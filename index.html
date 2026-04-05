@@ -3718,7 +3718,7 @@ if(G.bourseSession?.phase==='masked'){
   else if(rl>=3){
     trackEEPEvent(`📤 Dossier Scellé — Palier 3: vente finale disponible`);
     $('gTicker').textContent=`📤 Dossier Scellé: vente finale disponible au prochain inter-tour!`;
-    G.bourseSession.phase='revealed';}// prêt pour accepter/conclure}
+    G.bourseSession.phase='revealed';}}// prêt pour accepter/conclure
 if(cand.correct>=EEP.questions.length){ceoAchvIncrement(cand.id,'flawless_eep');}
 // ── Rapport EEP (inspiré showDayRecap) ─────────────────────────────
 // DETTE: Saisie du C.E.O. si dette impayée
