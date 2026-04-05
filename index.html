@@ -187,14 +187,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   background:rgba(0,0,0,.25);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   position:relative;flex-shrink:0;transition:all .2s;overflow:hidden;}
-.slot-card::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.03),transparent);
-  border-radius:6px;pointer-events:none;}
-.slot-card.filled{border-style:solid;border-color:#2a3050;background:linear-gradient(160deg,#161828,#0c0e16);
-  box-shadow:0 3px 10px rgba(0,0,0,.4);}
-.slot-card.filled.playable{border-color:var(--gold)!important;box-shadow:0 0 14px rgba(212,168,50,.4);animation:slotReady 1.5s ease infinite;}
-.slot-card.filled.playable:active{transform:scale(.92);animation:none;}
+.slot-card.filled{border-style:solid;border-color:#2a3050;background:linear-gradient(160deg,#161828,#0c0e16);}
+.slot-card.filled.playable{border-color:var(--gold)!important;box-shadow:0 0 12px rgba(212,168,50,.3);}
 .slot-card.filled.atk-card{border-color:#ef4444;box-shadow:0 0 8px rgba(239,68,68,.2);}
 .slot-card.filled.def-card{border-color:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.2);}
 .slot-card.filled.mul-card{border-color:#d4a832;box-shadow:0 0 8px rgba(212,168,50,.2);}
@@ -202,24 +196,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .slot-card .sc-icon{font-size:20px;line-height:1;}
 .slot-card .sc-name{font-size:5px;font-family:'Orbitron',monospace;color:var(--muted);text-align:center;margin-top:2px;padding:0 2px;line-height:1.2;}
 .slot-card .sc-cat{font-size:5px;font-family:'Orbitron',monospace;font-weight:900;letter-spacing:.3px;margin-bottom:2px;}
-.slot-card.empty-slot .sc-empty{font-size:9px;color:rgba(255,255,255,.08);}
+.slot-card.empty-slot .sc-empty{font-size:9px;color:rgba(255,255,255,.1);}
 .slot-card.gear-slot{border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.04);}
 .slot-card.gear-slot.filled{border-color:var(--purple);}
 .slot-card.theme-slot{border-color:rgba(34,211,238,.2);background:rgba(34,211,238,.03);}
 .slot-card.theme-slot.filled{border-color:var(--cyan);}
 .slot-divider{width:1px;height:60px;background:rgba(255,255,255,.08);flex-shrink:0;margin:0 2px;}
 .slot-label{font-size:6px;font-family:'Orbitron',monospace;color:rgba(255,255,255,.2);letter-spacing:.5px;text-align:center;margin-bottom:2px;}
-/* ── CARD FIELD — plateau central style TCG ──────────────── */
-#cardField{
-  flex-shrink:0;padding:8px 10px;
-  background:linear-gradient(180deg,rgba(8,10,18,.6),rgba(6,8,14,.8));
-  border-top:1px solid rgba(255,255,255,.04);
-  border-bottom:1px solid rgba(255,255,255,.04);}
-.cf-row{display:flex;gap:5px;justify-content:center;align-items:flex-start;margin-bottom:5px;}
-.cf-row:last-child{margin-bottom:0;}
-.cf-label{font-size:6px;font-family:'Orbitron',monospace;color:rgba(255,255,255,.18);letter-spacing:.5px;text-align:center;margin-bottom:2px;text-transform:uppercase;}
-.cf-group{display:flex;flex-direction:column;align-items:center;}
-.cf-divider{width:1px;height:50px;background:rgba(255,255,255,.06);margin:10px 4px 0;flex-shrink:0;}
 .trash-btn{
   width:38px;height:38px;border-radius:6px;border:1.5px solid rgba(239,68,68,.3);
   background:rgba(239,68,68,.06);cursor:pointer;
@@ -320,69 +303,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sab-hand{display:flex;gap:5px;justify-content:center;padding:5px;flex-wrap:wrap;}
 .sab-card{width:64px;height:78px;border:2px solid var(--orange);border-radius:6px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:7px;font-family:'Orbitron',monospace;color:var(--orange);cursor:pointer;transition:all .15s;}
 .sab-card:active{transform:scale(.93);background:rgba(249,115,22,.1);}.sab-card .sc-icon{font-size:22px;margin-bottom:2px;}.sab-card .sc-name{font-size:7px;letter-spacing:.5px;}
-/* ── MOBILE HUD PERMANENT — style TCG ────────────────────── */
-#mobHud{
-  background:linear-gradient(180deg,rgba(4,5,10,.97),rgba(3,4,8,.99));
-  border-top:2px solid rgba(212,168,50,.3);
-  padding:5px 6px 8px;
-  flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-  box-shadow:0 -6px 20px rgba(0,0,0,.6);}
-#mobHud::-webkit-scrollbar{display:none;}
-.mh-section{display:flex;flex-direction:column;align-items:center;gap:1px;flex-shrink:0;}
-.mh-label{font-size:5px;font-family:'Orbitron',monospace;color:rgba(255,255,255,.25);letter-spacing:.5px;text-align:center;text-transform:uppercase;}
-.mh-row{display:flex;gap:4px;align-items:flex-start;}
-.mh-slot{
-  width:50px;height:72px;border-radius:7px;
-  border:1.5px dashed rgba(255,255,255,.1);
-  background:rgba(0,0,0,.3);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  position:relative;flex-shrink:0;transition:all .18s;overflow:hidden;cursor:default;}
-.mh-slot::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.03),transparent);
-  border-radius:6px;pointer-events:none;}
-.mh-slot.filled{
-  border-style:solid;border-color:#2a3050;
-  background:linear-gradient(160deg,#161828,#0c0e16);
-  box-shadow:0 3px 10px rgba(0,0,0,.5);}
-.mh-slot.playable{border-color:var(--gold)!important;box-shadow:0 0 12px rgba(212,168,50,.4),0 3px 10px rgba(0,0,0,.5);cursor:pointer;animation:slotReady 1.5s ease infinite;}
-@keyframes slotReady{0%,100%{box-shadow:0 0 8px rgba(212,168,50,.3);}50%{box-shadow:0 0 18px rgba(212,168,50,.6);}}
-.mh-slot.playable:active{transform:scale(.9);animation:none;}
-.mh-slot.atk{border-color:#ef4444!important;box-shadow:0 0 8px rgba(239,68,68,.25);}
-.mh-slot.def{border-color:#22c55e!important;box-shadow:0 0 8px rgba(34,197,94,.25);}
-.mh-slot.mul{border-color:#d4a832!important;box-shadow:0 0 8px rgba(212,168,50,.25);}
-.mh-slot.intel{border-color:#22d3ee!important;box-shadow:0 0 8px rgba(34,211,238,.25);}
-.mh-slot .ms-cat{font-size:5px;font-family:'Orbitron',monospace;font-weight:900;letter-spacing:.3px;}
-.mh-slot .ms-icon{font-size:20px;line-height:1;}
-.mh-slot .ms-name{font-size:5.5px;font-family:'Orbitron',monospace;color:var(--muted);text-align:center;line-height:1.15;padding:0 2px;word-break:break-word;max-height:14px;overflow:hidden;}
-.mh-slot .ms-play{font-size:5.5px;color:var(--gold);font-family:'Orbitron',monospace;margin-top:1px;opacity:0;transition:opacity .2s;}
-.mh-slot.playable .ms-play{opacity:1;}
-.mh-slot .ms-empty{font-size:8px;color:rgba(255,255,255,.06);}
-.mh-slot.gear{border-color:rgba(168,85,247,.2);background:rgba(168,85,247,.03);}
-.mh-slot.theme{border-color:rgba(34,211,238,.15);background:rgba(34,211,238,.02);width:42px;height:58px;}
-.mh-slot.reserve{opacity:.5;}
-.mh-slot.reserve.filled{opacity:.9;border-style:solid;}
-.mh-div{width:1px;height:58px;background:rgba(255,255,255,.06);flex-shrink:0;margin:8px 2px 0;}
-.mh-trash{
-  width:36px;height:36px;border-radius:6px;
-  border:1.5px solid rgba(239,68,68,.25);background:rgba(239,68,68,.05);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-size:14px;transition:all .15s;flex-shrink:0;margin-top:8px;}
-.mh-trash:active{transform:scale(.88);border-color:var(--red);background:rgba(239,68,68,.15);}
-/* CARD FLY ANIMATION mobile */
-.mob-card-flying{
-  position:fixed;z-index:9000;pointer-events:none;
-  border-radius:7px;border:2px solid var(--gold);
-  background:linear-gradient(160deg,#1a1e30,#0e1018);
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;
-  box-shadow:0 0 30px rgba(212,168,50,.6),0 0 60px rgba(212,168,50,.2);
-  animation:mobCardFly .5s cubic-bezier(.4,0,.2,1) forwards;}
-@keyframes mobCardFly{
-  0%{transform:scale(1) translateY(0);opacity:1;}
-  35%{transform:scale(1.25) translateY(-40px);opacity:1;}
-  100%{transform:scale(.4) translateY(-180px);opacity:0;}}
 .rcode{font-family:'Orbitron',monospace;font-size:36px;font-weight:900;color:var(--gold);letter-spacing:8px;text-shadow:0 0 20px rgba(212,168,50,.3);margin:6px 0;}
 .p-tag{padding:6px 10px;background:rgba(255,255,255,.03);border-radius:4px;margin-bottom:3px;font-size:12px;display:flex;align-items:center;gap:6px;}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block;}.dot.on{background:var(--green);box-shadow:0 0 5px var(--green);}
@@ -560,74 +480,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div id="jStatus" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);"></div>
 <button class="btn" style="width:100%;" onclick="showScreen('menu')">← RETOUR</button></div></div>
 <!-- PLAYER MOBILE -->
-<div id="player" class="S" style="padding:0;height:100vh;height:100dvh;">
-<!-- TOP BAR -->
-<div class="mob-top" style="margin:5px 6px;border-radius:6px;">
+<div id="player" class="S" style="padding:6px;">
+<div class="mob-top">
   <span class="mob-badge" id="pBadge">—</span>
   <span id="pFlux" style="font-family:'Orbitron',monospace;font-size:11px;color:var(--gold);">⚡0</span>
   <span id="pPA" style="font-family:'Orbitron',monospace;font-size:10px;color:var(--orange);">PA: 5</span>
   <span id="pTimer" style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--gold);">—</span>
 </div>
-<!-- GAUGE -->
-<div style="height:10px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:2px;margin:0 6px 4px;overflow:hidden;flex-shrink:0;"><div id="pGauge" style="height:100%;background:linear-gradient(90deg,#1a6e3a,#22c55e);width:0%;transition:width .4s;"></div></div>
-<!-- CONTENT: question + answers (scrollable middle) -->
-<div style="flex:1;overflow-y:auto;padding:0 6px;">
-  <div class="mob-q" id="pQ">En attente...</div>
-  <div id="pAns"></div>
-  <div id="pHand" style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;padding:3px;"></div>
-  <div class="mob-log" id="pLog"><div style="opacity:.5;">Connexion...</div></div>
-</div>
-<!-- PERMANENT HUD — TCG style bottom bar -->
-<div id="mobHud" style="display:none;">
-  <div style="display:flex;gap:3px;align-items:flex-start;padding:1px 0 2px;">
-    <!-- 5 HAND SLOTS -->
-    <div class="mh-section">
-      <div class="mh-label">MAIN</div>
-      <div class="mh-row">
-        <div class="mh-slot" id="mSlot0"><div class="ms-empty">—</div></div>
-        <div class="mh-slot" id="mSlot1"><div class="ms-empty">—</div></div>
-        <div class="mh-slot" id="mSlot2"><div class="ms-empty">—</div></div>
-        <div class="mh-slot" id="mSlot3"><div class="ms-empty">—</div></div>
-        <div class="mh-slot" id="mSlot4"><div class="ms-empty">—</div></div>
-      </div>
-    </div>
-    <div class="mh-div"></div>
-    <!-- 3 RESERVE SLOTS (buffer dossiers) -->
-    <div class="mh-section">
-      <div class="mh-label">BUFFER</div>
-      <div class="mh-row">
-        <div class="mh-slot reserve" id="mRSlot0"><div class="ms-empty">—</div></div>
-        <div class="mh-slot reserve" id="mRSlot1"><div class="ms-empty">—</div></div>
-        <div class="mh-slot reserve" id="mRSlot2"><div class="ms-empty">—</div></div>
-      </div>
-    </div>
-    <div class="mh-div"></div>
-    <!-- 2 GEAR SLOTS -->
-    <div class="mh-section">
-      <div class="mh-label">GEAR</div>
-      <div class="mh-row">
-        <div class="mh-slot gear" id="mGSlot0"><div class="ms-empty" style="color:rgba(168,85,247,.15);font-size:7px;">GEAR</div></div>
-        <div class="mh-slot gear" id="mGSlot1"><div class="ms-empty" style="color:rgba(168,85,247,.15);font-size:7px;">GEAR</div></div>
-      </div>
-    </div>
-    <div class="mh-div"></div>
-    <!-- TRASH -->
-    <div class="mh-section" style="justify-content:center;">
-      <div class="mh-trash" onclick="pTrashCard()">🗑️</div>
-      <div class="mh-label" style="margin-top:2px;">JETER</div>
-    </div>
-    <div class="mh-div"></div>
-    <!-- 3 PORTFOLIO SLOTS -->
-    <div class="mh-section">
-      <div class="mh-label" style="color:rgba(34,211,238,.25);">PORTFOLIO</div>
-      <div class="mh-row">
-        <div class="mh-slot theme" id="mPSlot0"><div class="ms-empty" style="color:rgba(34,211,238,.12);font-size:6px;">THÈME</div></div>
-        <div class="mh-slot theme" id="mPSlot1"><div class="ms-empty" style="color:rgba(34,211,238,.12);font-size:6px;">THÈME</div></div>
-        <div class="mh-slot theme" id="mPSlot2"><div class="ms-empty" style="color:rgba(34,211,238,.12);font-size:6px;">THÈME</div></div>
-      </div>
-    </div>
-  </div>
-</div>
+<div style="height:10px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:2px;margin-bottom:5px;overflow:hidden;"><div id="pGauge" style="height:100%;background:linear-gradient(90deg,#1a6e3a,#22c55e);width:0%;transition:width .4s;"></div></div>
+<div class="mob-q" id="pQ">En attente...</div>
+<div id="pAns"></div>
+<div id="pHand" class="sab-hand"></div>
+<div class="mob-log" id="pLog"><div style="opacity:.5;">Connexion...</div></div>
 </div>
 <!-- GAME — interface TCG style Duel Links / Pokémon TCG Live -->
 <div id="game" class="S" style="position:relative;flex-direction:column;overflow:hidden;height:100vh;background:radial-gradient(ellipse at 50% 20%,#0e1220 0%,#06080f 100%);">
@@ -675,64 +539,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <!-- ── TICKER ────────────────────────────────────────────────── -->
 <div class="ticker" id="gTicker" style="flex-shrink:0;">CAPITALISM: ETERNAL OPTIMIZATION — INITIALISATION...</div>
 
-<!-- ══ CARD FIELD — plateau central style TCG Duel Links ══════ -->
-<div id="cardField" style="display:none;">
-  <!-- ROW 1: 5 MAIN hand slots -->
-  <div class="cf-row">
-    <div class="cf-group">
-      <div class="cf-label">MAIN</div>
-      <div style="display:flex;gap:5px;">
-        <div class="slot-card" id="hSlot0"></div>
-        <div class="slot-card" id="hSlot1"></div>
-        <div class="slot-card" id="hSlot2"></div>
-        <div class="slot-card" id="hSlot3"></div>
-        <div class="slot-card" id="hSlot4"></div>
-      </div>
-    </div>
-  </div>
-  <!-- ROW 2: 3 RESERVE slots (buffer dossiers) -->
-  <div class="cf-row">
-    <div class="cf-group">
-      <div class="cf-label">RÉSERVE</div>
-      <div style="display:flex;gap:5px;">
-        <div class="slot-card" id="rSlot0" style="opacity:.5;"></div>
-        <div class="slot-card" id="rSlot1" style="opacity:.5;"></div>
-        <div class="slot-card" id="rSlot2" style="opacity:.5;"></div>
-      </div>
-    </div>
-  </div>
-  <!-- ROW 3: 2 GEAR + PORTFOLIO 3 + TRASH -->
-  <div class="cf-row" style="gap:0;">
-    <!-- Gear -->
-    <div class="cf-group">
-      <div class="cf-label" style="color:rgba(168,85,247,.25);">GEAR</div>
-      <div style="display:flex;gap:5px;">
-        <div class="slot-card gear-slot" id="gSlot0"></div>
-        <div class="slot-card gear-slot" id="gSlot1"></div>
-      </div>
-    </div>
-    <div class="cf-divider"></div>
-    <!-- Portfolio -->
-    <div class="cf-group">
-      <div class="cf-label" style="color:rgba(34,211,238,.2);">PORTFOLIO</div>
-      <div style="display:flex;gap:5px;">
-        <div class="slot-card theme-slot" id="pSlot0" style="width:48px;height:66px;"></div>
-        <div class="slot-card theme-slot" id="pSlot1" style="width:48px;height:66px;"></div>
-        <div class="slot-card theme-slot" id="pSlot2" style="width:48px;height:66px;"></div>
-      </div>
-    </div>
-    <div class="cf-divider"></div>
-    <!-- Trash + PA -->
-    <div class="cf-group" style="justify-content:center;">
-      <div class="cf-label">PA</div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-        <div class="trash-btn" onclick="gestionPoubelle()" title="Supprimer une carte (1 PA)">🗑️</div>
-        <div id="handPA" style="font-family:'Orbitron',monospace;font-size:8px;color:var(--orange);text-align:center;"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ── ZONE QUESTION — centre du plateau comme le champ YuGiOh ─ -->
 <div id="qArea" class="qarea-ceo" style="flex:1;overflow-y:auto;padding:10px 14px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
   <!-- Timer intégré en haut de la zone question -->
@@ -749,6 +555,61 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div id="soloAnswerPanel" style="display:none;flex-shrink:0;padding:6px 12px 8px;background:linear-gradient(180deg,rgba(8,9,14,.95),rgba(6,8,15,.98));border-top:1px solid rgba(212,168,50,.25);">
   <div class="sap-label" style="font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:var(--gold);text-align:center;margin-bottom:4px;">⚡ FENÊTRE DE COMBAT — <span id="combatTimer">5</span>s</div>
   <div id="sapChoices" style="text-align:center;"></div>
+</div>
+
+<!-- ── MAIN + SLOTS PERMANENTS — style plateau TCG ─────────────────── -->
+<div id="soloHandBar" style="display:none;flex-shrink:0;background:linear-gradient(180deg,rgba(4,5,10,.96),rgba(3,4,8,.99));border-top:1px solid rgba(212,168,50,.2);padding:6px 8px 10px;">
+  <!-- Ligne 1: labels -->
+  <div style="display:flex;align-items:flex-end;gap:5px;margin-bottom:3px;">
+    <div style="width:52px;text-align:center;" class="slot-label">MAIN</div>
+    <div style="width:52px;" class="slot-label"></div>
+    <div style="width:52px;" class="slot-label"></div>
+    <div style="width:52px;" class="slot-label"></div>
+    <div style="width:52px;" class="slot-label"></div>
+    <div style="width:9px;"></div>
+    <div style="width:52px;" class="slot-label">RÉSERVE</div>
+    <div style="width:52px;" class="slot-label"></div>
+    <div style="width:52px;" class="slot-label"></div>
+    <div style="width:9px;"></div>
+    <div style="width:52px;" class="slot-label">GEAR</div>
+    <div style="width:52px;" class="slot-label"></div>
+    <div style="width:9px;"></div>
+    <div style="width:38px;" class="slot-label">🗑️</div>
+  </div>
+  <!-- Ligne 2: tous les slots -->
+  <div style="display:flex;gap:5px;align-items:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:1px 0 2px;">
+    <!-- 5 slots main -->
+    <div class="slot-card" id="hSlot0"></div>
+    <div class="slot-card" id="hSlot1"></div>
+    <div class="slot-card" id="hSlot2"></div>
+    <div class="slot-card" id="hSlot3"></div>
+    <div class="slot-card" id="hSlot4"></div>
+    <div class="slot-divider"></div>
+    <!-- 3 slots réserve -->
+    <div class="slot-card" id="rSlot0" style="opacity:.6;"></div>
+    <div class="slot-card" id="rSlot1" style="opacity:.6;"></div>
+    <div class="slot-card" id="rSlot2" style="opacity:.6;"></div>
+    <div class="slot-divider"></div>
+    <!-- 2 slots gear -->
+    <div class="slot-card gear-slot" id="gSlot0"></div>
+    <div class="slot-card gear-slot" id="gSlot1"></div>
+    <div class="slot-divider"></div>
+    <!-- Bouton poubelle -->
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+      <div class="trash-btn" onclick="gestionPoubelle()" title="Supprimer une carte (1 PA)">🗑️</div>
+      <div id="handPA" style="font-family:'Orbitron',monospace;font-size:8px;color:var(--orange);text-align:center;"></div>
+    </div>
+    <div class="slot-divider"></div>
+    <!-- 3 slots portfolio -->
+    <div style="display:flex;flex-direction:column;gap:2px;align-items:center;">
+      <div style="font-size:5px;font-family:'Orbitron',monospace;color:var(--cyan);letter-spacing:.5px;margin-bottom:1px;">PORTFOLIO</div>
+      <div style="display:flex;gap:4px;">
+        <div class="slot-card theme-slot" id="pSlot0" style="width:44px;height:60px;"></div>
+        <div class="slot-card theme-slot" id="pSlot1" style="width:44px;height:60px;"></div>
+        <div class="slot-card theme-slot" id="pSlot2" style="width:44px;height:60px;"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ── OVERLAY LATENCE ────────────────────────────────────────── -->
@@ -1199,31 +1060,57 @@ culture:[{q:"Film avec TPS Reports ?",c:["Wall Street","Office Space","The Big S
 science:[{q:"Gaz dominant atmosphère ?",c:["Oxygène","Azote","CO2","Argon"],a:1},{q:"Organe produit insuline ?",c:["Foie","Pancréas","Rein","Estomac"],a:1},{q:"Élément + abondant univers ?",c:["Oxygène","Carbone","Hydrogène","Hélium"],a:2},{q:"Planète + proche Soleil ?",c:["Vénus","Mars","Mercure","Terre"],a:2},{q:"Os adulte ?",c:["186","206","256","176"],a:1},{q:"Lumière > son.",v:true},{q:"ADN = protéine.",v:false},{q:"Eau bout 100°C niv. mer.",v:true},{q:"Électrons > protons.",v:false},{q:"Diamant = carbone pur.",v:true}]
 };
 
-// ==================== AI ENGINE (Google AI SDK — résout CORS nativement) ====================
-// GEMINI_API_KEY stockée sur Vercel — jamais exposée côté client
+// ==================== AI ENGINE v2 — Proxy Vercel + SDK Fallback ====================
+// En production (Vercel) : appelle /api/gemini (clé sécurisée côté serveur)
+// En local (file://) : appelle l'SDK Google directement avec la clé de dev
+const GEMINI_KEY_DEV='AIzaSyB3aQ7ZcvzxKczlmSagz06jJ-KlDSPCfxw';// DEV ONLY — retiré en prod
 const _sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const _IS_PROD=location.protocol==='https:'&&!location.hostname.includes('localhost');
 
-// ── Proxy sécurisé Vercel (/api/gemini) ─────────────────────
-// La clé n'est JAMAIS dans le HTML — elle est dans les env vars Vercel
+let _genAI=null;
 
+async function _getGenAI(){
+  if(_genAI)return _genAI;
+  try{
+    const mod=await import('https://esm.sh/@google/generative-ai');
+    _genAI=new mod.GoogleGenerativeAI(GEMINI_KEY_DEV);
+    return _genAI;
+  }catch(e){console.error('[CEO-AI] SDK:',e.message);throw e;}}
 
+const _MODEL_CHAIN=['gemini-2.0-flash-lite','gemini-2.0-flash','gemini-1.5-flash'];
 
-async function _geminiGenerate(prompt, model=null){
-  for(let attempt=0;attempt<3;attempt++){
-    try{
-      const r=await fetch('/api/gemini',{method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({prompt,model})});
-      if(!r.ok)throw new Error('HTTP '+r.status);
-      const d=await r.json();
-      if(d.error)throw new Error(d.error);
-      return d.text;
-    }catch(e){
-      if(attempt===2)throw new Error('IA indisponible');
-      await new Promise(r=>setTimeout(r,2000));}}
-  throw new Error('IA indisponible');}
+async function _geminiGenerate(prompt,model=null){
+  // ── MODE PROD : proxy Vercel sécurisé ───────────────────────────────
+  if(_IS_PROD){
+    for(let attempt=0;attempt<3;attempt++){
+      try{
+        const r=await fetch('/api/gemini',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({prompt,model})});
+        if(r.status===503&&attempt<2){await _sleep(2000);continue;}
+        if(!r.ok)throw new Error('Proxy HTTP '+r.status);
+        const d=await r.json();
+        if(d.error)throw new Error(d.error);
+        return d.text;
+      }catch(e){
+        if(attempt===2)throw new Error('IA indisponible (proxy): '+e.message);
+        await _sleep(1500+attempt*1500);}}
+    throw new Error('IA proxy: max retries');}
+  // ── MODE LOCAL : SDK direct ──────────────────────────────────────────
+  const genAI=await _getGenAI();
+  const modelsToTry=model?[model]:[..._MODEL_CHAIN];
+  for(const m of modelsToTry){
+    for(let attempt=0;attempt<2;attempt++){
+      try{
+        const mdl=genAI.getGenerativeModel({model:m,generationConfig:{temperature:0.8,maxOutputTokens:300}});
+        const result=await mdl.generateContent(prompt);
+        return result.response.text();
+      }catch(e){
+        const is429=e.message?.includes('429')||e.status===429;
+        if(is429&&attempt===0){await _sleep(6000);continue;}
+        if(!is429)break;}}}
+  throw new Error('Tous les modèles Gemini ont échoué.');}
 
-// Compatibilité avec l'ancienne API _geminiCall (pour fetchAIThemes)
 async function _geminiCall(requestBody,model=null){
   const prompt=requestBody.contents?.[0]?.parts?.[0]?.text||'';
   const text=await _geminiGenerate(prompt,model);
@@ -1416,7 +1303,7 @@ garant:{id:'garant',name:'LE GARANT',icon:'🛡️',role:'Défense / Assurance R
 
 // ── PA (Points d'Action) ─────────────────────────────────────────────────────
 // Garant commence avec 7 PA, les autres avec 5. Consommés par les actions d'inter-tour.
-const PA_COSTS={pioche:2,piocheRequin:1,poubelle:1,vente:3,achat:2,equip:1,capacite:3};
+const PA_COSTS={pioche:2,pioqueRequin:1,poubelle:1,bourse:3,capacite:3};
 
 function _getPlayerAP(){
   // En solo, le joueur humain
@@ -1759,7 +1646,7 @@ $('gClass').style.color=CEO_CL[G.classId].color;
 $('candBanner').style.display='';
 $('tlGrid').style.display='grid';
 $('bufferBar').style.display='none';
-$('cardField').style.display='';
+$('soloHandBar').style.display='';
 $('soloAnswerPanel').style.display='none';
 updGauge();updFlux();
 _updSoloHandBar();
@@ -1781,9 +1668,7 @@ function _updSoloHandBar(){
     const c=hand[i];
     if(c){
       const col=catColors[c.cat]||'#4a5268';
-      const duringLatency=EEP.latencyActive&&(isMyTurn?(c.cat==='defense'||c.cat==='multiplier'||c.cat==='intel'):(c.cat==='attack'));
-      const duringQuestion=EEP.questionActive&&!EEP.latencyActive&&!isMyTurn&&c.cat==='attack'&&!EEP._questionPlayed?.has(_SOLO_PLAYER_PID);
-      const canPlay=duringLatency||duringQuestion;
+      const canPlay=EEP.latencyActive&&(isMyTurn?(c.cat==='defense'||c.cat==='multiplier'||c.cat==='intel'):(c.cat==='attack'));
       el.className=`slot-card filled ${catCls[c.cat]||''} ${canPlay?'playable':''}`;
       el.style.cursor=canPlay?'pointer':'default';
       el.innerHTML=`<div class="sc-cat" style="color:${col};">${c.cat?.substring(0,3).toUpperCase()||''}</div>
@@ -1802,19 +1687,12 @@ function _updSoloHandBar(){
     const b=bufCards[i];
     if(b){
       const isAtkOnMe=b.card.cat==='attack'&&cand?.id===_SOLO_PLAYER_PID;
-      const isSealed=b.sealed||false;
       el.className=`slot-card filled ${isAtkOnMe?'atk-card':''}`;
       el.style.opacity='1';
-      if(isSealed){
-        // Dossier scellé — contenu masqué
-        el.innerHTML=`<div class="sc-cat" style="color:var(--orange);">N+${b.triggersAt-(EEP.questionIdx||0)}</div>
-          <div class="sc-icon">🔒</div>
-          <div class="sc-name" style="color:var(--orange);">SCELLÉ</div>`;
-      }else{
-        el.innerHTML=`<div class="sc-cat" style="color:${isAtkOnMe?'#ef4444':'#4a5268'};">N+${b.triggersAt-(EEP.questionIdx||0)}</div>
-          <div class="sc-icon">${b.card.icon}</div>
-          <div class="sc-name">${b.fromName.split(' ').pop()}</div>`;}
-      el.title=`${b.fromName}: ${isSealed?'Dossier Scellé':b.card.name}`;
+      el.innerHTML=`<div class="sc-cat" style="color:${isAtkOnMe?'#ef4444':'#4a5268'};">N+${b.triggersAt-(EEP.questionIdx||0)}</div>
+        <div class="sc-icon">${b.card.icon}</div>
+        <div class="sc-name">${b.fromName.split(' ').pop()}</div>`;
+      el.title=`${b.fromName}: ${b.card.name}`;
     }else{
       el.className='slot-card empty-slot';el.innerHTML='<div class="sc-empty">—</div>';el.style.opacity='.35';}}
 
@@ -2438,7 +2316,7 @@ showOv('ovGestion');}
 function _updGestionButtons(){
   const pa=G._ap||0;
   const cl=CEO_CL[G.classId];
-  const piocheCost=G.classId==='requin'?PA_COSTS.piocheRequin:PA_COSTS.pioche;
+  const piocheCost=G.classId==='requin'?PA_COSTS.pioqueRequin:PA_COSTS.pioche;
   // Les boutons restent actifs — le check se fait au clic avec consumePA
   const capBtn=$('gesCapaBtn');
   if(capBtn)capBtn.disabled=pa<(cl?.capaCost||3);}
@@ -2449,11 +2327,11 @@ if(G.gestionUsed){$('gTicker').textContent='⚠️ Action déjà utilisée ce to
 G.gestionUsed=true;closeOv('ovGestion');fn();return true;}
 
 function gestionBourse(){
-  if(!consumePA(PA_COSTS.vente,'Mise en vente'))return;
+  if(!consumePA(PA_COSTS.bourse,'Bourse'))return;
   closeOv('ovGestion');_bourseOpen();}
 
 function gestionPioche(){
-  const cost=G.classId==='requin'?PA_COSTS.piocheRequin:PA_COSTS.pioche;
+  const cost=G.classId==='requin'?PA_COSTS.pioqueRequin:PA_COSTS.pioche;
   if(!consumePA(cost,'Pioche'))return;
   const card=pickCard();
   G.cards.push(card);
@@ -2652,8 +2530,11 @@ function _bourseShowMasked(){
   const bidsHtml=S.bids.length
     ?S.bids.map(b=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:10px;"><span>${b.name}</span><span style="color:var(--gold);font-family:'Orbitron',monospace;">${b.amount}⚡</span></div>`).join('')
     :'<div style="color:var(--muted);font-size:10px;text-align:center;">Aucune enchère</div>';
-  let revealHtml='';
-  if(rl===0)revealHtml=`<div style="text-align:center;padding:8px;margin-bottom:8px;"><span class="sealed-badge">██████ CONFIDENTIEL · Palier 0/2</span></div>`;
+  // 3-tier reveal indicators
+  const tiers=[{n:0,icon:'🔒',label:'Scellé'},{n:1,icon:'📂',label:S.themeGenre||'Genre'},{n:2,icon:'🔓',label:rl>=2?(S.themeIcon+' '+S.themeName):'Titre'},{n:3,icon:'📤',label:'Vente finale'}];
+  const tiersHtml=tiers.map(t=>`<div style="flex:1;text-align:center;padding:4px 2px;border-radius:4px;background:${rl>=t.n?'rgba(212,168,50,.1)':'rgba(0,0,0,.15)'};border:1px solid ${rl>=t.n?'rgba(212,168,50,.3)':'rgba(255,255,255,.05)'};opacity:${rl>=t.n?1:.4};"><div style="font-size:14px;">${t.icon}</div><div style="font-size:7px;color:${rl>=t.n?'var(--gold)':'var(--muted)'};font-family:'Orbitron',monospace;">${t.label}</div></div>`).join('');
+  let revealHtml=`<div style="display:flex;gap:3px;margin-bottom:8px;">${tiersHtml}</div>`;
+  if(rl===0)revealHtml+=`<div style="text-align:center;padding:8px;margin-bottom:8px;"><span class="sealed-badge">██████ CONFIDENTIEL · Palier 0/3</span></div>`;
   else if(rl===1)revealHtml=`<div style="padding:8px;background:rgba(212,168,50,.06);border:1px solid var(--gold-dim);border-radius:4px;text-align:center;margin-bottom:8px;">
     <div style="font-size:9px;color:var(--gold);font-family:'Orbitron',monospace;margin-bottom:4px;">PALIER 1 — GENRE RÉVÉLÉ</div>
     <div style="font-size:13px;">📂 ${S.themeGenre}</div>
@@ -2675,9 +2556,10 @@ function _bourseShowMasked(){
           <button class="btn sm gold" onclick="_bourse_RaisePrice()">Modifier prix</button>
         </div>
         <div style="display:flex;gap:6px;">
-          <button class="btn sm" style="flex:1;" onclick="_bourse_Hold()">⏸ ATTENDRE</button>
+          <button class="btn sm" style="flex:1;" onclick="_bourse_Hold()">⏸ ATTENDRE (Palier ${rl}/3)</button>
           <button class="btn sm rd" style="flex:1;" onclick="_bourse_Withdraw()">🚫 RETIRER (−20%)</button>
         </div>
+        ${rl>=3?'<button class="btn gold" style="width:100%;margin-top:6px;" onclick="_bourse_DoReveal()">📤 CONCLURE LA VENTE</button>':''}
       </div>`:`
       <div style="background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.2);border-radius:4px;padding:8px;margin-bottom:8px;">
         <div style="font-size:9px;color:var(--cyan);margin-bottom:6px;">💼 Enchère${rl>=1?' (genre connu)':' à l\'aveugle'}</div>
@@ -2831,7 +2713,7 @@ $('invGrid').innerHTML=(!G.gear||!G.gear.length)
   :G.gear.map((item,i)=>`<div class="gear-card${G.equippedGear?.id===item.id?' equipped':''}" onclick="equipGear(${i})"><div class="gc-rarity ${item.rarity}">${item.rarity.toUpperCase()}</div><div class="gc-icon">${item.icon}</div><div class="gc-name">${item.name}</div><div class="gc-desc">${item.desc}</div></div>`).join('');
 showOv('ovInventaire');}
 function gestionInventaire(){if(!_gestionAction(()=>{}))return;_showInventaire();}
-function equipGear(idx){if(!consumePA(PA_COSTS.equip,'Équiper Gear'))return;G.equippedGear=G.equippedGear?.id===G.gear[idx]?.id?null:G.gear[idx];$('gClass').textContent=CEO_CL[G.classId].icon+' '+CEO_CL[G.classId].name+(G.equippedGear?' '+G.equippedGear.icon:'');_showInventaire();}
+function equipGear(idx){G.equippedGear=G.equippedGear?.id===G.gear[idx]?.id?null:G.gear[idx];$('gClass').textContent=CEO_CL[G.classId].icon+' '+CEO_CL[G.classId].name+(G.equippedGear?' '+G.equippedGear.icon:'');_showInventaire();}
 
 function gestionSkip(){
 closeOv('ovGestion');
@@ -3077,7 +2959,7 @@ function ceoLoadGame(event){
       if(save.achvTrackers)window._ceoAchvTrackers=save.achvTrackers;
       showScreen('game');
       $('gClass').textContent=CEO_CL[G.classId]?.icon+' '+CEO_CL[G.classId]?.name;
-      $('candBanner').style.display='';$('tlGrid').style.display='grid';$('cardField').style.display='';
+      $('candBanner').style.display='';$('tlGrid').style.display='grid';$('soloHandBar').style.display='';
       updGauge();updFlux();_updSoloHandBar();eepStartNextCandidate();
       $('gTicker').textContent='📂 Partie chargée — EEP '+(EEP.candidateIdx+1)+'/'+(EEP.players?.length||10);
     }catch(err){alert('Erreur de chargement: '+err.message);}};
@@ -3180,29 +3062,16 @@ else if(d.type==='signature'&&MP.hostPhase==='s0'){const p=MP.conns.find(c=>c.co
 else if(d.type==='classSel'){const p=MP.conns.find(c=>c.conn===conn);if(p)p.classId=d.classId;updDraftBoard();}
 else if(d.type==='draftPick'){const p=MP.conns.find(c=>c.conn===conn);if(!p)return;Object.keys(MP.draftSlots).forEach(k=>{if(MP.draftSlots[k]===p.pid)delete MP.draftSlots[k];});MP.draftSlots[d.slot]=p.pid;conn.send({type:'draftConfirm',slot:d.slot});updDraftBoard();mpBroadcast({type:'draftUpdate',slots:MP.draftSlots});}
 // ===== EEP: card played during latency =====
-else if(d.type==='playCard'&&(EEP.latencyActive||EEP.questionActive)){
+else if(d.type==='playCard'&&EEP.latencyActive){
 const p=EEP.players.find(pl=>pl.id===conn.peer);if(!p)return;
-// During question: limit 1 card per saboteur
-if(EEP.questionActive&&!EEP.latencyActive){
-  if(EEP._questionPlayed?.has(p.id))return;
-  EEP._questionPlayed=EEP._questionPlayed||new Set();
-  EEP._questionPlayed.add(p.id);}
 const cIdx=d.cardIdx;if(cIdx<0||cIdx>=p.cards.length)return;
 const card=p.cards.splice(cIdx,1)[0];
 const triggersAt=EEP.questionIdx+2;
-const isSealed=EEP.questionActive&&!EEP.latencyActive;
-EEP.buffer.push({card,fromPid:p.id,fromName:p.name,triggersAt,revealed:false,sealed:isSealed});
+EEP.buffer.push({card,fromPid:p.id,fromName:p.name,triggersAt,revealed:false});
 // ANALYSTE PASSIVE: +15 Flux "Frais de Conseil" on intel cards
 if(p.classId==='analyste'&&(card.type==='intel')){p.flux+=15;conn.send({type:'analysteBonus',flux:p.flux});}
-conn.send({type:'cardPlayed',cardName:card.name,cards:p.cards.map(c=>({id:c.id,name:c.name,icon:c.icon,desc:c.desc,cat:c.cat}))});
-updBufferUI();mpBroadcast({type:'bufferUpdate',buffer:EEP.buffer.map(b=>({hidden:!b.revealed,triggersAt:b.triggersAt,icon:b.revealed?b.card.icon:'📁',cat:b.card.cat,fromName:b.fromName,sealed:b.sealed||false}))});}
-// ===== TRASH CARD =====
-else if(d.type==='trashCard'){
-const p=EEP.players.find(pl=>pl.id===conn.peer);if(!p)return;
-const cIdx=d.cardIdx;if(cIdx<0||cIdx>=p.cards.length)return;
-const card=p.cards.splice(cIdx,1)[0];
-conn.send({type:'cardTrashed',cardName:card.name,cards:p.cards.map(c=>({id:c.id,name:c.name,icon:c.icon,desc:c.desc,cat:c.cat}))});
-$('gTicker').textContent=`🗑️ ${p.name} défausse ${card.icon} ${card.name}`;}
+conn.send({type:'cardPlayed',cardName:card.name});
+updBufferUI();mpBroadcast({type:'bufferUpdate',buffer:EEP.buffer.map(b=>({hidden:!b.revealed,triggersAt:b.triggersAt,icon:b.revealed?b.card.icon:'📁'}))});}
 // ===== LOAN: Fonds du C.E.O. =====
 else if(d.type==='requestLoan'){
 const p=EEP.players.find(pl=>pl.id===conn.peer);if(!p)return;
@@ -3332,77 +3201,145 @@ const cand=EEP.players[EEP.candidateIdx];
 $('candName').textContent=`${CEO_CL[cand.classId]?.icon||''} ${cand.name}`;
 $('gRound').textContent=`EEP ${EEP.candidateIdx+1}/${EEP.players.length}`;
 EEP.buffer=[];EEP.sniperRedirect=null;EEP.activeEffects=[];EEP.questionIdx=0;
-// Pick theme: forced from Bourse or random
+EEP._defenseQueue=[];EEP._multiplierQueue=[];
+
+// ── Choix du thème ──────────────────────────────────────────────────
 let themeObj;
-if(EEP.bourse.forcedTheme){themeObj=THEMES.find(t=>t.id===EEP.bourse.forcedTheme);EEP.bourse.forcedTheme=null;$('gTicker').textContent=`📈 Thème imposé par la Bourse: ${themeObj?.name}!`;}
+if(EEP.bourse?.forcedTheme){themeObj=THEMES.find(t=>t.id===EEP.bourse.forcedTheme);EEP.bourse.forcedTheme=null;}
 else{themeObj=pick(THEMES);}
 EEP.theme=themeObj.id;EEP.fmt=Math.random()<.5?'qcm':'vf';
-const all=QDB[EEP.theme]||[];
-// 2 passes de combat : pass 1 = QCM (Q1-Q10), pass 2 = VF (Q11-Q20)
-// Si la QDB a 20 questions on les divise, sinon on mélange tout
-const qcmPool=all.filter(q=>q.c!==undefined);const vfPool=all.filter(q=>q.v!==undefined);
-let pool;
-const passNum=(EEP._candidatePass||0);
-if(all.length>=15&&passNum===0){// Pass 1 : QCM
-  pool=qcmPool.length>=5?qcmPool:all.filter((_,i)=>i<10);}
-else if(all.length>=15&&passNum===1){// Pass 2 : VF
-  pool=vfPool.length>=5?vfPool:all.filter((_,i)=>i>=10);}
-else{pool=[...all];}
-if(pool.length<3){pool=[...all];} // fallback
-shuffle(pool);EEP.questions=pool.slice(0,10);
-// Notify all players
-mpBroadcast({type:'eepStart',candidateId:cand.id,candidateName:cand.name,theme:themeObj.name,themeIcon:themeObj.icon,total:EEP.questions.length});
-// Send each player their role + cards
-EEP.players.forEach(p=>{mpTo(p.id,{type:'eepRole',isCandidate:p.id===cand.id,cards:p.cards.map(c=>({id:c.id,name:c.name,icon:c.icon,desc:c.desc,cat:c.cat}))});});
+
+// ── Questions : IA ou statique ──────────────────────────────────────
+const isAITheme=G.aiThemeIds instanceof Set&&G.aiThemeIds.has(EEP.theme);
+if(isAITheme){
+  // Streaming Gemini : génère Q1 tout de suite, les suivantes en background
+  EEP._aiStream={queue:[],generated:0,total:10,themeName:themeObj.name,ready:false};
+  _eepStreamStart();
+}else{
+  const all=QDB[EEP.theme]||[];
+  const qcmPool=all.filter(q=>q.c!==undefined);const vfPool=all.filter(q=>q.v!==undefined);
+  const passNum=EEP._candidatePass||0;
+  let pool;
+  if(all.length>=15&&passNum===0)pool=qcmPool.length>=5?qcmPool:all.filter((_,i)=>i<10);
+  else if(all.length>=15&&passNum===1)pool=vfPool.length>=5?vfPool:all.filter((_,i)=>i>=10);
+  else pool=[...all];
+  if(pool.length<3)pool=[...all];
+  shuffle(pool);EEP.questions=pool.slice(0,10);}
+
+// ── GLaDOS intro thème ──────────────────────────────────────────────
+_gladosIntroTheme(themeObj.name);
+
+// ── Notify players ──────────────────────────────────────────────────
+mpBroadcast({type:'eepStart',candidateId:cand.id,candidateName:cand.name,
+  theme:themeObj.name,themeIcon:themeObj.icon,total:10});
+EEP.players.forEach(p=>{mpTo(p.id,{type:'eepRole',isCandidate:p.id===cand.id,
+  cards:p.cards.map(c=>({id:c.id,name:c.name,icon:c.icon,desc:c.desc}))});});
 updBufferUI();updGaugeFromEEP(cand);
-// Start first latency window — Phase 0 Briefing avant Q1
-eepBriefingPhase();}
 
-// ── PHASE 0: BRIEFING — 10s pour le candidat avant Q1 ─────────────────────
-function eepBriefingPhase(){
-const cand=EEP.players[EEP.candidateIdx];
-const isHumanCand=cand.id===_SOLO_PLAYER_PID;
-EEP.latencyActive=true;EEP.latencyTimer=10;EEP.isBriefing=true;
-EEP._defenseQueue=[];EEP._multiplierQueue=[];
-// UI update
-if(G.mode==='solo'){
-  $('soloAnswerPanel').style.display='';
-  const sapLabel=$('soloAnswerPanel').querySelector('.sap-label');
-  if(sapLabel)sapLabel.innerHTML=`⚡ BRIEFING — PRÉPAREZ VOS DÉFENSES — <span id="combatTimer">10</span>s`;
-  _updCombatUI(cand,isHumanCand);
-  $('gTicker').textContent='📋 Phase Briefing — Posez vos cartes défense/multiplicateur gratuitement sur le slot N+2.';}
-else{$('latencyOv').classList.add('show');$('latencyTimer').textContent='10';
-  $('latencySubLabel').textContent='BRIEFING — PRÉPAREZ VOS DÉFENSES';}
-mpBroadcast({type:'briefingStart',qi:0,duration:10,candidateId:cand.id});
-EEP.latencyInt=setInterval(()=>{EEP.latencyTimer--;
-if(G.mode==='solo'&&$('combatTimer'))$('combatTimer').textContent=EEP.latencyTimer+'s';
-else $('latencyTimer').textContent=EEP.latencyTimer;
-mpBroadcast({type:'latencyTick',t:EEP.latencyTimer});
-if(EEP.latencyTimer<=0){clearInterval(EEP.latencyInt);EEP.latencyActive=false;EEP.isBriefing=false;
-eepSendQuestion();}},1000);}
+// ── BRIEFING 10s (avant Q1) : candidat pose ses cartes, bots ne peuvent pas attaquer ──
+_eepBriefingPhase(cand);}
 
+// ── Streaming IA pour les EEPs sur thème Gemini ─────────────────────
+async function _eepStreamStart(){
+  const s=EEP._aiStream;
+  if(!s)return;
+  // Générer Q1 immédiatement (bloquant le temps du briefing 10s)
+  try{
+    const q=await generateOneQuestion(s.themeName,0,s.total);
+    s.queue.push(q);s.generated=1;
+  }catch(e){
+    // Fallback statique si Q1 échoue
+    const fallback=_getEEPFallbackQ();
+    if(fallback){s.queue.push(fallback);}
+    s.generated=1;}
+  s.ready=true;
+  // Pré-générer les suivantes en background (non-bloquant)
+  _eepStreamNext();}
+
+async function _eepStreamNext(){
+  const s=EEP._aiStream;
+  if(!s||s.generated>=s.total)return;
+  try{
+    const q=await generateOneQuestion(s.themeName,s.generated,s.total);
+    s.queue.push(q);s.generated++;
+  }catch(e){
+    const fallback=_getEEPFallbackQ();
+    if(fallback)s.queue.push(fallback);
+    s.generated++;}
+  // Continuer en background
+  if(s.generated<s.total){setTimeout(()=>_eepStreamNext().catch(()=>{}),200);}}
+
+function _getEEPFallbackQ(){
+  const keys=Object.keys(QDB).filter(k=>QDB[k]?.length>0);
+  const k=pick(keys);return k?pick(QDB[k]):null;}
+
+// Récupérer la prochaine question EEP (IA ou statique)
+async function _getNextEEPQuestion(){
+  const s=EEP._aiStream;
+  if(s){
+    // Attendre que la prochaine question soit prête (max 8s)
+    let waited=0;
+    while(s.queue.length===0&&waited<8000){
+      await _sleep(200);waited+=200;}
+    if(s.queue.length>0)return s.queue.shift();
+    // Timeout : fallback statique
+    return _getEEPFallbackQ();}
+  // Questions statiques : synchrone
+  return EEP.questions[EEP.questionIdx]||null;}
+
+// ── BRIEFING PHASE (10s avant Q1) ────────────────────────────────────
+function _eepBriefingPhase(cand){
+  const isHumanCand=cand.id===_SOLO_PLAYER_PID;
+  EEP.latencyActive=true;// permet au candidat de jouer des cartes
+  let t=10;
+  // Afficher le countdown sur le ticker
+  $('gTicker').textContent=`📋 BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
+  $('gTimer').textContent=`${t}s`;
+  if(isHumanCand&&G.mode==='solo'){_updSoloHandBar();}
+  mpBroadcast({type:'briefingStart',candidateId:cand.id,duration:10});
+  EEP._briefingInt=setInterval(()=>{
+    t--;
+    $('gTicker').textContent=`📋 BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
+    $('gTimer').textContent=`${t}s`;
+    mpBroadcast({type:'latencyTick',t});
+    if(t<=0){
+      clearInterval(EEP._briefingInt);
+      EEP.latencyActive=false;
+      // Maintenant lancer la première question
+      _eepSendNextQuestion();}},1000);}
+
+// ── Remplace eepLatencyWindow pour les phases inter-questions ─────────
 function eepLatencyWindow(){
-EEP.latencyActive=true;EEP.latencyTimer=10;EEP.isBriefing=false;
-$('latencyOv').classList.remove('show');// ne plus afficher l'ancien overlay
+// 10s entre chaque question : candidat défend, bots attaquent (1 carte max)
+EEP.latencyActive=true;EEP.latencyTimer=10;
 const cand=EEP.players[EEP.candidateIdx];
 const isHumanCand=cand.id===_SOLO_PLAYER_PID;
-// Reset défenses jouées ce tour
 EEP._defenseQueue=EEP._defenseQueue||[];
 EEP._multiplierQueue=EEP._multiplierQueue||[];
-// Mettre à jour l'UI combat
-if(G.mode==='solo'){_updCombatUI(cand,isHumanCand);}
-else{$('latencyOv').classList.add('show');$('latencyTimer').textContent='10';
-  $('latencySubLabel').textContent='JOUEZ VOS CARTES MAINTENANT';}
+if(G.mode==='solo'){_updCombatUI(cand,isHumanCand);_updSoloHandBar();}
+else{$('latencyOv').classList.add('show');$('latencyTimer').textContent='10';}
 mpBroadcast({type:'latencyStart',qi:EEP.questionIdx,duration:10});
 EEP.latencyInt=setInterval(()=>{EEP.latencyTimer--;
-if(G.mode==='solo'&&$('combatTimer'))$('combatTimer').textContent=EEP.latencyTimer+'s';
-else $('latencyTimer').textContent=EEP.latencyTimer;
-mpBroadcast({type:'latencyTick',t:EEP.latencyTimer});
-if(EEP.latencyTimer<=0){clearInterval(EEP.latencyInt);EEP.latencyActive=false;
-if(G.mode==='solo')$('#combatPanel')?.classList.remove('show');
-eepSendQuestion();}},1000);
-// Bots jouent des cartes si c'est le tour du joueur humain
+  if(G.mode==='solo'&&$('combatTimer'))$('combatTimer').textContent=EEP.latencyTimer+'s';
+  else $('latencyTimer').textContent=EEP.latencyTimer;
+  mpBroadcast({type:'latencyTick',t:EEP.latencyTimer});
+  if(EEP.latencyTimer<=0){
+    clearInterval(EEP.latencyInt);EEP.latencyActive=false;
+    if(G.mode==='solo')$('#combatPanel')?.classList.remove('show');
+    _eepSendNextQuestion();}},1000);
+// Bots : UNE SEULE carte par question, dossier scellé N+2
 if(G.mode==='solo'&&isHumanCand){soloBotAttack();}}
+
+// ── Envoi de la prochaine question (async pour attendre l'IA si besoin) ──
+async function _eepSendNextQuestion(){
+  // Récupérer la question (potentiellement attendre l'IA)
+  if(EEP._aiStream){
+    const q=await _getNextEEPQuestion();
+    if(!q){eepEndCandidate();return;}
+    // Injecter la question dans le tableau EEP.questions pour compatibilité
+    if(!EEP.questions[EEP.questionIdx])EEP.questions[EEP.questionIdx]=q;
+    else EEP.questions[EEP.questionIdx]=q;}
+  eepSendQuestion();}
 
 // Rendu de l'UI de combat (panneau latence solo)
 function _updCombatUI(cand,isHumanCand){
@@ -3544,13 +3481,9 @@ bots.forEach(bot=>{
 // Jouer une carte pendant la latence en solo
 // ── Garder soloPlayCard sans animation (appelé par anim + directement) ──
 function soloPlayCard(cardIdx){
-if(!EEP.latencyActive&&!EEP.questionActive)return;
+if(!EEP.latencyActive)return;
 const player=EEP.players.find(p=>p.id===_SOLO_PLAYER_PID);
 if(!player||cardIdx<0||cardIdx>=player.cards.length)return;
-// During question phase, saboteurs can only play 1 card
-if(EEP.questionActive&&!EEP.latencyActive){
-  if(EEP._questionPlayed?.has(_SOLO_PLAYER_PID))return;
-  EEP._questionPlayed?.add(_SOLO_PLAYER_PID);}
 const card=player.cards.splice(cardIdx,1)[0];
 // Sync G.cards
 const gi=G.cards.findIndex(c=>c.id===card.id&&c.name===card.name);
@@ -3574,52 +3507,15 @@ updBufferUI();_updSoloHandBar();
 // Flash vert sur la colonne N+2 de la timeline
 const n2=$('tlStack2');if(n2){n2.style.transition='none';n2.style.background='rgba(212,168,50,.15)';setTimeout(()=>{n2.style.background='';},400);}}
 
-// Bots attaquent le joueur humain pendant sa latence
-function soloBotAttack(){
-const bots=EEP.players.filter(p=>!p.isHuman&&p.cards&&p.cards.length>0);
-bots.forEach(bot=>{
-  if(Math.random()>0.25)return;// 25% chance
-  const cl=CEO_CL[bot.classId];
-  // IA par classe
-  let chosenIdx=-1;
-  if(cl.id==='requin'){// Requin: joue Sniper en priorité
-    chosenIdx=bot.cards.findIndex(c=>c.type==='sniper');
-    if(chosenIdx<0)chosenIdx=bot.cards.findIndex(c=>c.cat==='attack');}
-  else if(cl.id==='analyste'){// Analyste: attend Q5+ pour brouiller
-    if(EEP.questionIdx>=4){chosenIdx=bot.cards.findIndex(c=>c.type==='brouillage');}
-    if(chosenIdx<0&&EEP.questionIdx>=7)chosenIdx=bot.cards.findIndex(c=>c.cat==='attack');}
-  else{// Garant: défensif, attaque peu
-    if(Math.random()>0.5)chosenIdx=bot.cards.findIndex(c=>c.cat==='attack');}
-  if(chosenIdx<0||chosenIdx>=bot.cards.length)return;
-  const card=bot.cards.splice(chosenIdx,1)[0];
-  const delay=500+Math.random()*3000;
-  setTimeout(()=>{
-    if(!EEP.latencyActive)return;
-    EEP.buffer.push({card,fromPid:bot.id,fromName:bot.name,triggersAt:EEP.questionIdx+2,revealed:false});
-    $('gTicker').textContent=`${bot.icon||'🤖'} ${bot.name} (${cl.name}) lance ${card.icon} ${card.name} sur vous!`;
-    updBufferUI();},delay);});}
-
-// Bots jouent 1 carte chacun PENDANT la question (dossier scellé 🔒)
-function soloBotQuestionAttack(){
-const cand=EEP.players[EEP.candidateIdx];
-if(cand.id===_SOLO_PLAYER_PID)return;// pas d'attaque quand c'est le joueur humain
-const bots=EEP.players.filter(p=>!p.isHuman&&p.cards?.length>0&&p.id!==cand.id);
-bots.forEach(bot=>{
-  if(Math.random()>0.35)return;// 35% chance per bot
-  if(EEP._questionPlayed?.has(bot.id))return;// déjà joué
-  const atkIdx=bot.cards.findIndex(c=>c.cat==='attack');
-  if(atkIdx<0)return;
-  EEP._questionPlayed?.add(bot.id);
-  const card=bot.cards.splice(atkIdx,1)[0];
-  const delay=2000+Math.random()*5000;
-  setTimeout(()=>{
-    if(!EEP.questionActive)return;
-    EEP.buffer.push({card,fromPid:bot.id,fromName:bot.name,triggersAt:EEP.questionIdx+2,revealed:false,sealed:true});
-    $('gTicker').textContent=`🔒 ${bot.name} pose un Dossier Scellé sur N+2!`;
-    updBufferUI();_updSoloHandBar();},delay);});}
 
 function eepSendQuestion(){
-if(EEP.questionIdx>=EEP.questions.length){eepEndCandidate();return;}
+// Pour les thèmes IA, les questions arrivent en streaming via _eepSendNextQuestion
+// Cette fonction est appelée après que la question a été récupérée
+if(!EEP.questions||EEP.questionIdx>=EEP.questions.length){
+  if(EEP._aiStream&&EEP._aiStream.generated<EEP._aiStream.total){
+    // Questions IA pas encore toutes arrivées — déclencher via async
+    _eepSendNextQuestion();return;}
+  eepEndCandidate();return;}
 
 // ═══════════════════════════════════════════════════════════
 // RÉSOLUTION COMBAT — PRIORITÉ DÉFENSIVE
@@ -3747,19 +3643,14 @@ let time=EEP.timerBase;
 if(EEP.activeEffects.includes('brouillage'))time=Math.max(8,time-15);
 if(mq.some(m=>m.type==='mult_timer')||EEP._comboEffect?.effect==='overclock')time+=15;
 EEP.timer=time;EEP.answered=false;EEP.currentTarget=targetPid;
-EEP.questionActive=true;// saboteurs can play 1 card during question
-EEP._questionPlayed=new Set();// track who already played during this question
 $('gTimer').textContent=time+'s';$('gTimer').className='timer-ceo';
 if(EEP.timerInt)clearInterval(EEP.timerInt);
 EEP.timerInt=setInterval(()=>{EEP.timer--;$('gTimer').textContent=EEP.timer+'s';
 if(EEP.timer<=10)$('gTimer').className='timer-ceo crit';
-if(EEP.timer<=0){clearInterval(EEP.timerInt);EEP.questionActive=false;if(!EEP.answered){EEP.answered=true;eepProcessAnswer(null,false);}}},1000);
-// Bots saboteurs jouent 1 carte pendant la question (dossier scellé)
-if(G.mode==='solo'&&cand.id!==_SOLO_PLAYER_PID){soloBotQuestionAttack();}_updSoloHandBar();}
+if(EEP.timer<=0){clearInterval(EEP.timerInt);if(!EEP.answered){EEP.answered=true;eepProcessAnswer(null,false);}}},1000);}
 
 function eepProcessAnswer(fromPid,correct){
 if(EEP.timerInt)clearInterval(EEP.timerInt);
-EEP.questionActive=false;
 const cand=EEP.players[EEP.candidateIdx];
 const isSniped=EEP.currentTarget&&EEP.currentTarget!==cand.id;
 const scorer=isSniped?EEP.players.find(p=>p.id===EEP.currentTarget):cand;
@@ -3793,6 +3684,9 @@ const mx=scorer.gaugeCP.length?Math.max(...scorer.gaugeCP):0;if(scorer.gauge<mx)
 const cmx=cand.gaugeCP.length?Math.max(...cand.gaugeCP):0;if(cand.gauge<cmx)cand.gauge=cmx;
 EEP.currentTarget=null;
 updGaugeFromEEP(cand);
+// ── GLaDOS réagit à chaque réponse (non-bloquant) ───────────────────
+const th=THEMES.find(t=>t.id===EEP.theme);
+_gladosComment(correct,th?.name||EEP.theme,EEP.questions[EEP.questionIdx]?.q||'');
 // Show result on TV
 const q=EEP.questions[EEP.questionIdx];const isQCM=q.c!==undefined;
 if(isQCM){$('qChoices').querySelectorAll('.cbox-ceo').forEach((b,i)=>b.classList.add(i===q.a?'ok':'ko'));}
@@ -3805,13 +3699,26 @@ setTimeout(()=>{if(EEP.questionIdx>=EEP.questions.length)eepEndCandidate();else 
 
 function eepEndCandidate(){
 const cand=EEP.players[EEP.candidateIdx];
-// ── Révélation par paliers du Dossier Scellé ─────────────────────────
+// ── Révélation par paliers du Dossier Scellé (3 niveaux) ─────────────
+// Palier 0 : 🔒 Scellé — rien de visible
+// Palier 1 : 📂 Genre du thème révélé (après 1 EEP)
+// Palier 2 : 🔓 Titre complet révélé (après 2 EEP)
+// Palier 3 : 📤 Vente finale disponible (après 3 EEP)
 if(G.bourseSession?.phase==='masked'){
-  G.bourseSession.revealLevel=Math.min(2,(G.bourseSession.revealLevel||0)+1);
-  const rl=G.bourseSession.revealLevel;
-  if(rl===1)trackEEPEvent(`📮 Dossier Scellé: genre "${G.bourseSession.themeGenre}" révélé`);
-  else if(rl===2)trackEEPEvent(`📮 Dossier Scellé: ${G.bourseSession.themeIcon} ${G.bourseSession.themeName} révélé`);}
-// ── Succès EEP parfait ──────────────────────────────────────────────
+  const rl=(G.bourseSession.revealLevel||0)+1;
+  G.bourseSession.revealLevel=Math.min(3,rl);
+  if(rl===1){
+    trackEEPEvent(`📂 Dossier Scellé — Palier 1: Genre "${G.bourseSession.themeGenre}" révélé`);
+    $('gTicker').textContent=`📂 Dossier Scellé: genre "${G.bourseSession.themeGenre}" révélé!`;}
+  else if(rl===2){
+    trackEEPEvent(`🔓 Dossier Scellé — Palier 2: Titre "${G.bourseSession.themeName}" dévoilé`);
+    $('gTicker').textContent=`🔓 Dossier Scellé: ${G.bourseSession.themeIcon} ${G.bourseSession.themeName} dévoilé!`;
+    // Bots réévaluent leurs offres
+    _botsBid('revealed');}
+  else if(rl>=3){
+    trackEEPEvent(`📤 Dossier Scellé — Palier 3: vente finale disponible`);
+    $('gTicker').textContent=`📤 Dossier Scellé: vente finale disponible au prochain inter-tour!`;
+    G.bourseSession.phase='revealed';}// prêt pour accepter/conclure}
 if(cand.correct>=EEP.questions.length){ceoAchvIncrement(cand.id,'flawless_eep');}
 // ── Rapport EEP (inspiré showDayRecap) ─────────────────────────────
 // DETTE: Saisie du C.E.O. si dette impayée
@@ -3824,7 +3731,7 @@ mpTo(cand.id,{type:'debtSaisie',gauge:cand.gauge});
 $('gTicker').textContent=`🏦 SAISIE! ${cand.name} n'a pas remboursé. -15% jauge!`;}}
 // Draw new cards for everyone based on class
 EEP.players.forEach(p=>{const cl=CEO_CL[p.classId];const draw=cl?.stats.cardD||1;const ck=Object.keys(SAB_CARDS);for(let i=0;i<draw&&p.cards.length<6;i++)p.cards.push({...SAB_CARDS[pick(ck)]});
-mpTo(p.id,{type:'eepCandEnd',candidateName:cand.name,score:cand.correct,gauge:cand.gauge,cards:p.cards.map(c=>({id:c.id,name:c.name,icon:c.icon,desc:c.desc,cat:c.cat}))});});
+mpTo(p.id,{type:'eepCandEnd',candidateName:cand.name,score:cand.correct,gauge:cand.gauge,cards:p.cards.map(c=>({id:c.id,name:c.name,icon:c.icon,desc:c.desc}))});});
 // ── Feedback succès/échec EEP pour le joueur humain ─────────────────
 if(G.mode==='solo'){const isMe=cand.id===_SOLO_PLAYER_PID;if(isMe)showEEPFeedback(cand.correct>=5,Math.round(cand.gauge),G.flux);}
 // Show on TV
@@ -3875,7 +3782,6 @@ if(tlGrid){
   (EEP.buffer||[]).forEach(b=>{const rel=b.triggersAt-qi;if(rel>=0&&rel<=2)slots[rel].push(b);});
   [0,1,2].forEach(rel=>{
     const hdr=$(`tlCol${rel}`)?.querySelector('.tl-col-hdr');
-    const stack=$(`tlStack${rel}`);
     if(!stack)return;
     const items=slots[rel];
     const attacks=items.filter(b=>b.card.cat==='attack');
@@ -3892,23 +3798,21 @@ if(tlGrid){
     if(!items.length){stack.innerHTML='<div style="font-size:9px;color:var(--muted);padding:4px;">—</div>';return;}
     attacks.forEach((b,i)=>{
       const isBlocked=i<blocked;
-      const isSealed=b.sealed&&!b.revealed;
       const chip=document.createElement('div');
+      // Dossier scellé : afficher 🔒 si bot et non encore révélé
+      const isSealed=b.sealed&&!b.revealed&&b.fromPid!==_SOLO_PLAYER_PID;
       chip.className='tl-chip '+(b.revealed?'blk':isBlocked?'def':'atk');
       if(isSealed){
-        chip.innerHTML=`🔒<span style="font-size:7px;color:var(--orange);">SCELLÉ</span>`;
-      }else{
+        chip.innerHTML=`🔒<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;opacity:.6;">N+${b.triggersAt-(EEP.questionIdx||0)}</span>`;
+        chip.title=`Dossier scellé — Q${b.triggersAt+1}`;}
+      else{
         chip.innerHTML=`${b.card.icon}<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;">${b.fromName.split(' ').pop()}</span>`;}
       if(isBlocked){const s=document.createElement('div');s.className='d-strike';chip.style.position='relative';chip.appendChild(s);}
       stack.appendChild(chip);});
     items.filter(b=>b.card.cat!=='attack').forEach(b=>{
-      const isSealed=b.sealed&&!b.revealed;
       const chip=document.createElement('div');
       chip.className='tl-chip '+(b.revealed?'blk':'hidden-chip');
-      if(isSealed){
-        chip.innerHTML=`🔒<span style="font-size:7px;color:var(--orange);">SCELLÉ</span>`;
-      }else{
-        chip.innerHTML=`${b.card.icon}<span style="font-size:7px;">${b.card.name.substring(0,6)}</span>`;}
+      chip.innerHTML=`${b.card.icon}<span style="font-size:7px;">${b.card.name.substring(0,6)}</span>`;
       stack.appendChild(chip);});});
 }else if(legacyBar){
   legacyBar.style.display='';
@@ -4149,7 +4053,7 @@ MP.hostConn.on('open',()=>{MP.hostConn.send({type:'join',name});$('jStatus').tex
 MP.hostConn.on('data',d=>playerRx(d));MP.hostConn.on('error',e=>{$('jStatus').textContent='❌'+e;$('jStatus').style.color='var(--red)';});});
 MP.peer.on('error',e=>{$('jStatus').textContent='❌'+e.type;$('jStatus').style.color='var(--red)';});}
 
-let P_isCandidate=false,P_cards=[],P_flux=0,P_debt=0,P_isSeller=false,P_classId='',P_bourseThemes=[],P_bourseData=null,P_bourseBid=0,P_buffer=[],P_latencyActive=false;
+let P_isCandidate=false,P_cards=[],P_flux=0,P_debt=0,P_isSeller=false,P_classId='',P_bourseThemes=[],P_bourseData=null,P_bourseBid=0;
 
 function playerRx(d){
 if(d.type==='joined'){showScreen('player');$('pBadge').textContent=MP.myName;pLog('✅ Salle '+d.roomCode);$('pQ').innerHTML='<div style="color:var(--muted);">En attente...</div>';$('pAns').innerHTML='';}
@@ -4161,35 +4065,25 @@ else if(d.type==='s0End'){pLog('🏆 Sprint fini!');showPDraft(d);}
 else if(d.type==='draftUpdate'){if(MP._draftData)showPDraft({...MP._draftData,slots:d.slots});}
 else if(d.type==='draftConfirm'){pLog('✅ Passage #'+d.slot);}
 // GAME
-else if(d.type==='gameStart'){pLog('🏢 Partie lancée!');$('mobHud').style.display='';_updMobileHand();}
+else if(d.type==='gameStart'){pLog('🏢 Partie lancée!');}
 else if(d.type==='eepStart'){pLog(`📋 EEP: ${d.candidateName}`);$('pQ').innerHTML=`<div style="color:var(--gold);font-size:12px;">📋 Évaluation de ${d.candidateName}</div>`;}
-else if(d.type==='eepRole'){P_isCandidate=d.isCandidate;P_cards=d.cards||[];P_latencyActive=false;$('pAns').innerHTML=P_isCandidate?'<div style="text-align:center;color:var(--gold);font-size:11px;">🎯 VOUS ÊTES LE CANDIDAT</div>':'';$('mobHud').style.display='';_updMobileHand();}
-// BRIEFING PHASE — candidat prépare ses défenses
-else if(d.type==='briefingStart'){
-P_latencyActive=true;
-$('pTimer').textContent='📋 '+d.duration;
-if(P_isCandidate){
-$('pQ').innerHTML='<div style="color:var(--cyan);font-size:12px;font-weight:700;margin-bottom:4px;">📋 BRIEFING — PRÉPAREZ VOS DÉFENSES</div><div style="font-size:10px;color:var(--muted);">Posez vos cartes défense/multiplicateur gratuitement.</div>';}
-else{$('pQ').innerHTML='<div style="color:var(--muted);font-size:11px;">📋 Le candidat se prépare...</div>';}
-_updMobileHand();}
+else if(d.type==='eepRole'){P_isCandidate=d.isCandidate;P_cards=d.cards||[];$('pAns').innerHTML=P_isCandidate?'<div style="text-align:center;color:var(--gold);font-size:11px;">🎯 VOUS ÊTES LE CANDIDAT</div>':'';}
 // LATENCY WINDOW — saboteurs can play cards
 else if(d.type==='latencyStart'){
-P_latencyActive=true;
 $('pTimer').textContent='⏳'+d.duration;
 if(!P_isCandidate){
 let html='<div style="color:var(--orange);font-size:12px;font-weight:700;margin-bottom:4px;">⏳ FENÊTRE DE LATENCE</div>';
-if(P_cards.length>0)html+='<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Jouez vos dossiers depuis la main!</div>';
+if(P_cards.length>0)html+='<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Jouez vos dossiers!</div>';
 if(P_debt===0)html+='<button class="btn sm or" style="margin-bottom:6px;" onclick="requestLoan()">🏦 Solliciter un Prêt (+50⚡)</button>';
 else html+='<div style="font-size:9px;color:var(--red);margin-bottom:4px;">💀 Dette: '+P_debt+'⚡</div>';
-$('pQ').innerHTML=html;}
-else{$('pQ').innerHTML='<div style="color:var(--muted);font-size:11px;">⏳ Préparez-vous...</div>';}
-_updMobileHand();}
+$('pQ').innerHTML=html;
+$('pHand').innerHTML=P_cards.map((c,i)=>`<div class="sab-card" onclick="pPlayCard(${i})"><div class="sc-icon">${c.icon}</div><div class="sc-name">${c.name}</div></div>`).join('');}
+else{$('pQ').innerHTML='<div style="color:var(--muted);font-size:11px;">⏳ Préparez-vous...</div>';}}
 else if(d.type==='latencyTick'){$('pTimer').textContent='⏳'+d.t;}
-else if(d.type==='cardPlayed'){if(d.cards){P_cards=d.cards;}else{const idx=P_cards.findIndex(c=>c.name===d.cardName);if(idx>=0)P_cards.splice(idx,1);}pLog('🃏 '+d.cardName+' chargé!');_updMobileHand();}
-else if(d.type==='cardTrashed'){if(d.cards){P_cards=d.cards;}else{const idx=P_cards.findIndex(c=>c.name===d.cardName);if(idx>=0)P_cards.splice(idx,1);}pLog('🗑️ '+d.cardName+' jetée');_updMobileHand();}
+else if(d.type==='cardPlayed'){const idx=P_cards.findIndex(c=>c.name===d.cardName);if(idx>=0)P_cards.splice(idx,1);$('pHand').innerHTML='';pLog('🃏 '+d.cardName+' chargé!');}
 // QUESTION
 else if(d.type==='eepQuestion'){
-P_latencyActive=false;_updMobileHand();
+$('pHand').innerHTML='';
 // Brouillage : seulement sur la cible (canAnswer)
 const hasBrouillage=d.effects&&d.effects.includes('brouillage')&&d.canAnswer;
 const hasPression=d.effects&&d.effects.includes('pression')&&d.canAnswer;
@@ -4230,7 +4124,7 @@ else{
     </div>`;}}}
 else if(d.type==='eepSniper'){pLog('🎯 SNIPER! '+d.thiefName+' vole la question!');}
 else if(d.type==='eepResult'){pLog(d.correct?'✅':'❌');$('pGauge').style.width=d.gauge+'%';$('pAns').innerHTML='';$('pQ').className='mob-q';}
-else if(d.type==='eepCandEnd'){P_cards=d.cards||[];P_latencyActive=false;pLog(`📊 ${d.candidateName}: ${d.score} — Jauge: ${d.gauge}%`);_updMobileHand();}
+else if(d.type==='eepCandEnd'){P_cards=d.cards||[];pLog(`📊 ${d.candidateName}: ${d.score} — Jauge: ${d.gauge}%`);}
 // DETTE
 else if(d.type==='loanGranted'){P_flux=d.flux;P_debt=d.debt;$('pFlux').textContent='⚡'+d.flux+' (💀'+d.debt+')';pLog('🏦 Prêt accordé! +50⚡, dette: 75⚡');}
 else if(d.type==='loanDenied'){pLog('🏦 Prêt refusé: '+d.reason);}
@@ -4272,110 +4166,11 @@ $('pQ').innerHTML=`<div style="color:var(--orange);font-size:13px;font-weight:70
 P_bourseBid=0;
 $('pAns').innerHTML=`<input type="number" id="bidAmt" class="inp" placeholder="Montant ⚡" min="${d.newPrice}" style="font-size:14px;letter-spacing:1px;"><button class="btn sm gold" style="width:100%;margin-top:4px;" onclick="pBourseBid()">✅ RE-CONFIRMER OFFRE</button>`;}
 else if(d.type==='bourseTick'){/* timer update, could display */}
-else if(d.type==='bourseEnd'){P_isSeller=false;P_bourseBid=0;$('pAns').innerHTML='';$('pQ').innerHTML='<div style="color:var(--muted);">Prochain EEP...</div>';_updMobileHand();}
-else if(d.type==='bufferUpdate'){P_buffer=d.buffer||[];_updMobileHand();}
+else if(d.type==='bourseEnd'){P_isSeller=false;P_bourseBid=0;$('pAns').innerHTML='';$('pQ').innerHTML='<div style="color:var(--muted);">Prochain EEP...</div>';}
+else if(d.type==='bufferUpdate'){/* */}
 else if(d.type==='scoreboard'){pLog('📊 '+d.players.map(p=>`${p.name}:${Math.round(p.gauge)}%`).join(' '));}}
 
 function pPlayCard(idx){if(idx<0||idx>=P_cards.length)return;MP.hostConn.send({type:'playCard',cardIdx:idx});}
-
-// ── MOBILE HUD: Animation carte jouée — style TCG ───────────────────────
-function pPlayCardAnim(idx,el){
-  if(!P_latencyActive||idx<0||idx>=P_cards.length)return;
-  const card=P_cards[idx];
-  const rect=el.getBoundingClientRect();
-  // Clone fantôme volant
-  const clone=document.createElement('div');
-  clone.className='mob-card-flying';
-  clone.style.cssText=`left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;`;
-  clone.textContent=card.icon;
-  document.body.appendChild(clone);
-  // Feedback visuel immédiat
-  el.style.opacity='0.15';el.style.transform='scale(.85)';
-  // Envoyer après début anim
-  setTimeout(()=>{pPlayCard(idx);},180);
-  setTimeout(()=>{clone.remove();},550);
-}
-
-// ── MOBILE HUD: Jeter une carte ──────────────────────────────────────────
-let P_trashMode=false;
-function pTrashCard(){
-  if(P_trashMode){P_trashMode=false;_updMobileHand();pLog('🗑️ Annulé');return;}
-  if(!P_cards.length){pLog('🗑️ Aucune carte');return;}
-  P_trashMode=true;_updMobileHand();
-  pLog('🗑️ Sélectionnez une carte à jeter');}
-function pDoTrash(idx){
-  if(idx<0||idx>=P_cards.length)return;
-  const c=P_cards.splice(idx,1)[0];
-  P_trashMode=false;
-  pLog('🗑️ '+c.name+' jetée');
-  MP.hostConn.send({type:'trashCard',cardIdx:idx});
-  _updMobileHand();}
-
-// ── MOBILE HUD: Render permanent — style Duel Links / Pokémon TCG ──────
-function _updMobileHand(){
-  const catCls={attack:'atk',defense:'def',multiplier:'mul',intel:'intel'};
-  const catColors={attack:'#ef4444',defense:'#22c55e',multiplier:'#d4a832',intel:'#22d3ee'};
-  const catLabels={attack:'ATK',defense:'DEF',multiplier:'MUL',intel:'INT'};
-  const canAct=P_latencyActive&&!P_isCandidate;
-
-  // ── 5 HAND SLOTS ─────────────────────────────────────────────
-  for(let i=0;i<5;i++){
-    const el=$(`mSlot${i}`);if(!el)continue;
-    const c=P_cards[i];
-    if(c){
-      const catClass=catCls[c.cat]||'';
-      const col=catColors[c.cat]||'#4a5268';
-      const playable=canAct;
-      const trashing=P_trashMode;
-      el.className=`mh-slot filled ${catClass} ${playable?'playable':''} ${trashing?'playable':''}`;
-      el.style.cursor=(playable||trashing)?'pointer':'default';
-      if(trashing){
-        el.style.borderColor='var(--red)';
-        el.style.boxShadow='0 0 10px rgba(239,68,68,.4)';
-      }
-      el.innerHTML=`
-        <div class="ms-cat" style="color:${col};">${catLabels[c.cat]||''}</div>
-        <div class="ms-icon">${c.icon}</div>
-        <div class="ms-name">${c.name}</div>
-        ${trashing?'<div class="ms-play" style="opacity:1;color:var(--red);">🗑️ JETER</div>':
-          playable?'<div class="ms-play">▶ JOUER</div>':''}`;
-      if(trashing){el.onclick=()=>pDoTrash(i);}
-      else if(playable){el.onclick=()=>pPlayCardAnim(i,el);}
-      else{el.onclick=null;}
-    }else{
-      el.className='mh-slot';
-      el.innerHTML='<div class="ms-empty">—</div>';
-      el.onclick=null;
-      el.style.borderColor='';el.style.boxShadow='';}}
-
-  // ── 3 BUFFER SLOTS (dossiers adverses) ────────────────────────
-  const bufSlice=(P_buffer||[]).slice(0,3);
-  for(let i=0;i<3;i++){
-    const el=$(`mRSlot${i}`);if(!el)continue;
-    const b=bufSlice[i];
-    if(b){
-      const isAtk=b.cat==='attack';
-      el.className=`mh-slot reserve filled ${isAtk?'atk':''}`;
-      el.innerHTML=`
-        <div class="ms-cat" style="color:${isAtk?'#ef4444':'#4a5268'};">N+${b.triggersAt||'?'}</div>
-        <div class="ms-icon">${b.icon||'📁'}</div>
-        <div class="ms-name" style="font-size:4px;">${b.hidden?'???':b.fromName||''}</div>`;
-    }else{
-      el.className='mh-slot reserve';
-      el.innerHTML='<div class="ms-empty">—</div>';}}
-
-  // ── 2 GEAR SLOTS (placeholder — gear non supporté en MP pour l'instant)
-  for(let i=0;i<2;i++){
-    const el=$(`mGSlot${i}`);if(!el)continue;
-    el.className='mh-slot gear';
-    el.innerHTML='<div class="ms-empty" style="color:rgba(168,85,247,.15);font-size:7px;">GEAR</div>';}
-
-  // ── 3 PORTFOLIO SLOTS (placeholder) ─────────────────────────
-  for(let i=0;i<3;i++){
-    const el=$(`mPSlot${i}`);if(!el)continue;
-    el.className='mh-slot theme';
-    el.innerHTML='<div class="ms-empty" style="color:rgba(34,211,238,.12);font-size:6px;">THÈME</div>';}
-}
 function requestLoan(){if(P_debt>0){pLog('🏦 Dette en cours!');return;}MP.hostConn.send({type:'requestLoan'});}
 // BOURSE actions
 function pBourseSell(themeId){P_isSeller=true;MP.hostConn.send({type:'bourseSell',themeId});}
@@ -4414,15 +4209,70 @@ function submitSig(){const c=$('sigC');if(!c)return;const d=c.getContext('2d').g
 if(px<30){pLog('⚠️ Signez!');return;}MP.hostConn.send({type:'signature'});pLog('✍️ Signé!');}
 
 // DRAFT mode
-function showPDraft(d){MP._draftData=d;const myRank=d.ranking?.find(r=>r.pid===MP.peer?.id);
-$('pQ').innerHTML=`<div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:4px;">🏆 Rang: #${myRank?.rank||'?'} (${myRank?.score||0} 📝)</div><div style="font-size:10px;color:var(--muted);margin-bottom:8px;">Choisissez votre classe puis votre ordre de passage.</div>`;
-let html='<div style="margin-bottom:8px;">'+Object.values(CEO_CL).map(cl=>`<button class="mob-cb" style="margin-bottom:3px;display:block;width:100%;" onclick="pDraftClass('${cl.id}')">${cl.icon} ${cl.name} — ${cl.role}</button>`).join('')+'</div>';
-html+='<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Ordre de passage:</div><div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;">';
-const slots=d.slots||{};const n=d.total||d.ranking?.length||10;
-for(let i=1;i<=n;i++){const taken=slots[String(i)];const mine=taken===MP.peer?.id;html+=`<button class="btn sm ${mine?'gold':taken?'':'cy'}" ${taken&&!mine?'disabled':''} onclick="pDraftPick(${i})" style="min-width:36px;">${i}</button>`;}
-html+='</div>';$('pAns').innerHTML=html;}
-function pDraftClass(id){P_classId=id;MP.hostConn.send({type:'classSel',classId:id});$('pBadge').textContent=CEO_CL[id].icon+' '+MP.myName;pLog('🏢 '+CEO_CL[id].name);}
-function pDraftPick(slot){MP.hostConn.send({type:'draftPick',slot:String(slot)});}
+function showPDraft(d){
+MP._draftData=d;
+const myRank=d.ranking?.find(r=>r.pid===MP.peer?.id);
+const myRankNum=myRank?.rank||99;
+const slots=d.slots||{};
+const n=d.total||d.ranking?.length||10;
+const mySlot=Object.entries(slots).find(([k,v])=>v===MP.peer?.id)?.[0];
+// Calcul du tour de draft : le joueur #1 choisit en premier, etc.
+const draftTurn=Object.keys(slots).length+1;// combien de slots déjà pris
+const isMyTurn=myRankNum===draftTurn&&!mySlot;
+
+$('pQ').innerHTML=`
+<div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:3px;">🏆 Rang: #${myRankNum} · ${myRank?.score||0} contrats signés</div>
+<div style="font-size:9px;color:var(--muted);margin-bottom:6px;">
+  ${mySlot?`✅ Passage #${mySlot} confirmé`:(isMyTurn?'🎯 À VOUS DE CHOISIR':'⏳ Attendez votre tour (rang #'+myRankNum+')')}
+</div>`;
+
+// Classes
+let html='';
+if(!P_classId){
+  html+='<div style="font-size:9px;color:var(--gold);font-family:\'Orbitron\',monospace;margin-bottom:5px;letter-spacing:1px;">① CHOISISSEZ VOTRE CLASSE</div>';
+  html+='<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;">';
+  html+=Object.values(CEO_CL).map(cl=>`
+    <button class="mob-cb" style="display:flex;align-items:center;gap:8px;padding:8px 10px;" onclick="pDraftClass('${cl.id}')">
+      <span style="font-size:20px;">${cl.icon}</span>
+      <div style="text-align:left;"><div style="font-size:10px;font-weight:700;">${cl.name}</div>
+      <div style="font-size:8px;color:var(--muted);">${cl.role}</div></div>
+    </button>`).join('');
+  html+='</div>';}
+else{
+  const cl=CEO_CL[P_classId];
+  html+=`<div style="background:rgba(212,168,50,.1);border:1px solid var(--gold-dim);border-radius:5px;padding:6px 10px;margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+    <span style="font-size:22px;">${cl.icon}</span>
+    <div><div style="font-size:10px;font-weight:700;color:var(--gold);">${cl.name}</div>
+    <div style="font-size:8px;color:var(--muted);">${cl.role}</div></div>
+    <button class="btn sm rd" style="margin-left:auto;" onclick="pDraftClass(null)">Changer</button>
+  </div>`;}
+
+// Slots de passage (uniquement si classe choisie)
+if(P_classId){
+  html+='<div style="font-size:9px;color:var(--gold);font-family:\'Orbitron\',monospace;margin-bottom:5px;letter-spacing:1px;">② CHOISISSEZ VOTRE ORDRE</div>';
+  html+='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:6px;">';
+  for(let i=1;i<=n;i++){
+    const taken=slots[String(i)];
+    const mine=taken===MP.peer?.id;
+    const takenByOther=taken&&!mine;
+    const takerName=takenByOther?d.ranking?.find(r=>r.pid===taken)?.name?.split(' ')[0]||'?':'';
+    html+=`<button class="btn sm${mine?' gold':takenByOther?'':isMyTurn?' cy':''}"
+      ${takenByOther||(!isMyTurn&&!mine)?'disabled':''}
+      onclick="${mine?'':'pDraftPick('+i+')'}"
+      style="padding:6px 2px;font-size:9px;${mine?'pointer-events:none;':''}" title="${takenByOther?'Pris par '+takerName:mine?'Votre slot':''}">
+      #${i}${takenByOther?`<br><span style="font-size:7px;opacity:.6;">${takerName}</span>`:''}${mine?'✓':''}
+    </button>`;}
+  html+='</div>';
+  if(!isMyTurn&&!mySlot){
+    html+=`<div style="font-size:9px;color:var(--muted);text-align:center;padding:4px 0;">⏳ Rang #${myRankNum} — attendez que les ${myRankNum-1} premiers aient choisi</div>`;}}
+
+$('pAns').innerHTML=html;}
+
+function pDraftClass(id){
+  P_classId=id;
+  if(id){MP.hostConn.send({type:'classSel',classId:id});$('pBadge').textContent=CEO_CL[id].icon+' '+MP.myName;pLog('🏢 '+CEO_CL[id].name);}
+  if(MP._draftData)showPDraft(MP._draftData);}
+function pDraftPick(slot){MP.hostConn.send({type:'draftPick',slot:String(slot)});pLog('📋 Passage #'+slot+' sélectionné');}
 
 function pLog(m){const e=$('pLog'),d=document.createElement('div');d.textContent=m;d.style.marginBottom='1px';e.prepend(d);while(e.children.length>20)e.removeChild(e.lastChild);}
 
