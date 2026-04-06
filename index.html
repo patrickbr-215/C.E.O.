@@ -446,7 +446,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div class="sep" style="margin-top:6px;"></div>
 <button class="btn sm" onclick="showOv('ovCodex')" style="width:100%;border-color:var(--muted);color:var(--muted);">📖 CODEX — RÈGLES & CLASSES</button>
 </div>
-<div style="margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:2px;">v4.0 — INTEGRATION SPRINT · EEP PROTOCOL · PRIORITÉ DÉFENSIVE</div>
+<div style="margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:2px;">v5.1 — INTEGRATION SPRINT · EEP PROTOCOL · PRIORITÉ DÉFENSIVE</div>
 </div>
 <!-- CLASS SELECT (solo) -->
 <div id="classSelect" class="S" style="padding:12px;overflow-y:auto;"><div class="cs-title">🏢 DÉPARTEMENT</div><div class="class-grid-ceo" id="classGrid"></div>
@@ -1321,34 +1321,34 @@ La réponse correcte doit être à l'index "a" (entier 0-3). Les 4 choix doivent
   return q;}
 
 // ==================== BOSS CEO — NOTIFICATIONS CHAT ========================
-const BOSS_PERSONA='Tu es le C.E.O. tout-puissant du jeu C.E.O. — Capitalism: Eternal Optimization. Tu parles comme un patron tyrannique, sarcastique, condescendant, avec un humour noir corporate. Style: une phrase cinglante, jamais plus de 20 mots. Français uniquement. Sans guillemets.';
+const BOSS_PERSONA='Tu es le C.E.O. de la Firme dans le jeu C.E.O. — Capitalism: Eternal Optimization. Tu es une IA inspirée de GLaDOS : passif-agressive, cynique, hautaine, corporate jusqu\'au grotesque. Tu utilises du vocabulaire de manager impitoyable (synergie, KPI, licenciement, optimisation humaine, restructuration, downsizing, deliverables). Ne sois JAMAIS neutre. Chaque message contient 2-3 phrases. Ton humour est noir, condescendant, et toujours en français. Sans guillemets autour de ta réponse.';
 const BOSS_STATIC_WRONG=[
-  'Pathétique. Mon stagiaire de 12 ans aurait fait mieux.',
-  'Vous êtes viré. Enfin, pas encore. Mais mentalement, oui.',
-  'Mauvaise réponse. Je prends note pour votre dossier de licenciement.',
-  'Je suis le C.E.O. et même moi je suis gêné pour vous.',
-  'Votre incompétence est presque impressionnante. Presque.',
-  'Mon algorithme de recrutement vient de planter en vous voyant.',
+  'Fascinant. Votre taux de réussite vient d\'atteindre un nouveau plancher historique. Je vais devoir optimiser votre poste — c\'est-à-dire le supprimer.',
+  'Mauvaise réponse. J\'ai déjà transmis votre dossier au département de restructuration. Ils sont très efficaces pour les cas comme le vôtre.',
+  'Votre incompétence transcende les KPIs. Si la médiocrité était un indicateur de performance, vous seriez promu directeur général adjoint.',
+  'Erreur. Mes stagiaires non rémunérés font mieux, et eux au moins apportent le café. Votre valeur ajoutée tend vers le négatif.',
+  'Je prends note pour votre évaluation annuelle — qui sera aussi votre dernière. La synergie entre vous et la porte de sortie est optimale.',
+  'C\'est la réponse que vous avez choisie ? Vraiment ? Mon algorithme de recrutement vient de se mettre en arrêt maladie en vous voyant.',
 ];
 const BOSS_STATIC_RIGHT=[
-  'Correct. Ne vous habituez pas, la chute sera brutale.',
-  'Bien. Je vais quand même baisser votre prime de Noël.',
-  'Exact. Votre taux de survie passe de critique à médiocre.',
-  'Bonne réponse. Mon golden retriever aurait trouvé aussi.',
+  'Correct. Ne vous habituez pas à ce sentiment de compétence — les statistiques montrent qu\'il est temporaire dans votre cas.',
+  'Bien joué. Je vais quand même baisser votre prime de Noël, mais au moins vous gardez votre badge d\'accès. Pour l\'instant.',
+  'Exact. Votre taux de survie corporative passe de "licenciement imminent" à "sursis conditionnel". Profitez-en.',
+  'Bonne réponse. Mon golden retriever aurait trouvé aussi, mais lui au moins ne demande pas de RTT.',
 ];
 const BOSS_STATIC_INTRO=[
-  'Ah, un nouvel entretien. Essayez de ne pas me faire perdre mon temps.',
-  'Bienvenue dans mon bureau. Ici, la médiocrité est un motif de renvoi.',
-  'Vous pensez mériter ce poste ? Prouvez-le. Maintenant.',
+  'Ah, un nouvel entretien. J\'ai pris la liberté de pré-remplir votre lettre de licenciement — par optimisme, bien sûr. Montrez-moi que j\'ai eu tort.',
+  'Bienvenue dans mon bureau. Ici, la médiocrité est un motif de renvoi et l\'excellence est le strict minimum. Vos KPIs commencent maintenant.',
+  'Le comité de direction m\'a demandé de vous évaluer avec bienveillance. J\'ai refusé. Prouvez que vous méritez l\'oxygène de cet open space.',
 ];
 const BOSS_STATIC_OUTRO_BAD=[
-  'Lamentable. Même l\'imprimante a un meilleur taux de réussite.',
-  'Votre CV va directement dans la déchiqueteuse.',
-  'Sécurité ? Raccompagnez ce candidat vers la sortie.',
+  'Lamentable. Même l\'imprimante du 3ème étage a un meilleur taux de réussite. Je lance le processus de downsizing — en commençant par vous.',
+  'Votre CV va directement dans la déchiqueteuse. J\'ai optimisé le processus : il n\'y aura pas d\'entretien de sortie.',
+  'Sécurité ? Raccompagnez ce candidat vers la sortie. Et récupérez son badge, sa tasse, et ce qui reste de sa dignité professionnelle.',
 ];
 const BOSS_STATIC_OUTRO_GOOD=[
-  'Pas mal. Je suis presque impressionné. Presque.',
-  'Acceptable. Vous survivez un jour de plus dans cette entreprise.',
+  'Pas mal. Je suis presque impressionné. Presque. Votre dossier passe de "restructurable" à "potentiellement recyclable". C\'est un compliment.',
+  'Acceptable. Vous survivez un jour de plus dans cette entreprise. Ne prenez pas ça pour de la reconnaissance — c\'est de l\'indifférence calculée.',
 ];
 
 let _bossPending=false;
@@ -1373,9 +1373,9 @@ function _bossNotif(text){
   _bossBeep();
   const bubble=document.createElement('div');
   bubble.className='boss-bubble';
-  bubble.innerHTML=`<div class="boss-avi">💼</div><div class="boss-body"><div class="boss-name">Directeur Général</div><div class="boss-txt">${text}</div></div>`;
+  bubble.innerHTML=`<div class="boss-avi">💼</div><div class="boss-body"><div class="boss-name">C.E.O. de la Firme</div><div class="boss-txt">${text}</div></div>`;
   box.appendChild(bubble);
-  setTimeout(()=>{bubble.classList.add('out');setTimeout(()=>bubble.remove(),500);},9000);
+  setTimeout(()=>{bubble.classList.add('out');setTimeout(()=>bubble.remove(),500);},12000);
   // Also show on ticker for TV
   const tk=$('gTicker');
   if(tk)tk.innerHTML=`<span class="glados-tick">${text}</span>`;
@@ -1394,7 +1394,7 @@ async function _bossGemini(prompt){
 // Début d'entretien — systématique
 function bossIntro(candName,themeName){
   _bossNotif(pick(BOSS_STATIC_INTRO));
-  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" commence son entretien sur le thème "${themeName}". Génère une phrase d\'introduction menaçante.`).then(r=>{if(r&&r.length>5)_bossNotif(r);});
+  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" commence son entretien sur le thème "${themeName}". Génère 2-3 phrases d\'introduction menaçantes et corporate. Mentionne le thème avec mépris.`).then(r=>{if(r&&r.length>10)_bossNotif(r);});
 }
 
 // Fin d'entretien — systématique
@@ -1403,8 +1403,8 @@ function bossOutro(candName,score,total){
   if(pct<50)_bossNotif(pick(BOSS_STATIC_OUTRO_BAD));
   else if(pct>=80)_bossNotif(pick(BOSS_STATIC_OUTRO_GOOD));
   else _bossNotif(`${score}/${total}. Mouais. On a vu mieux.`);
-  const verdict=pct<50?'a lamentablement échoué':pct>=80?'a étonnamment bien réussi':'a fait un score médiocre';
-  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" ${verdict} avec ${score}/${total} (${pct}%). Commente en 15 mots max.`).then(r=>{if(r&&r.length>5)_bossNotif(r);});
+  const verdict=pct<50?'a lamentablement échoué':'a fait un score médiocre';
+  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" ${verdict} avec ${score}/${total} (${pct}%). Génère 2-3 phrases de jugement. Si < 50%: insulte et menace de licenciement. Si > 80%: sarcasme condescendant style "pas mal pour un humain".`).then(r=>{if(r&&r.length>10)_bossNotif(r);});
 }
 
 // Action inter-tour — 20% de chance
@@ -1412,13 +1412,13 @@ function bossMaybeComment(actionLabel){
   if(_bossPending||Math.random()>0.20)return;
   _bossPending=true;
   const statics=[
-    `Ah, ${actionLabel}. Intéressant choix stratégique. Enfin, "stratégique"...`,
-    `${actionLabel} ? J\'aurais fait l\'inverse. Mais bon, je suis le CEO.`,
-    `Notez bien : ${actionLabel} est rarement la bonne décision.`,
+    `Ah, ${actionLabel}. Un choix stratégique intéressant — si par "stratégique" on entend "désespéré". Vos KPIs de prise de décision sont en chute libre.`,
+    `${actionLabel} ? Mon analyse prédictive donne 73% de chances que ça se retourne contre vous. Mais ne vous inquiétez pas, je prends des notes pour votre dossier.`,
+    `Notez bien : ${actionLabel} est rarement la bonne décision. Mais dans votre cas, même la bonne décision serait probablement la mauvaise.`,
   ];
   _bossNotif(pick(statics));
-  _bossGemini(`${BOSS_PERSONA} Le joueur vient de faire: "${actionLabel}" pendant l\'inter-tour. Commente en 12 mots max.`).then(r=>{
-    if(r&&r.length>5)_bossNotif(r);_bossPending=false;
+  _bossGemini(`${BOSS_PERSONA} Le joueur vient de faire: "${actionLabel}" pendant l\'inter-tour. Commente en 2-3 phrases passives-agressives et corporate.`).then(r=>{
+    if(r&&r.length>10)_bossNotif(r);_bossPending=false;
   }).catch(()=>{_bossPending=false;});
 }
 
@@ -1885,10 +1885,9 @@ function addCustomTheme(){
 
 async function confirmThemeDraft(){
   closeOv('ovThemeDraft');
-  // Build THEME_DECK: player's 5 + 9 bots × 5 = 50
+  // Build GLOBAL_THEME_POOL: player's 5 + 9 bots × 5 = 50
   const playerThemes=[..._draftSelected];
   THEME_DECK=[...playerThemes];
-  // Bots pick 5 random themes each from remaining pool
   const botPool=STATIC_THEMES.filter(t=>!_draftSelected.has(t.id)).map(t=>t.id);
   for(let b=0;b<9;b++){
     shuffle(botPool);
@@ -1898,10 +1897,36 @@ async function confirmThemeDraft(){
   // Register AI themes
   if(!(G.aiThemeIds instanceof Set))G.aiThemeIds=new Set();
   playerThemes.forEach(id=>{const t=THEMES.find(x=>x.id===id);if(t?.aiGenerated)G.aiThemeIds.add(id);});
-  // Fetch AI icons for custom themes (non-blocking)
   const customNames=[...G.aiThemeIds].map(id=>THEMES.find(t=>t.id===id)?.name).filter(Boolean);
   if(customNames.length)fetchAIThemes(customNames).catch(()=>{});
-  // → Launch Sprint
+  // ── TV Announcement: Draft Protocol ──
+  showScreen('game');
+  $('qTheme').textContent='⚙️ PROTOCOLE DE DRAFT';
+  $('qNum').textContent='';
+  $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(12px,3vw,16px);color:var(--gold);letter-spacing:2px;">RECOUPLAGE DES ACTIFS</span>`;
+  $('qChoices').innerHTML=`<div style="max-width:300px;margin:12px auto;text-align:center;">
+    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">50 thèmes collectés — Distribution aléatoire en cours...</div>
+    <div style="background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:2px;height:5px;overflow:hidden;">
+      <div style="height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));animation:aiLoad 2s ease-in-out infinite;"></div>
+    </div></div>`;
+  $('gTimer').textContent='';
+  _bossNotif('Protocole de Draft activé. 50 thèmes en recouplage. Votre destin professionnel se joue maintenant — enfin, ce qu\'il en reste.');
+  // Distribute 2 themes per player from pool
+  const poolCopy=[...THEME_DECK];shuffle(poolCopy);
+  DRAFT.playerPortfolio={};
+  const qdbKeys=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);
+  // Human gets 2 from their picks (guaranteed playable)
+  const humanThemes=playerThemes.filter(id=>QDB[id]&&QDB[id].length>=3).slice(0,2);
+  if(humanThemes.length<2){const extra=qdbKeys.filter(k=>!humanThemes.includes(k));
+    while(humanThemes.length<2&&extra.length)humanThemes.push(extra.shift());}
+  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...humanThemes];
+  G.portfolio=[...humanThemes];
+  // Bots get 2 themes with QDB entries
+  BOT_NAMES.forEach((_,i)=>{
+    shuffle(qdbKeys);
+    DRAFT.playerPortfolio[`solo_bot_${i}`]=[qdbKeys[0]||'finance',qdbKeys[1]||'tech'];});
+  // Wait 3s for dramatic effect then launch Sprint
+  await _sleep(3000);
   _startSoloSprint();}
 
 // ── SIGNATURE SPRINT (60s) ──────────────────────────────────────────────
@@ -1913,7 +1938,7 @@ function _startSoloSprint(){
   $('sprintContractText').textContent=_sprintState.contracts[0]||'Clause de bonheur obligatoire';
   _initSprintCanvas();
   showOv('ovSoloSprint');
-  _bossNotif('Signez vite! Votre carrière en dépend. Enfin, pas vraiment.');
+  _bossNotif('Phase d\'intégration : Signature Sprint. Signez ces contrats absurdes le plus vite possible. Votre score déterminera votre rang dans la hiérarchie — et votre chance de survie.');
   // Start countdown
   _sprintState.int=setInterval(()=>{
     _sprintState.timer--;
@@ -2008,9 +2033,11 @@ function _showRewards(winner,playerRank,rankings){
       🃏 3 Cartes Gold: ${welcomeCards.map(c=>c.icon+' '+c.name).join(', ')}<br>
       ⚡ 50 Flux de départ${isWinner?' + 100 bonus':''}</div>${winnerBonus}`;
 
-  // 2 random themes from THEME_DECK for portfolio
-  shuffle(THEME_DECK);
-  const myThemes=THEME_DECK.splice(0,2);
+  // Use portfolio already distributed during confirmThemeDraft
+  const myThemes=[...(G.portfolio||[])];
+  if(myThemes.length<2){// Fallback if not set
+    const qk=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);shuffle(qk);
+    while(myThemes.length<2&&qk.length)myThemes.push(qk.shift());}
 
   // Nomination: winner picks first candidate (for solo, auto-pick)
   const nomineeIdx=isWinner?1:0;// winner nominates someone else (or self)
@@ -3680,24 +3707,33 @@ async function _getNextEEPQuestion(){
 // ── BRIEFING PHASE (10s avant Q1) ────────────────────────────────────
 function _eepBriefingPhase(cand){
   const isHumanCand=cand.id===_SOLO_PLAYER_PID;
-  EEP.latencyActive=true;// permet au candidat de jouer des cartes
+  EEP.latencyActive=true;
   let t=10;
-  // Afficher le countdown sur le ticker
-  $('gTicker').textContent=`📋 BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
+  // ── TV: INITIATIVE DÉFENSIVE ──
+  $('qTheme').textContent='🛡️ INITIATIVE DÉFENSIVE';
+  $('qNum').textContent=`${cand.name}`;
+  $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(11px,2.5vw,15px);color:var(--cyan);letter-spacing:2px;">PRÉPARATION DU CANDIDAT</span>`;
+  $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--muted);">Le candidat pose ses cartes défensives face cachée — ${t}s</div>`;
+  $('gTicker').textContent=`🛡️ BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
   $('gTimer').textContent=`${t}s`;
   if(isHumanCand&&G.mode==='solo'){_updSoloHandBar();}
+  // ── Avantage 1er candidat : échange gratuit de thème ──
+  if(EEP.candidateIdx===0&&isHumanCand&&cand.freeSwap){
+    cand.freeSwap=false;
+    _bossNotif('Avantage du premier candidat : vous pouvez échanger gratuitement un de vos thèmes. Profitez-en — c\'est la dernière fois que je suis généreux.');
+    // Open theme selection briefly (non-blocking, player can ignore)
+    setTimeout(()=>{if(EEP.latencyActive)openThemeSel();},500);}
   mpBroadcast({type:'briefingStart',candidateId:cand.id,duration:10});
-  // Boss CEO commente le début d'entretien
   bossIntro(cand.name,EEP.theme||G.theme||'évaluation');
   EEP._briefingInt=setInterval(()=>{
     t--;
-    $('gTicker').textContent=`📋 BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
+    $('gTicker').textContent=`🛡️ BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
+    $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--muted);">Le candidat pose ses cartes défensives face cachée — ${t}s</div>`;
     $('gTimer').textContent=`${t}s`;
     mpBroadcast({type:'latencyTick',t});
     if(t<=0){
       clearInterval(EEP._briefingInt);
       EEP.latencyActive=false;
-      // Maintenant lancer la première question
       _eepSendNextQuestion();}},1000);}
 
 // ── Remplace eepLatencyWindow pour les phases inter-questions ─────────
