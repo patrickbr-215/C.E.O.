@@ -421,9 +421,20 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .codex-item .ci-name{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;color:var(--cyan);margin-bottom:2px;}
 .codex-item .ci-desc{font-size:10px;color:var(--muted);}
 
+/* ── BOSS NOTIFICATION BUBBLES ──────────────────────────────────────── */
+#boss-notif{position:fixed;top:0;left:0;right:0;z-index:9990;display:flex;flex-direction:column;gap:4px;padding:6px 8px;pointer-events:none;}
+.boss-bubble{display:flex;gap:8px;align-items:flex-start;background:linear-gradient(135deg,rgba(15,17,24,.96),rgba(25,28,40,.96));border:1px solid rgba(212,168,50,.35);border-radius:10px;padding:8px 12px;backdrop-filter:blur(8px);pointer-events:auto;animation:bossIn .35s cubic-bezier(.22,1,.36,1) forwards;box-shadow:0 4px 20px rgba(0,0,0,.5),0 0 12px rgba(212,168,50,.12);}
+.boss-bubble.out{animation:bossOut .4s ease-in forwards;}
+.boss-avi{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8860b);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;border:1.5px solid rgba(212,168,50,.5);}
+.boss-body{flex:1;min-width:0;}
+.boss-name{font-family:'Orbitron',monospace;font-size:8px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px;}
+.boss-txt{font-family:'Rajdhani',sans-serif;font-size:12px;color:#e0e0e0;line-height:1.35;word-break:break-word;}
+@keyframes bossIn{from{opacity:0;transform:translateY(-20px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes bossOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-30px) scale(.9);}}
 </style>
 </head>
 <body>
+<div id="boss-notif"></div>
 <!-- MENU -->
 <div id="menu" class="S active">
 <div class="logo-main">C.E.O.</div><div class="logo-sub">CAPITALISM: ETERNAL OPTIMIZATION</div><div class="logo-tagline">"Votre souffrance est notre KPI."</div>
@@ -1047,7 +1058,60 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 
 // ==================== DATA ====================
-const STATIC_THEMES=[{id:'finance',name:'Finance',icon:'💰'},{id:'marketing',name:'Marketing',icon:'📢'},{id:'rh',name:'RH',icon:'👔'},{id:'tech',name:'Tech',icon:'💻'},{id:'juridique',name:'Juridique',icon:'⚖️'},{id:'geo',name:'Géopolitique',icon:'🌍'},{id:'culture',name:'Culture Corp.',icon:'🎭'},{id:'science',name:'R&D',icon:'🔬'}];
+const STATIC_THEMES=[
+// ── MAINSTREAM (25) ─────────────────────────────────────────────────
+{id:'manga_shonen',name:'Manga Shōnen',icon:'⚔️',type:'mainstream'},
+{id:'pop_2020',name:'Pop Culture 2020s',icon:'🎤',type:'mainstream'},
+{id:'cinema_blockbuster',name:'Blockbusters',icon:'🎬',type:'mainstream'},
+{id:'jeux_video',name:'Jeux Vidéo',icon:'🎮',type:'mainstream'},
+{id:'series_netflix',name:'Séries Streaming',icon:'📺',type:'mainstream'},
+{id:'football',name:'Football',icon:'⚽',type:'mainstream'},
+{id:'rap_fr',name:'Rap Français',icon:'🎤',type:'mainstream'},
+{id:'tiktok_trends',name:'TikTok & Trends',icon:'📱',type:'mainstream'},
+{id:'cuisine_monde',name:'Cuisine du Monde',icon:'🍜',type:'mainstream'},
+{id:'geographie',name:'Géographie',icon:'🌍',type:'mainstream'},
+{id:'histoire_france',name:'Histoire de France',icon:'🇫🇷',type:'mainstream'},
+{id:'animaux',name:'Animaux',icon:'🐾',type:'mainstream'},
+{id:'musique_rock',name:'Rock & Metal',icon:'🎸',type:'mainstream'},
+{id:'sport_olympique',name:'Sports Olympiques',icon:'🏅',type:'mainstream'},
+{id:'voitures',name:'Automobiles',icon:'🏎️',type:'mainstream'},
+{id:'mode_luxe',name:'Mode & Luxe',icon:'👗',type:'mainstream'},
+{id:'mythologie',name:'Mythologie',icon:'⚡',type:'mainstream'},
+{id:'records_monde',name:'Records du Monde',icon:'🏆',type:'mainstream'},
+{id:'espace',name:'Espace & NASA',icon:'🚀',type:'mainstream'},
+{id:'corps_humain',name:'Corps Humain',icon:'🫀',type:'mainstream'},
+{id:'rap_us',name:'Rap US',icon:'🇺🇸',type:'mainstream'},
+{id:'super_heros',name:'Super-Héros',icon:'🦸',type:'mainstream'},
+{id:'disney_pixar',name:'Disney & Pixar',icon:'🏰',type:'mainstream'},
+{id:'internet_memes',name:'Internet & Memes',icon:'💀',type:'mainstream'},
+{id:'tech_gadgets',name:'Tech & Gadgets',icon:'💻',type:'mainstream'},
+// ── EXPERT (25) ─────────────────────────────────────────────────────
+{id:'finance',name:'Finance',icon:'💰',type:'expert'},
+{id:'marketing',name:'Marketing',icon:'📢',type:'expert'},
+{id:'rh',name:'RH',icon:'👔',type:'expert'},
+{id:'juridique',name:'Droit & Juridique',icon:'⚖️',type:'expert'},
+{id:'philo',name:'Philosophie',icon:'🧠',type:'expert'},
+{id:'physique_quantique',name:'Physique Quantique',icon:'⚛️',type:'expert'},
+{id:'art_contemporain',name:'Art Contemporain',icon:'🎨',type:'expert'},
+{id:'crypto_web3',name:'Crypto & Web3',icon:'🪙',type:'expert'},
+{id:'geopolitique',name:'Géopolitique',icon:'🌐',type:'expert'},
+{id:'psychologie',name:'Psychologie',icon:'🧩',type:'expert'},
+{id:'litterature',name:'Littérature',icon:'📖',type:'expert'},
+{id:'cinema_auteur',name:'Cinéma d\'Auteur',icon:'🎞️',type:'expert'},
+{id:'musique_classique',name:'Musique Classique',icon:'🎻',type:'expert'},
+{id:'sciences_nature',name:'Sciences Naturelles',icon:'🔬',type:'expert'},
+{id:'architecture',name:'Architecture',icon:'🏛️',type:'expert'},
+{id:'gastronomie',name:'Gastronomie',icon:'👨‍🍳',type:'expert'},
+{id:'manga_seinen',name:'Manga Seinen',icon:'📕',type:'expert'},
+{id:'histoire_monde',name:'Histoire Mondiale',icon:'📜',type:'expert'},
+{id:'ecologie',name:'Écologie & Climat',icon:'🌱',type:'expert'},
+{id:'intelligence_artificielle',name:'IA & Machine Learning',icon:'🤖',type:'expert'},
+{id:'startups',name:'Startups & Licornes',icon:'🦄',type:'expert'},
+{id:'medecine',name:'Médecine',icon:'⚕️',type:'expert'},
+{id:'astronomie',name:'Astronomie',icon:'🔭',type:'expert'},
+{id:'sociologie',name:'Sociologie',icon:'👥',type:'expert'},
+{id:'guerre_strategie',name:'Guerre & Stratégie',icon:'🗡️',type:'expert'}
+];
 let THEMES=[...STATIC_THEMES]; // mutable — les thèmes IA s'y ajoutent dynamiquement
 const QDB={
 finance:[{q:"Indice des 40 plus grandes capitalisations FR ?",c:["DAX 30","CAC 40","FTSE 100","S&P 500"],a:1},{q:"Golden parachute ?",c:["Bonus embauche","Indemnité départ","Plan épargne","Stock-option"],a:1},{q:"IPO signifie ?",c:["Internal Profit Opt.","Initial Public Offering","Integrated Perf. Output","Index Profitable Ops"],a:1},{q:"Devise la plus échangée ?",c:["Euro","Yen","Dollar US","Livre"],a:2},{q:"Le PIB mesure ?",c:["La dette","La production économique","L'inflation","Le chômage"],a:1},{q:"Hedge fund = fonds spéculatif.",v:true},{q:"La SEC est européenne.",v:false},{q:"Bitcoin créé en 2009.",v:true},{q:"OPA = Offre Publique d'Achat.",v:true},{q:"Bull market = marché en baisse.",v:false}],
@@ -1060,7 +1124,80 @@ culture:[{q:"Film avec TPS Reports ?",c:["Wall Street","Office Space","The Big S
 science:[{q:"Gaz dominant atmosphère ?",c:["Oxygène","Azote","CO2","Argon"],a:1},{q:"Organe produit insuline ?",c:["Foie","Pancréas","Rein","Estomac"],a:1},{q:"Élément + abondant univers ?",c:["Oxygène","Carbone","Hydrogène","Hélium"],a:2},{q:"Planète + proche Soleil ?",c:["Vénus","Mars","Mercure","Terre"],a:2},{q:"Os adulte ?",c:["186","206","256","176"],a:1},{q:"Lumière > son.",v:true},{q:"ADN = protéine.",v:false},{q:"Eau bout 100°C niv. mer.",v:true},{q:"Électrons > protons.",v:false},{q:"Diamant = carbone pur.",v:true}]
 };
 
-// ==================== AI ENGINE v2 — Proxy Vercel + SDK Fallback ====================
+// ==================== OFFLINE FALLBACK QDB (anti-freeze, ~40 Qs) ====================
+const OFFLINE_QDB=[
+{q:"Combien de continents ?",c:["5","6","7","8"],a:2},{q:"Animal le plus rapide ?",c:["Lion","Guépard","Faucon","Thon"],a:1},
+{q:"Plus grande planète ?",c:["Saturne","Jupiter","Neptune","Uranus"],a:1},{q:"CEO signifie ?",c:["Chief Executive Officer","Corporate Executive Order","Central Economic Office","Chief Eval Officer"],a:0},
+{q:"Plus grande population ?",c:["Inde","Chine","USA","Brésil"],a:0},{q:"Homme sur la Lune ?",c:["1965","1969","1972","1967"],a:1},
+{q:"Plus grand océan ?",c:["Atlantique","Indien","Pacifique","Arctique"],a:2},{q:"Joueurs au foot ?",c:["9","10","11","12"],a:2},
+{q:"Plus petit pays ?",c:["Monaco","Vatican","Nauru","Malte"],a:1},{q:"Qui peint la Joconde ?",c:["Michel-Ange","Raphaël","De Vinci","Botticelli"],a:2},
+{q:"Grande Muraille visible de l'espace.",v:false},{q:"Eau bout à 100°C.",v:true},{q:"Soleil = étoile.",v:true},
+{q:"10% du cerveau.",v:false},{q:"Son dans le vide.",v:false},{q:"Lumière ~8min Soleil-Terre.",v:true},
+{q:"Octogone a 6 côtés.",v:false},{q:"Diamant = carbone.",v:true},{q:"Tokyo + peuplée.",v:true},{q:"Mars = planète bleue.",v:false},
+{q:"Métal liquide ambiant ?",c:["Plomb","Mercure","Étain","Zinc"],a:1},{q:"Cordes guitare classique ?",c:["4","5","6","8"],a:2},
+{q:"Gaz principal respiration ?",c:["Oxygène","Azote","CO2","Argon"],a:1},{q:"Monnaie du Japon ?",c:["Won","Yuan","Yen","Baht"],a:2},
+{q:"Os le plus long ?",c:["Tibia","Fémur","Humérus","Radius"],a:1},{q:"1 km = ?",c:["100m","500m","1000m","10000m"],a:2},
+{q:"Les Misérables ?",c:["Zola","Hugo","Balzac","Dumas"],a:1},{q:"Fruit + potassium ?",c:["Pomme","Orange","Banane","Raisin"],a:2},
+{q:"Mozart né en Autriche.",v:true},{q:"Cœur humain 6 cavités.",v:false},{q:"Python = langage prog.",v:true},{q:"Tour Eiffel à Lyon.",v:false},
+{q:"Inventeur de la pizza ?",c:["France","Grèce","Italie","Espagne"],a:2},{q:"Dents adulte ?",c:["28","30","32","34"],a:2},
+{q:"Brésil en Afrique.",v:false},{q:"Symbole 'O' ?",c:["Or","Osmium","Oxygène","Oganesson"],a:2},
+{q:"1h en secondes ?",c:["360","3600","600","36000"],a:1},{q:"Lune a atmosphère épaisse.",v:false},
+{q:"Wi-Fi = Wireless Fidelity.",v:false},{q:"Netflix avant Google.",v:true}
+];
+let _offlineIdx=0;
+function _getOfflineFallback(){_offlineIdx=(_offlineIdx+1)%OFFLINE_QDB.length;return{...OFFLINE_QDB[_offlineIdx],source:'offline'};}
+
+// ==================== PIPELINE N+1 (Just-in-Time, Anti-Freeze) ====================
+// Principe: dès que Q(N) est affichée, on lance Q(N+1) en background.
+// Si Gemini ne répond pas en 6s → fallback OFFLINE_QDB. Jamais de freeze.
+const _qPipeline={nextPromise:null,nextReady:null,generating:false,themeName:'',qIndex:0};
+
+function _pipelineStart(themeName){
+  _qPipeline.themeName=themeName;_qPipeline.qIndex=0;
+  _qPipeline.nextPromise=null;_qPipeline.nextReady=null;_qPipeline.generating=false;}
+
+function _pipelinePrefetch(){
+  if(_qPipeline.generating)return;_qPipeline.generating=true;_qPipeline.nextReady=null;
+  const idx=_qPipeline.qIndex;const name=_qPipeline.themeName;
+  _qPipeline.nextPromise=Promise.race([
+    generateOneQuestion(name,idx,10),
+    new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT_6S')),6000))
+  ]).then(q=>{_qPipeline.nextReady=q;_qPipeline.generating=false;return q;})
+   .catch(e=>{console.warn('[N+1] Timeout/err, offline fallback:',e.message);
+    const fb=_getOfflineFallback();_qPipeline.nextReady=fb;_qPipeline.generating=false;return fb;});}
+
+async function _pipelineGet(){
+  if(_qPipeline.nextReady){const q=_qPipeline.nextReady;_qPipeline.nextReady=null;_qPipeline.qIndex++;return q;}
+  if(_qPipeline.nextPromise){
+    try{const q=await Promise.race([_qPipeline.nextPromise,
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error('PIPELINE_WAIT')),6000))]);
+      _qPipeline.nextReady=null;_qPipeline.qIndex++;return q;}
+    catch(e){_qPipeline.qIndex++;return _getOfflineFallback();}}
+  _qPipeline.qIndex++;return _getOfflineFallback();}
+
+// ==================== THEME DRAFT & PORTFOLIO ====================
+const DRAFT={
+  pool:[],              // thèmes dispo (shrinks quand pris)
+  playerThemes:{},      // pid → [5 theme ids picked]
+  playerPortfolio:{},   // pid → [3 active theme ids]
+  currentPickerIdx:0,   // index dans l'ordre du sprint
+  pickCount:5,          // chaque joueur pioche 5
+  portfolioSize:3       // 3 actifs
+};
+function _initDraft(){DRAFT.pool=shuffle([...STATIC_THEMES]);DRAFT.playerThemes={};DRAFT.playerPortfolio={};DRAFT.currentPickerIdx=0;}
+function _draftPick(pid,themeId){
+  const idx=DRAFT.pool.findIndex(t=>t.id===themeId);if(idx<0)return false;
+  if(!DRAFT.playerThemes[pid])DRAFT.playerThemes[pid]=[];
+  if(DRAFT.playerThemes[pid].length>=DRAFT.pickCount)return false;
+  DRAFT.playerThemes[pid].push(themeId);DRAFT.pool.splice(idx,1);return true;}
+function _setPortfolio(pid,themeIds){
+  const owned=DRAFT.playerThemes[pid]||[];
+  const valid=themeIds.filter(id=>owned.includes(id)).slice(0,DRAFT.portfolioSize);
+  DRAFT.playerPortfolio[pid]=valid;return valid;}
+function _getPortfolio(pid){return(DRAFT.playerPortfolio[pid]||[]).map(id=>STATIC_THEMES.find(t=>t.id===id)).filter(Boolean);}
+
+// ==================== PA (Points d'Action) ====================
+function _getPA(classId){return classId==='garant'?7:5;}
 // En production (Vercel) : appelle /api/gemini (clé sécurisée côté serveur)
 // En local (file://) : appelle l'SDK Google directement avec la clé de dev
 const GEMINI_KEY_DEV='AIzaSyB3aQ7ZcvzxKczlmSagz06jJ-KlDSPCfxw';// DEV ONLY — retiré en prod
@@ -1068,8 +1205,8 @@ const _sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const _IS_PROD=location.protocol==='https:'&&!location.hostname.includes('localhost');
 
 let _genAI=null;
-
 let _aiDisabled=false;
+
 async function _getGenAI(){
   if(_aiDisabled)return null;
   if(_genAI)return _genAI;
@@ -1080,7 +1217,7 @@ async function _getGenAI(){
   }catch(e){
     console.error('[CEO-AI] SDK load failed:',e.message);
     _aiDisabled=true;
-    $('gTicker').textContent='⚠️ Module IA indisponible — mode local activé.';
+    _bossNotif('⚠️ Module IA indisponible — mode local activé.');
     return null;}}
 
 const _MODEL_CHAIN=['gemini-2.0-flash-lite','gemini-2.0-flash','gemini-1.5-flash'];
@@ -1155,64 +1292,112 @@ La réponse correcte doit être à l'index "a" (entier 0-3). Les 4 choix doivent
   else throw new Error('Type inconnu');
   return q;}
 
-// ==================== GLADOS — IA COMMENTATRICE ====================
-const GLADOS_PERSONAS=[
-  'Tu es GLaDOS de Portal : froide, sarcastique, condescendante, avec un humour noir corporatif.',
-  'Tu commentes une session d\'évaluation de performance pour C.E.O. — Capitalism: Eternal Optimization.',
-  'Ton style: précis, mordant, jamais plus d\'une phrase. Tu traites les joueurs comme des sujets de test défectueux.',
+// ==================== BOSS CEO — NOTIFICATIONS CHAT ========================
+const BOSS_PERSONA='Tu es le C.E.O. tout-puissant du jeu C.E.O. — Capitalism: Eternal Optimization. Tu parles comme un patron tyrannique, sarcastique, condescendant, avec un humour noir corporate. Style: une phrase cinglante, jamais plus de 20 mots. Français uniquement. Sans guillemets.';
+const BOSS_STATIC_WRONG=[
+  'Pathétique. Mon stagiaire de 12 ans aurait fait mieux.',
+  'Vous êtes viré. Enfin, pas encore. Mais mentalement, oui.',
+  'Mauvaise réponse. Je prends note pour votre dossier de licenciement.',
+  'Je suis le C.E.O. et même moi je suis gêné pour vous.',
+  'Votre incompétence est presque impressionnante. Presque.',
+  'Mon algorithme de recrutement vient de planter en vous voyant.',
 ];
-const GLADOS_STATIC_WRONG=[
-  '⬡ Fascinant. Vous avez choisi exactement la mauvaise réponse. Comme prévu.',
-  '⬡ Intéressant. Vous avez optimisé votre taux d\'échec à 100% sur cette question.',
-  '⬡ Ce n\'était pas la bonne réponse. Mais votre confiance en vous était, elle, parfaite.',
-  '⬡ J\'ai simulé 4 000 candidats. Vous êtes dans le quartile inférieur. Félicitations.',
-  '⬡ Mauvaise réponse. Je prends note pour votre dossier de licenciement.',
-  '⬡ Remarquable. Vous avez réussi à vous tromper sur quelque chose que les singes capucins savent.',
+const BOSS_STATIC_RIGHT=[
+  'Correct. Ne vous habituez pas, la chute sera brutale.',
+  'Bien. Je vais quand même baisser votre prime de Noël.',
+  'Exact. Votre taux de survie passe de critique à médiocre.',
+  'Bonne réponse. Mon golden retriever aurait trouvé aussi.',
 ];
-const GLADOS_STATIC_RIGHT=[
-  '⬡ Correct. Cela ne compensera pas les autres erreurs. Mais j\'enregistre.',
-  '⬡ Bonne réponse. Ne vous habituez pas à ce sentiment.',
-  '⬡ C\'était la réponse correcte. Vous avez eu de la chance. J\'ai vérifié.',
-  '⬡ Exact. Votre taux de survie vient de passer de "déplorable" à "légèrement moins déplorable".',
-  '⬡ Bien. Je vais quand même vous évaluer négativement sur votre façon de tenir le téléphone.',
+const BOSS_STATIC_INTRO=[
+  'Ah, un nouvel entretien. Essayez de ne pas me faire perdre mon temps.',
+  'Bienvenue dans mon bureau. Ici, la médiocrité est un motif de renvoi.',
+  'Vous pensez mériter ce poste ? Prouvez-le. Maintenant.',
+];
+const BOSS_STATIC_OUTRO_BAD=[
+  'Lamentable. Même l\'imprimante a un meilleur taux de réussite.',
+  'Votre CV va directement dans la déchiqueteuse.',
+  'Sécurité ? Raccompagnez ce candidat vers la sortie.',
+];
+const BOSS_STATIC_OUTRO_GOOD=[
+  'Pas mal. Je suis presque impressionné. Presque.',
+  'Acceptable. Vous survivez un jour de plus dans cette entreprise.',
 ];
 
-let _gladosEnabled=true;
-let _gladosPending=false;
+let _bossPending=false;
+const _BOSS_TIMEOUT=7000;
 
-function _gladosSpeak(text){
-  if(!_gladosEnabled)return;
-  $('gTicker').innerHTML=`<span class="glados-tick">${text}</span>`;
-  // Remettre le ticker normal après 6s
-  setTimeout(()=>{if($('gTicker').querySelector('.glados-tick'))$('gTicker').textContent=pick(TICKERS);},6000);}
-
-async function _gladosComment(correct,themeName,questionText){
-  if(!_gladosEnabled||_gladosPending)return;
-  _gladosPending=true;
-  // Réponse statique immédiate (pendant que l'IA génère)
-  const instant=correct?pick(GLADOS_STATIC_RIGHT):pick(GLADOS_STATIC_WRONG);
-  _gladosSpeak(instant);
-  // Puis tenter une réponse IA contextualisée (en background, non bloquante)
+// ── Notification Sound (Web Audio micro-beep) ──
+let _bossAudioCtx=null;
+function _bossBeep(){
   try{
-    const result=correct?'a répondu correctement':'s\'est trompé';
-    const prompt=`${GLADOS_PERSONAS.join(' ')}
-Le candidat ${result} à la question: "${questionText}" (thème: ${themeName}).
-Génère UN commentaire cynique de moins de 15 mots. Commence par "⬡". Français uniquement. Sans guillemets.`;
-    const comment=await _geminiGenerate(prompt,'gemini-2.0-flash-lite');
-    const clean=comment.trim().replace(/^["']|["']$/g,'');
-    if(clean.length>5)_gladosSpeak(clean);
-  }catch(e){/* Le commentaire statique reste affiché */}
-  finally{_gladosPending=false;}}
-
-async function _gladosIntroTheme(themeName){
-  _gladosSpeak(`⬡ Thème "${themeName}" activé. Préparez-vous à être déçu de vous-même.`);
-  try{
-    const prompt=`${GLADOS_PERSONAS[0]} Le thème d'évaluation est "${themeName}". Génère une introduction sarcastique de 10 mots max. Commence par "⬡". Français.`;
-    const r=await _geminiGenerate(prompt,'gemini-2.0-flash-lite');
-    const clean=r.trim().replace(/^["']|["']$/g,'');
-    if(clean.length>5)_gladosSpeak(clean);
+    if(!_bossAudioCtx)_bossAudioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const ctx=_bossAudioCtx,o=ctx.createOscillator(),g=ctx.createGain();
+    o.type='sine';o.frequency.value=880;
+    g.gain.setValueAtTime(0.08,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.15);
+    o.connect(g);g.connect(ctx.destination);
+    o.start();o.stop(ctx.currentTime+0.15);
   }catch(e){}}
 
+// ── Affichage Bubble ──
+function _bossNotif(text){
+  const box=$('boss-notif');if(!box)return;
+  _bossBeep();
+  const bubble=document.createElement('div');
+  bubble.className='boss-bubble';
+  bubble.innerHTML=`<div class="boss-avi">💼</div><div class="boss-body"><div class="boss-name">Directeur Général</div><div class="boss-txt">${text}</div></div>`;
+  box.appendChild(bubble);
+  setTimeout(()=>{bubble.classList.add('out');setTimeout(()=>bubble.remove(),500);},9000);
+  // Also show on ticker for TV
+  const tk=$('gTicker');
+  if(tk)tk.innerHTML=`<span class="glados-tick">${text}</span>`;
+}
+
+// ── Gemini call with 7s timeout — NEVER blocks game ──
+async function _bossGemini(prompt){
+  try{
+    const timeoutP=new Promise((_,rej)=>setTimeout(()=>rej(new Error('BOSS_TIMEOUT')),_BOSS_TIMEOUT));
+    const result=await Promise.race([_geminiGenerate(prompt,'gemini-2.0-flash-lite'),timeoutP]);
+    return result.trim().replace(/^["']/,'').replace(/["']$/,'');
+  }catch(e){return null;}}
+
+// ── TRIGGERS ──
+
+// Début d'entretien — systématique
+function bossIntro(candName,themeName){
+  _bossNotif(pick(BOSS_STATIC_INTRO));
+  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" commence son entretien sur le thème "${themeName}". Génère une phrase d\'introduction menaçante.`).then(r=>{if(r&&r.length>5)_bossNotif(r);});
+}
+
+// Fin d'entretien — systématique
+function bossOutro(candName,score,total){
+  const pct=Math.round(score/total*100);
+  if(pct<50)_bossNotif(pick(BOSS_STATIC_OUTRO_BAD));
+  else if(pct>=80)_bossNotif(pick(BOSS_STATIC_OUTRO_GOOD));
+  else _bossNotif(`${score}/${total}. Mouais. On a vu mieux.`);
+  const verdict=pct<50?'a lamentablement échoué':pct>=80?'a étonnamment bien réussi':'a fait un score médiocre';
+  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" ${verdict} avec ${score}/${total} (${pct}%). Commente en 15 mots max.`).then(r=>{if(r&&r.length>5)_bossNotif(r);});
+}
+
+// Action inter-tour — 20% de chance
+function bossMaybeComment(actionLabel){
+  if(_bossPending||Math.random()>0.20)return;
+  _bossPending=true;
+  const statics=[
+    `Ah, ${actionLabel}. Intéressant choix stratégique. Enfin, "stratégique"...`,
+    `${actionLabel} ? J\'aurais fait l\'inverse. Mais bon, je suis le CEO.`,
+    `Notez bien : ${actionLabel} est rarement la bonne décision.`,
+  ];
+  _bossNotif(pick(statics));
+  _bossGemini(`${BOSS_PERSONA} Le joueur vient de faire: "${actionLabel}" pendant l\'inter-tour. Commente en 12 mots max.`).then(r=>{
+    if(r&&r.length>5)_bossNotif(r);_bossPending=false;
+  }).catch(()=>{_bossPending=false;});
+}
+
+// Compat: ancien _gladosSpeak / _gladosComment redirigés
+function _gladosSpeak(text){_bossNotif(text);}
+async function _gladosComment(correct,themeName,questionText){/* Ne commente plus chaque question */}
+async function _gladosIntroTheme(themeName){bossIntro('Candidat',themeName);}
 
 // Icônes uniquement (appel léger)
 async function fetchAIThemes(themeNames){
@@ -2340,6 +2525,7 @@ G.gestionUsed=true;closeOv('ovGestion');fn();return true;}
 
 function gestionBourse(){
   if(!consumePA(PA_COSTS.bourse,'Bourse'))return;
+  bossMaybeComment('Ouvrir la Bourse');
   closeOv('ovGestion');_bourseOpen();}
 
 function gestionPioche(){
@@ -2351,6 +2537,7 @@ function gestionPioche(){
   const hp=EEP.players?.find(p=>p.id===_SOLO_PLAYER_PID);
   if(hp)hp.cards.push({...card});
   $('gTicker').textContent=`🃏 Pioché: ${card.icon} ${card.name}!`;
+  bossMaybeComment('Piocher une carte');
   closeOv('ovGestion');setTimeout(()=>openGestion(),400);}
 
 function gestionInventaire(){
@@ -2381,6 +2568,7 @@ function poubelleSup(idx){
   if(gi>=0)G.cards.splice(gi,1);
   closeOv('ovPoubelle');
   $('gTicker').textContent=`🗑️ "${card.name}" supprimée. Coût irrécupérable — Sunk Cost.`;
+  bossMaybeComment('Purger une carte');
   setTimeout(()=>openGestion(),400);}
 
 // ── CAPACITÉS DE CLASSE ──────────────────────────────────────────────────────
@@ -2388,6 +2576,7 @@ function gestionCapacite(){
   const cl=CEO_CL[G.classId];
   if(!cl)return;
   if(!consumePA(cl.capaCost,cl.capaName))return;
+  bossMaybeComment('Capacité: '+cl.capaName);
   closeOv('ovGestion');
   $('capaciteTitle').textContent=`${cl.capaIcon} ${cl.capaName}`;
   $('capaciteDesc').textContent=cl.capaDesc;
@@ -2857,67 +3046,8 @@ function getEscalationLabel(eepIdx){
   if(e>=3)return{icon:'📈',label:'PRESSION CROISSANTE — Bots plus agressifs'};
   return{icon:'📊',label:'Conditions normales'};}
 
-// ── 4. ACHIEVEMENTS CEO (inspiré du système d'achievements 7DTD) ────────────
-// Succès débloqués en jeu avec toast animé
-
-const CEO_ACHIEVEMENTS=[
-  {id:'first_ceo',name:'Premier Mandat',icon:'🏆',stat:'total_correct',tiers:[1,10,50],desc:'Répondre correctement'},
-  {id:'sniper_master',name:'Prédateur Fiscal',icon:'🎯',stat:'cards_played',tiers:[3,10,25],desc:'Jouer des cartes de combat'},
-  {id:'flawless',name:'EEP Parfait',icon:'⭐',stat:'flawless_eep',tiers:[1,3,10],desc:'Scorer 10/10 à un EEP'},
-  {id:'comeback',name:'Résilience Corporative',icon:'💪',stat:'comeback',tiers:[1,5],desc:'Remonter après un EEP raté'},
-  {id:'bourse_winner',name:'Trader d\'Élite',icon:'📈',stat:'bourse_wins',tiers:[1,5,10],desc:'Vendre un thème à la Bourse'},
-  {id:'surveiller',name:'Grand Inquisiteur',icon:'🔮',stat:'spy_uses',tiers:[1,5],desc:'Espionner un adversaire'},
-  {id:'defender',name:'Mur de Béton',icon:'🛡️',stat:'blocks',tiers:[3,10,25],desc:'Bloquer des attaques'},
-  {id:'flux_hoarder',name:'Accumulateur',icon:'💰',stat:'total_flux',tiers:[100,500,1000],desc:'Accumuler du Flux'},
-];
-const CEO_ACHV_TIER_COLORS=['#6b7280','#3b82f6','#a855f7','#d4a832'];
-const CEO_ACHV_TIER_NAMES=['Bronze','Argent','Or','Platine'];
-
-if(!window._ceoAchvTrackers)window._ceoAchvTrackers={};
-
-function _getCeoAchvTracker(pid){
-  if(!window._ceoAchvTrackers[pid])window._ceoAchvTrackers[pid]={_unlockedTiers:{}};
-  return window._ceoAchvTrackers[pid];}
-
-function ceoAchvIncrement(pid,stat,amount=1){
-  if(!pid)return;
-  const t=_getCeoAchvTracker(pid);
-  t[stat]=(t[stat]||0)+amount;
-  _checkCeoAchievements(pid,stat);}
-
-function _checkCeoAchievements(pid,stat){
-  const t=_getCeoAchvTracker(pid);
-  CEO_ACHIEVEMENTS.filter(a=>a.stat===stat).forEach(a=>{
-    const val=t[a.stat]||0;
-    const prevTier=t._unlockedTiers[a.id]??-1;
-    for(let tier=0;tier<a.tiers.length;tier++){
-      if(tier<=prevTier)continue;
-      if(val>=a.tiers[tier]){
-        t._unlockedTiers[a.id]=tier;
-        _showCeoAchvToast(pid,a,tier);}}});}
-
-function _showCeoAchvToast(pid,achievement,tier){
-  const player=EEP.players?.find(p=>p.id===pid);
-  const name=player?.name||(pid===_SOLO_PLAYER_PID?'Vous':'?');
-  const col=CEO_ACHV_TIER_COLORS[tier]||'#3b82f6';
-  const tierName=CEO_ACHV_TIER_NAMES[tier]||'Bronze';
-  const toast=document.createElement('div');
-  toast.style.cssText=`position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:9999;
-    background:linear-gradient(135deg,rgba(13,15,22,.97),rgba(17,19,28,.97));
-    border:2px solid ${col};border-radius:10px;padding:10px 16px;
-    display:flex;align-items:center;gap:10px;min-width:260px;max-width:360px;
-    box-shadow:0 0 24px ${col}44,0 4px 16px rgba(0,0,0,.5);
-    animation:achvSlideIn .4s ease-out;font-family:inherit;pointer-events:none;`;
-  toast.innerHTML=`
-    <div style="font-size:26px;filter:drop-shadow(0 0 5px ${col});">${achievement.icon}</div>
-    <div style="flex:1;">
-      <div style="font-size:8px;color:${col};font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',monospace;">🏆 Succès Débloqué!</div>
-      <div style="font-size:12px;color:#fff;font-weight:700;margin:2px 0;">${achievement.name}</div>
-      <div style="font-size:9px;color:#aaa;">${name} — <span style="color:${col};">${tierName}</span></div>
-    </div>`;
-  document.body.appendChild(toast);
-  setTimeout(()=>{toast.style.transition='all .5s';toast.style.opacity='0';toast.style.transform='translateX(-50%) translateY(-16px)';},3500);
-  setTimeout(()=>toast.remove(),4100);}
+// ── 4. ACHIEVEMENTS CEO — DÉSACTIVÉ (allège le jeu) ──────────────────────────
+function ceoAchvIncrement(){}
 
 // ── 5. TOAST D'ENTRÉE EN SCÈNE (inspiré de _showDayStartToast) ──────────────
 function showCandidateEntryToast(candName,candClass,eepIdx,onContinue){
@@ -2950,7 +3080,6 @@ function ceoSaveGame(){
          cards:p.cards,correct:p.correct,gaugeCP:p.gaugeCP,debt:p.debt})),
       EEP_idx:EEP.candidateIdx,
       bourseSession:G.bourseSession,
-      achvTrackers:window._ceoAchvTrackers||{},
     };
     const blob=new Blob([JSON.stringify(save)],{type:'application/json'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);
@@ -2968,7 +3097,6 @@ function ceoLoadGame(event){
       Object.assign(G,save.G);
       EEP.players=save.EEP_players;EEP.candidateIdx=save.EEP_idx||0;EEP.active=true;
       if(save.bourseSession)G.bourseSession=save.bourseSession;
-      if(save.achvTrackers)window._ceoAchvTrackers=save.achvTrackers;
       showScreen('game');
       $('gClass').textContent=CEO_CL[G.classId]?.icon+' '+CEO_CL[G.classId]?.name;
       $('candBanner').style.display='';$('tlGrid').style.display='grid';$('soloHandBar').style.display='';
@@ -2997,8 +3125,7 @@ function _ceoLoadTrigger(){const i=document.createElement('input');i.type='file'
 // Injecter l'animation keyframe si pas encore présente
 if(!document.querySelector('#ceoKF')){
   const st=document.createElement('style');st.id='ceoKF';
-  st.textContent=`@keyframes achvSlideIn{from{opacity:0;transform:translateX(-50%) translateY(-16px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
-  @keyframes feedbackFloat{0%{opacity:1;transform:translateX(-50%) translateY(0);}100%{opacity:0;transform:translateX(-50%) translateY(-40px);}}`;
+  st.textContent=`@keyframes feedbackFloat{0%{opacity:1;transform:translateX(-50%) translateY(0);}100%{opacity:0;transform:translateX(-50%) translateY(-40px);}}`;
   document.head.appendChild(st);}
 
 // ==================== FIN DES SYSTÈMES 7DTD ====================
@@ -3073,6 +3200,21 @@ if(d.type==='join'){if(MP.conns.find(c=>c.conn===conn))return;MP.conns.push({con
 else if(d.type==='signature'&&MP.hostPhase==='s0'){const p=MP.conns.find(c=>c.conn===conn);if(!p)return;p.sigScore=(p.sigScore||0)+1;conn.send({type:'newContract',contract:pick(BULLSHIT_CONTRACTS),score:p.sigScore});updS0Board();$('s0Last').textContent=`📝 ${p.name} vient de signer!`;}
 else if(d.type==='classSel'){const p=MP.conns.find(c=>c.conn===conn);if(p)p.classId=d.classId;updDraftBoard();}
 else if(d.type==='draftPick'){const p=MP.conns.find(c=>c.conn===conn);if(!p)return;Object.keys(MP.draftSlots).forEach(k=>{if(MP.draftSlots[k]===p.pid)delete MP.draftSlots[k];});MP.draftSlots[d.slot]=p.pid;conn.send({type:'draftConfirm',slot:d.slot});updDraftBoard();mpBroadcast({type:'draftUpdate',slots:MP.draftSlots});}
+// ===== THEME DRAFT: joueur pioche un thème du pool =====
+else if(d.type==='themeDraftPick'&&MP.hostPhase==='draft'){
+const p=MP.conns.find(c=>c.conn===conn);if(!p)return;
+const ok=_draftPick(p.pid,d.themeId);
+if(ok){const owned=DRAFT.playerThemes[p.pid]||[];
+conn.send({type:'themeDraftOk',themeId:d.themeId,owned,remaining:DRAFT.pickCount-owned.length,pool:DRAFT.pool.map(t=>({id:t.id,name:t.name,icon:t.icon,type:t.type}))});
+// Broadcast updated pool to all
+mpBroadcast({type:'themeDraftPoolUpdate',pool:DRAFT.pool.map(t=>({id:t.id,name:t.name,icon:t.icon,type:t.type}))});
+updDraftBoard();}
+else{conn.send({type:'themeDraftFail',reason:'Thème indisponible ou max atteint'});}}
+// ===== PORTFOLIO: joueur active 3 thèmes =====
+else if(d.type==='portfolioSet'&&MP.hostPhase==='draft'){
+const p=MP.conns.find(c=>c.conn===conn);if(!p)return;
+const active=_setPortfolio(p.pid,d.themeIds||[]);
+conn.send({type:'portfolioOk',active});updDraftBoard();}
 // ===== EEP: card played during latency =====
 else if(d.type==='playCard'&&EEP.latencyActive){
 const p=EEP.players.find(pl=>pl.id===conn.peer);if(!p)return;
@@ -3156,9 +3298,12 @@ function updS0Board(){const sorted=[...MP.conns].sort((a,b)=>(b.sigScore||0)-(a.
 $('s0Board').innerHTML=sorted.map((p,i)=>`<div class="s0-row"><div class="s0-rank">#${i+1}</div><div class="s0-name">${p.name}</div><div class="s0-score">${p.sigScore||0}</div></div>`).join('');}
 
 async function endS0(){MP.hostPhase='draft';MP.draftSlots={};MP.aiReady=false;
+_initDraft(); // Initialise le pool de 50 thèmes pour le draft
 const sorted=[...MP.conns].sort((a,b)=>(b.sigScore||0)-(a.sigScore||0));
 const ranking=sorted.map((p,i)=>({pid:p.pid,name:p.name,rank:i+1,score:p.sigScore||0}));
-mpBroadcast({type:'s0End',ranking,total:MP.conns.length});
+mpBroadcast({type:'s0End',ranking,total:MP.conns.length,
+  themePool:DRAFT.pool.map(t=>({id:t.id,name:t.name,icon:t.icon,type:t.type})),
+  pickCount:DRAFT.pickCount,portfolioSize:DRAFT.portfolioSize});
 showScreen('s0Draft');
 // Show AI loading state immediately
 $('draftBoard').innerHTML=`
@@ -3182,14 +3327,18 @@ MP.aiReady=true;updDraftBoard();}
 
 function updDraftBoard(){
 const sorted=[...MP.conns].sort((a,b)=>(b.sigScore||0)-(a.sigScore||0));
-// Only render player rows once AI is done (avoids overwriting the loading animation)
 if(MP.aiReady){
-$('draftBoard').innerHTML=sorted.map((p,i)=>{const slot=Object.entries(MP.draftSlots).find(([k,v])=>v===p.pid);return`<div class="s0-row"><div class="s0-rank">#${i+1}</div><div class="s0-name">${p.name} ${p.classId?CEO_CL[p.classId]?.icon:''}</div><div class="s0-score" style="font-size:11px;">${slot?'Passage #'+slot[0]:'...'}</div></div>`;}).join('');}
-const playersReady=MP.conns.every(c=>c.classId)&&Object.keys(MP.draftSlots).length>=MP.conns.length;
-const allReady=playersReady&&MP.aiReady;
+$('draftBoard').innerHTML=sorted.map((p,i)=>{const slot=Object.entries(MP.draftSlots).find(([k,v])=>v===p.pid);
+const themes=DRAFT.playerThemes[p.pid]||[];const portfolio=DRAFT.playerPortfolio[p.pid]||[];
+return`<div class="s0-row"><div class="s0-rank">#${i+1}</div><div class="s0-name">${p.name} ${p.classId?CEO_CL[p.classId]?.icon:''}</div><div class="s0-score" style="font-size:10px;">${slot?'P#'+slot[0]:'..'} · 📋${themes.length}/5 · ⭐${portfolio.length}/3</div></div>`;}).join('');}
+const hasClass=MP.conns.every(c=>c.classId);
+const hasOrder=Object.keys(MP.draftSlots).length>=MP.conns.length;
+const hasThemes=MP.conns.every(c=>(DRAFT.playerThemes[c.pid]||[]).length>=DRAFT.pickCount);
+const hasPortfolio=MP.conns.every(c=>(DRAFT.playerPortfolio[c.pid]||[]).length>=DRAFT.portfolioSize);
+const allReady=hasClass&&hasOrder&&hasThemes&&hasPortfolio&&MP.aiReady;
 $('btnDraftGo').disabled=!allReady;
 if(!MP.aiReady){$('draftStatus').innerHTML='<span style="color:var(--cyan);font-family:\'Orbitron\',monospace;font-size:9px;letter-spacing:2px;animation:pulse 1s infinite;">🤖 GÉNÉRATION IA EN COURS...</span>';}
-else{$('draftStatus').textContent=allReady?'✅ Tout le monde est prêt!':'En attente des choix de classe et ordre...';}}
+else{$('draftStatus').textContent=allReady?'✅ Tout le monde est prêt!':`En attente: ${hasClass?'✅':'❌'} Classes · ${hasOrder?'✅':'❌'} Ordre · ${hasThemes?'✅':'❌'} Thèmes · ${hasPortfolio?'✅':'❌'} Portfolio`;}}
 
 // ===== DRAFT → GAME =====
 function mpDraftDone(){
@@ -3198,8 +3347,9 @@ MP.conns.forEach(c=>{if(!order.find(o=>o.pid===c.pid))order.push(c);});
 EEP.players=order.map((c,i)=>{
 const cl=CEO_CL[c.classId]||CEO_CL.requin;const cardCount=cl.stats.cardD;const hand=[];const ck=Object.keys(SAB_CARDS);for(let j=0;j<cardCount;j++)hand.push({...SAB_CARDS[pick(ck)]});
 return{id:c.pid,name:c.name,classId:c.classId||'requin',gauge:0,flux:0,
-  ap:CEO_CL[c.classId||'requin']?.paStart||5,// PA selon classe
-  cards:hand,correct:0,order:i+1,gaugeCP:[],debt:0};});
+  pa:_getPA(c.classId||'requin'),paMax:_getPA(c.classId||'requin'),
+  cards:hand,correct:0,order:i+1,gaugeCP:[],debt:0,
+  portfolio:DRAFT.playerPortfolio[c.pid]||[]};});
 mpBroadcast({type:'gameStart',players:EEP.players.map(p=>({id:p.id,name:p.name,classId:p.classId,order:p.order}))});
 MP.hostPhase='eep';EEP.active=true;EEP.candidateIdx=0;
 showScreen('game');$('gClass').textContent='📡 HOST TV';$('gClass').style.color='var(--cyan)';
@@ -3217,8 +3367,14 @@ EEP._defenseQueue=[];EEP._multiplierQueue=[];
 
 // ── Choix du thème ──────────────────────────────────────────────────
 let themeObj;
-if(EEP.bourse?.forcedTheme){themeObj=THEMES.find(t=>t.id===EEP.bourse.forcedTheme);EEP.bourse.forcedTheme=null;}
-else{themeObj=pick(THEMES);}
+if(EEP.bourse?.forcedTheme){themeObj=THEMES.find(t=>t.id===EEP.bourse.forcedTheme);EEP.bourse.forcedTheme=null;
+$('gTicker').textContent=`📈 Thème imposé par la Bourse: ${themeObj?.name}!`;}
+else{
+  // Tirer du portfolio du candidat (3 thèmes actifs), sinon fallback global
+  const portfolio=_getPortfolio(cand.id);
+  if(portfolio.length>0){themeObj=pick(portfolio);}
+  else{themeObj=pick(THEMES);}
+}
 EEP.theme=themeObj.id;EEP.fmt=Math.random()<.5?'qcm':'vf';
 
 // ── Questions : IA ou statique ──────────────────────────────────────
@@ -3255,31 +3411,30 @@ _eepBriefingPhase(cand);}
 async function _eepStreamStart(){
   const s=EEP._aiStream;
   if(!s)return;
-  // Générer Q1 immédiatement (bloquant le temps du briefing 10s)
+  // Utiliser le pipeline N+1 anti-freeze
+  _pipelineStart(s.themeName);
+  // Générer Q1 via pipeline (6s max puis fallback)
+  _pipelinePrefetch();
   try{
-    const q=await generateOneQuestion(s.themeName,0,s.total);
+    const q=await _pipelineGet();
     s.queue.push(q);s.generated=1;
   }catch(e){
-    // Fallback statique si Q1 échoue
-    const fallback=_getEEPFallbackQ();
-    if(fallback){s.queue.push(fallback);}
-    s.generated=1;}
+    s.queue.push(_getOfflineFallback());s.generated=1;}
   s.ready=true;
-  // Pré-générer les suivantes en background (non-bloquant)
+  // Pré-lancer Q2 en background (N+1)
+  _pipelinePrefetch();
   _eepStreamNext();}
 
 async function _eepStreamNext(){
   const s=EEP._aiStream;
   if(!s||s.generated>=s.total)return;
   try{
-    const q=await generateOneQuestion(s.themeName,s.generated,s.total);
+    const q=await _pipelineGet();
     s.queue.push(q);s.generated++;
   }catch(e){
-    const fallback=_getEEPFallbackQ();
-    if(fallback)s.queue.push(fallback);
-    s.generated++;}
-  // Continuer en background
-  if(s.generated<s.total){setTimeout(()=>_eepStreamNext().catch(()=>{}),200);}}
+    s.queue.push(_getOfflineFallback());s.generated++;}
+  // Pré-lancer la suivante (N+1 async)
+  if(s.generated<s.total){_pipelinePrefetch();setTimeout(()=>_eepStreamNext().catch(()=>{}),100);}}
 
 function _getEEPFallbackQ(){
   const keys=Object.keys(QDB).filter(k=>QDB[k]?.length>0);
@@ -3309,6 +3464,8 @@ function _eepBriefingPhase(cand){
   $('gTimer').textContent=`${t}s`;
   if(isHumanCand&&G.mode==='solo'){_updSoloHandBar();}
   mpBroadcast({type:'briefingStart',candidateId:cand.id,duration:10});
+  // Boss CEO commente le début d'entretien
+  bossIntro(cand.name,EEP.theme||G.theme||'évaluation');
   EEP._briefingInt=setInterval(()=>{
     t--;
     $('gTicker').textContent=`📋 BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
@@ -3655,6 +3812,8 @@ let time=EEP.timerBase;
 if(EEP.activeEffects.includes('brouillage'))time=Math.max(8,time-15);
 if(mq.some(m=>m.type==='mult_timer')||EEP._comboEffect?.effect==='overclock')time+=15;
 EEP.timer=time;EEP.answered=false;EEP.currentTarget=targetPid;
+// ── N+1 Pipeline: lance la génération de la question suivante en arrière-plan ──
+if(EEP._aiStream&&EEP._aiStream.generated<EEP._aiStream.total){_pipelinePrefetch();}
 $('gTimer').textContent=time+'s';$('gTimer').className='timer-ceo';
 if(EEP.timerInt)clearInterval(EEP.timerInt);
 EEP.timerInt=setInterval(()=>{EEP.timer--;$('gTimer').textContent=EEP.timer+'s';
@@ -3765,6 +3924,8 @@ $('ovResult').querySelector('.btn').onclick=()=>{
       else{openGestion();}});}
   else if(EEP.candidateIdx+1<EEP.players.length){bourseOpen();}
   else{EEP.candidateIdx++;eepStartNextCandidate();}};
+// Boss CEO juge le résultat
+bossOutro(_eepCandName,_eepScore,_eepTotal);
 showOv('ovResult');}
 
 function eepEndGame(){
@@ -4067,6 +4228,8 @@ MP.hostConn.on('data',d=>playerRx(d));MP.hostConn.on('error',e=>{$('jStatus').te
 MP.peer.on('error',e=>{$('jStatus').textContent='❌'+e.type;$('jStatus').style.color='var(--red)';});}
 
 let P_isCandidate=false,P_cards=[],P_flux=0,P_debt=0,P_isSeller=false,P_classId='',P_bourseThemes=[],P_bourseData=null,P_bourseBid=0;
+let P_themePool=[],P_draftedThemes=[],P_portfolio=[];
+const DRAFT_PICK_COUNT=5,DRAFT_PORTFOLIO_SIZE=3;
 
 function playerRx(d){
 if(d.type==='joined'){showScreen('player');$('pBadge').textContent=MP.myName;pLog('✅ Salle '+d.roomCode);$('pQ').innerHTML='<div style="color:var(--muted);">En attente...</div>';$('pAns').innerHTML='';}
@@ -4074,9 +4237,14 @@ if(d.type==='joined'){showScreen('player');$('pBadge').textContent=MP.myName;pLo
 else if(d.type==='startS0'){pLog('📝 Sprint!');showPSig(pick(BULLSHIT_CONTRACTS));}
 else if(d.type==='s0Timer'){$('pTimer').textContent=d.t+'s';$('pTimer').style.color=d.t<=10?'var(--red)':'var(--gold)';}
 else if(d.type==='newContract'){$('pFlux').textContent='📝'+d.score;showPSig(d.contract);}
-else if(d.type==='s0End'){pLog('🏆 Sprint fini!');showPDraft(d);}
+else if(d.type==='s0End'){pLog('🏆 Sprint fini!');P_themePool=d.themePool||[];P_draftedThemes=[];P_portfolio=[];showPDraft(d);}
 else if(d.type==='draftUpdate'){if(MP._draftData)showPDraft({...MP._draftData,slots:d.slots});}
 else if(d.type==='draftConfirm'){pLog('✅ Passage #'+d.slot);}
+// ===== THEME DRAFT =====
+else if(d.type==='themeDraftOk'){P_draftedThemes=d.owned||[];P_themePool=d.pool||[];pLog('📋 Thème drafté! '+d.owned.length+'/'+DRAFT_PICK_COUNT);if(MP._draftData)showPDraft(MP._draftData);}
+else if(d.type==='themeDraftFail'){pLog('❌ '+d.reason);}
+else if(d.type==='themeDraftPoolUpdate'){P_themePool=d.pool||[];if(MP._draftData)showPDraft(MP._draftData);}
+else if(d.type==='portfolioOk'){P_portfolio=d.active||[];pLog('⭐ Portfolio: '+d.active.length+'/'+DRAFT_PORTFOLIO_SIZE);if(MP._draftData)showPDraft(MP._draftData);}
 // GAME
 else if(d.type==='gameStart'){pLog('🏢 Partie lancée!');}
 else if(d.type==='eepStart'){pLog(`📋 EEP: ${d.candidateName}`);$('pQ').innerHTML=`<div style="color:var(--gold);font-size:12px;">📋 Évaluation de ${d.candidateName}</div>`;}
@@ -4279,6 +4447,33 @@ if(P_classId){
   if(!isMyTurn&&!mySlot){
     html+=`<div style="font-size:9px;color:var(--muted);text-align:center;padding:4px 0;">⏳ Rang #${myRankNum} — attendez que les ${myRankNum-1} premiers aient choisi</div>`;}}
 
+// ③ DRAFT DE THÈMES (5 parmi 50)
+if(P_classId&&mySlot){
+  const myThemes=P_draftedThemes||[];
+  const remaining=DRAFT_PICK_COUNT-(myThemes.length);
+  html+='<div style="font-size:9px;color:var(--gold);font-family:\'Orbitron\',monospace;margin-bottom:5px;margin-top:8px;letter-spacing:1px;">③ DRAFTEZ VOS THÈMES ('+myThemes.length+'/'+DRAFT_PICK_COUNT+')</div>';
+  if(remaining>0&&P_themePool&&P_themePool.length>0){
+    html+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-height:200px;overflow-y:auto;margin-bottom:6px;">';
+    P_themePool.forEach(t=>{
+      html+=`<button class="mob-cb" style="padding:6px 4px;font-size:9px;" onclick="pThemeDraft('${t.id}')">
+        <span style="font-size:14px;">${t.icon}</span><br>${t.name}<br><span style="font-size:7px;color:${t.type==='expert'?'var(--purple)':'var(--cyan)'};">${t.type}</span></button>`;});
+    html+='</div>';}
+  if(myThemes.length>0){
+    html+='<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px;">'+myThemes.map(id=>{const t=STATIC_THEMES.find(x=>x.id===id);return t?`<span style="font-size:9px;background:var(--card);border:1px solid var(--border);border-radius:3px;padding:2px 5px;">${t.icon} ${t.name}</span>`:''}).join('')+'</div>';}
+
+  // ④ PORTFOLIO (activer 3 sur 5)
+  if(myThemes.length>=DRAFT_PICK_COUNT){
+    const myPortfolio=P_portfolio||[];
+    html+='<div style="font-size:9px;color:var(--gold);font-family:\'Orbitron\',monospace;margin-bottom:5px;letter-spacing:1px;">④ PORTFOLIO ACTIF ('+myPortfolio.length+'/'+DRAFT_PORTFOLIO_SIZE+')</div>';
+    html+='<div style="display:flex;flex-direction:column;gap:3px;margin-bottom:6px;">';
+    myThemes.forEach(id=>{const t=STATIC_THEMES.find(x=>x.id===id);if(!t)return;
+      const isActive=myPortfolio.includes(id);
+      html+=`<button class="mob-cb" style="display:flex;align-items:center;gap:6px;padding:6px 8px;${isActive?'border-color:var(--gold);background:rgba(212,168,50,.08);':''}" onclick="pPortfolioToggle('${id}')">
+        <span style="font-size:16px;">${t.icon}</span><span style="font-size:10px;">${t.name}</span>
+        ${isActive?'<span style="margin-left:auto;color:var(--gold);font-size:10px;">⭐</span>':''}
+      </button>`;});
+    html+='</div>';}}
+
 $('pAns').innerHTML=html;}
 
 function pDraftClass(id){
@@ -4286,6 +4481,14 @@ function pDraftClass(id){
   if(id){MP.hostConn.send({type:'classSel',classId:id});$('pBadge').textContent=CEO_CL[id].icon+' '+MP.myName;pLog('🏢 '+CEO_CL[id].name);}
   if(MP._draftData)showPDraft(MP._draftData);}
 function pDraftPick(slot){MP.hostConn.send({type:'draftPick',slot:String(slot)});pLog('📋 Passage #'+slot+' sélectionné');}
+function pThemeDraft(themeId){MP.hostConn.send({type:'themeDraftPick',themeId});}
+function pPortfolioToggle(themeId){
+  const idx=P_portfolio.indexOf(themeId);
+  if(idx>=0)P_portfolio.splice(idx,1);
+  else if(P_portfolio.length<DRAFT_PORTFOLIO_SIZE)P_portfolio.push(themeId);
+  else{pLog('⭐ Portfolio plein (max '+DRAFT_PORTFOLIO_SIZE+')');return;}
+  MP.hostConn.send({type:'portfolioSet',themeIds:P_portfolio});
+  if(MP._draftData)showPDraft(MP._draftData);}
 
 function pLog(m){const e=$('pLog'),d=document.createElement('div');d.textContent=m;d.style.marginBottom='1px';e.prepend(d);while(e.children.length>20)e.removeChild(e.lastChild);}
 
