@@ -2042,12 +2042,21 @@ function startAfterRewards(){
     bourse:{active:false,phase:'none',themeId:null,themeObj:null,reservePrice:20,bids:[],forcedTheme:null},
     bourseSession:{phase:'idle',sellerPid:null,themeId:null,themeName:null,themeIcon:null,
       reservePrice:20,bids:[],eepAtList:null,eepAtReveal:null,revealLevel:0}});
+  // ── Sync DRAFT.playerPortfolio (human + bots) ──
+  DRAFT.playerPortfolio={};
+  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G._myThemes];
+  // Bots get 2 random themes each from the static themes that have QDB entries
+  const qdbKeys=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);
+  BOT_NAMES.forEach((_,i)=>{
+    const botId=`solo_bot_${i}`;
+    shuffle(qdbKeys);
+    DRAFT.playerPortfolio[botId]=[qdbKeys[0]||'finance',qdbKeys[1]||'tech'];});
   // Build EEP.players based on Sprint rankings
   const classIds=Object.keys(CEO_CL);
   const allPlayers=[
     {id:_SOLO_PLAYER_PID,name:'Vous',classId:G.classId,gauge:0,flux:G._welcomeFlux,
      cards:[...G._welcomeCards],correct:0,order:1,gaugeCP:[],debt:0,isHuman:true,
-     freeSwap:G._isSprintWinner}// winner gets free theme swap
+     freeSwap:G._isSprintWinner}
   ];
   const rankings=G._rankings||[];
   BOT_NAMES.forEach((name,i)=>{
@@ -3596,6 +3605,16 @@ if(isAITheme){
   else if(all.length>=15&&passNum===1)pool=vfPool.length>=5?vfPool:all.filter((_,i)=>i>=10);
   else pool=[...all];
   if(pool.length<3)pool=[...all];
+  // ── GUARD: si aucune question trouvée, fallback OFFLINE_QDB ──
+  if(pool.length===0){
+    // Essayer OFFLINE_QDB du thème puis fallback générique
+    if(typeof OFFLINE_QDB==='object'&&!Array.isArray(OFFLINE_QDB)&&OFFLINE_QDB[EEP.theme]){
+      pool=[...OFFLINE_QDB[EEP.theme]];}
+    else if(Array.isArray(OFFLINE_QDB)&&OFFLINE_QDB.length){
+      pool=[...OFFLINE_QDB];}
+    else{// Dernier recours: prendre un thème QDB au hasard
+      const fallKey=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>=5);
+      if(fallKey)pool=[...QDB[fallKey]];}}
   shuffle(pool);EEP.questions=pool.slice(0,10);}
 
 // ── GLaDOS intro thème ──────────────────────────────────────────────
