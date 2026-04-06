@@ -439,14 +439,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div id="menu" class="S active">
 <div class="logo-main">C.E.O.</div><div class="logo-sub">CAPITALISM: ETERNAL OPTIMIZATION</div><div class="logo-tagline">"Votre souffrance est notre KPI."</div>
 <div class="menu-grid">
-<button class="btn gold" onclick="showScreen('classSelect')">🏢 PARTIE SOLO (vs 9 IAs)</button>
+<button class="btn gold" onclick="showScreen('classSelect')">🏢 PARTIE SOLO (vs 9 IAs) 🏢</button>
 <div class="sep">MULTIJOUEUR</div>
 <button class="btn cy" onclick="showScreen('hostSetup')">📡 CRÉER SALLE (TV)</button>
 <button class="btn" onclick="showScreen('join')">📱 REJOINDRE</button>
 <div class="sep" style="margin-top:6px;"></div>
 <button class="btn sm" onclick="showOv('ovCodex')" style="width:100%;border-color:var(--muted);color:var(--muted);">📖 CODEX — RÈGLES & CLASSES</button>
 </div>
-<div style="margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:2px;">v1.3 — SOLO COMPETITION · EEP PROTOCOL · PRIORITÉ DÉFENSIVE</div>
+<div style="margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:2px;">v4.0 — INTEGRATION SPRINT · EEP PROTOCOL · PRIORITÉ DÉFENSIVE</div>
 </div>
 <!-- CLASS SELECT (solo) -->
 <div id="classSelect" class="S" style="padding:12px;overflow-y:auto;"><div class="cs-title">🏢 DÉPARTEMENT</div><div class="class-grid-ceo" id="classGrid"></div>
@@ -965,16 +965,44 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div><!-- /cb -->
 </div>
 
-<!-- SOLO ONBOARDING — Saisie des thèmes IA -->
-<div id="ovSoloOnboard" class="ov">
-<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;margin-bottom:4px;">📊 DÉFINIR VOS MARCHÉS</div>
-<div style="font-size:11px;color:var(--muted);max-width:360px;margin-bottom:14px;">Entrez vos 5 thèmes d'évaluation — Gemini génère des questions exclusives en temps réel.</div>
-<div id="soloOnboardBody" style="width:100%;max-width:360px;"></div>
-<div id="soloOnboardStatus" style="min-height:20px;width:100%;max-width:360px;text-align:center;"></div>
-<div style="display:flex;flex-direction:column;gap:6px;width:100%;max-width:360px;margin-top:10px;">
-<button class="btn gold" id="soloOnboardBtn" onclick="soloOnboardConfirm()" style="width:100%;">🤖 ANALYSER LE MARCHÉ</button>
-<button class="btn sm" style="width:100%;" onclick="closeOv('ovSoloOnboard');showScreen('classSelect')">← RETOUR AU DÉPARTEMENT</button>
+<!-- ═══ V4.0 INTEGRATION SPRINT ═══════════════════════════════════════ -->
+<!-- ÉCRAN 2 : SÉLECTION DES 5 THÈMES -->
+<div id="ovThemeDraft" class="ov" style="overflow-y:auto;">
+<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(13px,3vw,17px);color:var(--gold);letter-spacing:3px;margin-bottom:2px;">📊 SÉLECTION DES MARCHÉS</div>
+<div style="font-size:10px;color:var(--muted);max-width:400px;margin-bottom:8px;">Choisissez 5 thèmes. Les bots choisiront aussi — 50 thèmes au total dans le deck.</div>
+<div id="themeDraftCount" style="font-family:'Orbitron',monospace;font-size:11px;color:var(--cyan);margin-bottom:6px;">0/5 sélectionnés</div>
+<div id="themeDraftGrid" class="tgrid-ceo" style="max-height:40vh;overflow-y:auto;margin-bottom:8px;"></div>
+<div style="max-width:360px;width:100%;margin-bottom:8px;">
+<div style="font-size:9px;color:var(--muted);margin-bottom:4px;font-family:'Share Tech Mono',monospace;">THÈME PERSONNALISÉ (optionnel) :</div>
+<input id="customThemeInput" type="text" maxlength="40" placeholder="Ex: Cuisine japonaise, Formule 1..." style="width:100%;padding:8px;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;box-sizing:border-box;">
+<button class="btn sm cy" style="width:100%;margin-top:4px;" onclick="addCustomTheme()">+ AJOUTER CE THÈME</button>
 </div>
+<button class="btn gold" id="btnDraftConfirm" onclick="confirmThemeDraft()" disabled style="width:100%;max-width:360px;">VALIDER MES 5 MARCHÉS →</button>
+<button class="btn sm" style="width:100%;max-width:360px;margin-top:4px;" onclick="closeOv('ovThemeDraft');showScreen('classSelect')">← RETOUR</button>
+</div>
+
+<!-- ÉCRAN 3 : SIGNATURE SPRINT (60s) -->
+<div id="ovSoloSprint" class="ov">
+<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;">📝 SIGNATURE SPRINT</div>
+<div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Signez le maximum de contrats absurdes en 60 secondes!</div>
+<div id="sprintTimer" style="font-family:'Orbitron',monospace;font-size:36px;color:var(--gold);">60</div>
+<div id="sprintScore" style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--cyan);margin-bottom:6px;">Contrats signés: 0</div>
+<div id="sprintContract" style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px;max-width:320px;width:100%;margin-bottom:8px;">
+<div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);margin-bottom:3px;">📋 CONTRAT</div>
+<div id="sprintContractText" style="font-size:11px;color:var(--text);line-height:1.3;">En attente...</div>
+</div>
+<canvas id="sprintCanvas" width="300" height="100" style="border:1px solid var(--border);border-radius:4px;background:rgba(0,0,0,.3);touch-action:none;margin-bottom:6px;"></canvas>
+<button class="btn gold" onclick="submitSprintSig()" style="width:100%;max-width:300px;">✍️ SIGNER & SUIVANT</button>
+<div id="sprintLeaderboard" style="margin-top:8px;max-width:300px;width:100%;font-size:10px;color:var(--muted);"></div>
+</div>
+
+<!-- ÉCRAN 4 : RÉCOMPENSES & WELCOME PACK -->
+<div id="ovRewards" class="ov">
+<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;margin-bottom:6px;">🏆 RÉSULTATS DU SPRINT</div>
+<div id="rewardsSummary" style="max-width:340px;width:100%;"></div>
+<div id="rewardsWelcome" style="max-width:340px;width:100%;margin-top:10px;"></div>
+<div id="rewardsNomination" style="max-width:340px;width:100%;margin-top:10px;"></div>
+<button class="btn gold" id="btnStartEEP" onclick="startAfterRewards()" style="width:100%;max-width:340px;margin-top:12px;">▶️ LANCER L'ENTRETIEN</button>
 </div>
 <!-- RESTRUCTURATION PORTFOLIO (limite 2 thèmes) -->
 <div id="ovRestructuration" class="ov">
@@ -1802,47 +1830,242 @@ $('btnStartGame').disabled=false;}
 let _aiQuestionsLoaded=false;
 const _SOLO_PLAYER_PID='solo_player';
 
+// ==================== V4.0 INTEGRATION SPRINT FLOW ====================
+// Écran 1: classSelect (existant) → Écran 2: themeDraft → Écran 3: Sprint → Écran 4: Rewards → Game
+
+let THEME_DECK=[];// All themes from all players (50 total)
+let _sprintState={timer:60,int:null,score:0,botScores:[],contracts:[]};
+let _draftSelected=new Set();
+
 function startSoloGame(){if(!G.classId)return;
-// Réinitialiser THEMES
-THEMES.length=0;STATIC_THEMES.forEach(t=>THEMES.push({...t}));
-// Initialiser G
 G.mode='solo';
-Object.assign(G,{flux:0,gauge:0,gaugeCP:[],cycle:1,round:1,totalR:0,
-  cards:Object.keys(SAB_CARDS).slice(0,2).map(k=>({...SAB_CARDS[k]})),
-  usedThemes:{},ultiCharge:0,correct:0,ultiAutoQ:0,ultiLock:0,
-  aiThemeIds:new Set(),gear:[],equippedGear:null,freeErrUsed:false,
-  portfolio:[],themePass:{},bourseQueue:[],gestionUsed:false,
-  _ap:CEO_CL[G.classId]?.paStart||5,
-  _bourse_revealLevel:0,
-  bots:[],
-  bourse:{active:false,phase:'none',themeId:null,themeObj:null,reservePrice:20,bids:[],forcedTheme:null},
-  bourseSession:{phase:'idle',sellerPid:null,themeId:null,themeName:null,themeIcon:null,
-    reservePrice:20,bids:[],eepAtList:null,eepAtReveal:null,revealLevel:0}});
-// Construire EEP.players : humain + 9 bots
-const classIds=Object.keys(CEO_CL);const sabKeys=Object.keys(SAB_CARDS);
-const allPlayers=[
-  {id:_SOLO_PLAYER_PID,name:'Vous',classId:G.classId,gauge:0,flux:0,
-   cards:[pickCard(),pickCard(),pickCard()],// 3 cartes de départ
-   correct:0,order:1,gaugeCP:[],debt:0,isHuman:true}
-];
-BOT_NAMES.forEach((name,i)=>{
-  allPlayers.push({id:`solo_bot_${i}`,name,classId:pick(classIds),gauge:0,flux:20,
-    cards:[pickCard(),pickCard()],
-    correct:0,order:i+2,gaugeCP:[],debt:0,isHuman:false,icon:BOT_ICONS[i]});});
-shuffle(allPlayers);allPlayers.forEach((p,i)=>p.order=i+1);
-// Lancer le moteur EEP
-EEP.active=true;EEP.candidateIdx=0;EEP.players=allPlayers;
-showScreen('game');
-$('gClass').textContent=CEO_CL[G.classId].icon+' '+CEO_CL[G.classId].name;
-$('gClass').style.color=CEO_CL[G.classId].color;
-$('candBanner').style.display='';
-$('tlGrid').style.display='grid';
-$('bufferBar').style.display='none';
-$('soloHandBar').style.display='';
-$('soloAnswerPanel').style.display='none';
-updGauge();updFlux();
-_updSoloHandBar();
-eepStartNextCandidate();}
+THEMES.length=0;STATIC_THEMES.forEach(t=>THEMES.push({...t}));
+// Show theme draft overlay
+_draftSelected.clear();
+const g=$('themeDraftGrid');g.innerHTML='';
+STATIC_THEMES.forEach(t=>{
+  const d=document.createElement('div');d.className='tcard-ceo';d.dataset.t=t.id;
+  d.style.position='relative';
+  const badge=t.type==='expert'?'<div style="position:absolute;top:2px;right:2px;font-size:7px;background:rgba(168,85,247,.15);color:#a855f7;border:1px solid #a855f7;border-radius:2px;padding:1px 3px;font-family:Orbitron,monospace;">PRO</div>':'';
+  d.innerHTML=`${badge}<div class="ti">${t.icon}</div><div class="tn" style="font-size:9px;">${t.name}</div>`;
+  d.onclick=()=>_toggleDraftTheme(d,t.id);
+  g.appendChild(d);});
+$('themeDraftCount').textContent='0/5 sélectionnés';
+$('btnDraftConfirm').disabled=true;
+showOv('ovThemeDraft');}
+
+function _toggleDraftTheme(el,id){
+  if(_draftSelected.has(id)){_draftSelected.delete(id);el.classList.remove('sel');}
+  else{if(_draftSelected.size>=5)return;_draftSelected.add(id);el.classList.add('sel');}
+  $('themeDraftCount').textContent=`${_draftSelected.size}/5 sélectionnés`;
+  $('btnDraftConfirm').disabled=_draftSelected.size<5;}
+
+function addCustomTheme(){
+  const input=$('customThemeInput');
+  const name=input.value.trim();
+  if(!name||name.length<2)return;
+  const tId='custom_'+name.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'').slice(0,20);
+  if(THEMES.find(t=>t.id===tId))return;
+  const t={id:tId,name,icon:'🎯',type:'mainstream',aiGenerated:true};
+  THEMES.push(t);STATIC_THEMES.push(t);
+  // Add to grid + auto-select
+  const g=$('themeDraftGrid');
+  const d=document.createElement('div');d.className='tcard-ceo sel';d.dataset.t=tId;
+  d.innerHTML=`<div style="position:absolute;top:2px;right:2px;font-size:7px;background:rgba(34,211,238,.15);color:var(--cyan);border:1px solid var(--cyan);border-radius:2px;padding:1px 3px;font-family:Orbitron,monospace;">IA</div><div class="ti">🎯</div><div class="tn" style="font-size:9px;">${name}</div>`;
+  d.style.position='relative';
+  d.onclick=()=>_toggleDraftTheme(d,tId);
+  g.prepend(d);
+  if(_draftSelected.size<5)_draftSelected.add(tId);
+  $('themeDraftCount').textContent=`${_draftSelected.size}/5 sélectionnés`;
+  $('btnDraftConfirm').disabled=_draftSelected.size<5;
+  input.value='';
+  // Mark as AI theme
+  if(!(G.aiThemeIds instanceof Set))G.aiThemeIds=new Set();
+  G.aiThemeIds.add(tId);}
+
+async function confirmThemeDraft(){
+  closeOv('ovThemeDraft');
+  // Build THEME_DECK: player's 5 + 9 bots × 5 = 50
+  const playerThemes=[..._draftSelected];
+  THEME_DECK=[...playerThemes];
+  // Bots pick 5 random themes each from remaining pool
+  const botPool=STATIC_THEMES.filter(t=>!_draftSelected.has(t.id)).map(t=>t.id);
+  for(let b=0;b<9;b++){
+    shuffle(botPool);
+    for(let i=0;i<5&&THEME_DECK.length<50;i++){
+      THEME_DECK.push(botPool[i%botPool.length]);}}
+  shuffle(THEME_DECK);
+  // Register AI themes
+  if(!(G.aiThemeIds instanceof Set))G.aiThemeIds=new Set();
+  playerThemes.forEach(id=>{const t=THEMES.find(x=>x.id===id);if(t?.aiGenerated)G.aiThemeIds.add(id);});
+  // Fetch AI icons for custom themes (non-blocking)
+  const customNames=[...G.aiThemeIds].map(id=>THEMES.find(t=>t.id===id)?.name).filter(Boolean);
+  if(customNames.length)fetchAIThemes(customNames).catch(()=>{});
+  // → Launch Sprint
+  _startSoloSprint();}
+
+// ── SIGNATURE SPRINT (60s) ──────────────────────────────────────────────
+function _startSoloSprint(){
+  _sprintState={timer:60,int:null,score:0,botScores:BOT_NAMES.map(()=>0),contracts:[...BULLSHIT_CONTRACTS]};
+  shuffle(_sprintState.contracts);
+  $('sprintTimer').textContent='60';
+  $('sprintScore').textContent='Contrats signés: 0';
+  $('sprintContractText').textContent=_sprintState.contracts[0]||'Clause de bonheur obligatoire';
+  _initSprintCanvas();
+  showOv('ovSoloSprint');
+  _bossNotif('Signez vite! Votre carrière en dépend. Enfin, pas vraiment.');
+  // Start countdown
+  _sprintState.int=setInterval(()=>{
+    _sprintState.timer--;
+    $('sprintTimer').textContent=_sprintState.timer;
+    if(_sprintState.timer<=10)$('sprintTimer').style.color='var(--red)';
+    // Bots sign randomly (0.3-1.5 signs/sec average)
+    _sprintState.botScores.forEach((_,i)=>{
+      if(Math.random()<0.03)_sprintState.botScores[i]++;});
+    if(_sprintState.timer<=0){clearInterval(_sprintState.int);_endSoloSprint();}
+  },1000);}
+
+function _initSprintCanvas(){
+  const c=$('sprintCanvas');if(!c)return;
+  const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);
+  ctx.strokeStyle='#d4a832';ctx.lineWidth=2;ctx.lineCap='round';
+  let drawing=false;
+  function pos(e){const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};}
+  c.onmousedown=c.ontouchstart=e=>{e.preventDefault();drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);};
+  c.onmousemove=c.ontouchmove=e=>{if(!drawing)return;e.preventDefault();const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();};
+  c.onmouseup=c.ontouchend=()=>drawing=false;}
+
+function submitSprintSig(){
+  if(_sprintState.timer<=0)return;
+  const c=$('sprintCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const d=ctx.getImageData(0,0,c.width,c.height).data;
+  let px=0;for(let i=3;i<d.length;i+=4)if(d[i]>0)px++;
+  if(px<20){_bossNotif('Griffonnez quelque chose au moins!');return;}
+  _sprintState.score++;
+  $('sprintScore').textContent=`Contrats signés: ${_sprintState.score}`;
+  // Next contract
+  ctx.clearRect(0,0,c.width,c.height);
+  const ci=_sprintState.score%_sprintState.contracts.length;
+  $('sprintContractText').textContent=_sprintState.contracts[ci]||'Clause de résilience maximale';
+  // Update leaderboard
+  _updSprintLB();}
+
+function _updSprintLB(){
+  const entries=[{name:'Vous',score:_sprintState.score,isPlayer:true}];
+  BOT_NAMES.forEach((n,i)=>entries.push({name:n,score:_sprintState.botScores[i],icon:BOT_ICONS[i]}));
+  entries.sort((a,b)=>b.score-a.score);
+  $('sprintLeaderboard').innerHTML=entries.slice(0,5).map((e,i)=>
+    `<div style="display:flex;justify-content:space-between;padding:2px 0;${e.isPlayer?'color:var(--gold);font-weight:700;':''}">`+
+    `<span>#${i+1} ${e.icon||'👤'} ${e.name}</span><span>${e.score}</span></div>`).join('');}
+
+function _endSoloSprint(){
+  // Final bot scores boost (bots sign ~8-15 contracts total)
+  _sprintState.botScores=_sprintState.botScores.map(s=>s+Math.floor(Math.random()*8)+5);
+  _updSprintLB();
+  // Determine winner
+  const allScores=[{name:'Vous',score:_sprintState.score,isPlayer:true,pid:_SOLO_PLAYER_PID}];
+  BOT_NAMES.forEach((n,i)=>allScores.push({name:n,score:_sprintState.botScores[i],pid:`solo_bot_${i}`,icon:BOT_ICONS[i]}));
+  allScores.sort((a,b)=>b.score-a.score);
+  const winner=allScores[0];
+  const playerRank=allScores.findIndex(e=>e.isPlayer)+1;
+  setTimeout(()=>{
+    closeOv('ovSoloSprint');
+    _showRewards(winner,playerRank,allScores);
+  },1500);}
+
+// ── REWARDS & WELCOME PACK ──────────────────────────────────────────────
+function _showRewards(winner,playerRank,rankings){
+  // Summary
+  const isWinner=winner.isPlayer;
+  $('rewardsSummary').innerHTML=`
+    <div style="text-align:center;padding:10px;background:rgba(212,168,50,.08);border:1px solid rgba(212,168,50,.3);border-radius:6px;">
+      <div style="font-size:28px;">${isWinner?'🏆':'🎖️'}</div>
+      <div style="font-family:'Orbitron',monospace;font-size:14px;color:var(--gold);margin:4px 0;">
+        ${isWinner?'VOUS AVEZ GAGNÉ LE SPRINT!':'SPRINT TERMINÉ'}</div>
+      <div style="font-size:11px;color:var(--muted);">Rang #${playerRank} — ${_sprintState.score} contrats signés</div>
+      <div style="font-size:10px;color:var(--text);margin-top:4px;">${winner.icon||'👤'} ${winner.name}: ${winner.score} contrats</div>
+    </div>
+    ${rankings.slice(0,5).map((e,i)=>`<div style="display:flex;justify-content:space-between;font-size:10px;padding:2px 4px;${e.isPlayer?'color:var(--gold);':'color:var(--muted);'}">
+      <span>#${i+1} ${e.icon||'👤'} ${e.name}</span><span>${e.score}</span></div>`).join('')}`;
+
+  // Welcome Pack: 1 gear, 3 gold cards, 50 flux
+  const welcomeGear=pick([
+    {id:'flux_start',name:'Montre CEO',icon:'⌚',desc:'+10⚡ au début de chaque EEP',type:'fluxStart',val:10,rarity:'gold'},
+    {id:'def_aura',name:'Aura de Charisme',icon:'✨',desc:'Réduit dégâts sabotage -15%',type:'defAura',val:15,rarity:'gold'},
+    {id:'combo_boost',name:'Café Premium',icon:'☕',desc:'+5s bonus sur chaque question',type:'timeBoost',val:5,rarity:'gold'},
+  ]);
+  const welcomeCards=[pickCard(),pickCard(),pickCard()];
+  // Winner bonus
+  const winnerBonus=isWinner?`<div style="margin-top:6px;padding:6px;background:rgba(212,168,50,.1);border:1px solid var(--gold);border-radius:4px;">
+    <div style="font-size:9px;color:var(--gold);font-family:'Orbitron',monospace;">🏆 BONUS VAINQUEUR</div>
+    <div style="font-size:10px;color:var(--text);">Gear Premium + 100⚡ bonus + 1 Carte Black</div></div>`:'';
+
+  $('rewardsWelcome').innerHTML=`
+    <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--cyan);letter-spacing:1px;margin-bottom:4px;">📦 WELCOME PACK</div>
+    <div style="font-size:10px;color:var(--text);line-height:1.5;">
+      ${welcomeGear.icon} <strong>${welcomeGear.name}</strong> — ${welcomeGear.desc}<br>
+      🃏 3 Cartes Gold: ${welcomeCards.map(c=>c.icon+' '+c.name).join(', ')}<br>
+      ⚡ 50 Flux de départ${isWinner?' + 100 bonus':''}</div>${winnerBonus}`;
+
+  // 2 random themes from THEME_DECK for portfolio
+  shuffle(THEME_DECK);
+  const myThemes=THEME_DECK.splice(0,2);
+
+  // Nomination: winner picks first candidate (for solo, auto-pick)
+  const nomineeIdx=isWinner?1:0;// winner nominates someone else (or self)
+  $('rewardsNomination').innerHTML=`
+    <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--orange);letter-spacing:1px;margin-top:6px;">🎯 CANDIDAT #1</div>
+    <div style="font-size:10px;color:var(--muted);">${isWinner?"En tant que vainqueur, vous choisissez qui passe en premier.":"Le vainqueur a choisi l\u0027ordre de passage."}</div>
+    <div style="font-size:10px;color:var(--text);margin-top:2px;">📋 Portfolio: ${myThemes.map(id=>{const t=THEMES.find(x=>x.id===id);return(t?.icon||'📚')+' '+(t?.name||id);}).join(', ')}</div>`;
+
+  // Store for later
+  G._welcomeGear=welcomeGear;
+  G._welcomeCards=welcomeCards;
+  G._welcomeFlux=isWinner?150:50;
+  G._myThemes=myThemes;
+  G._rankings=rankings;
+  G._isSprintWinner=isWinner;
+
+  showOv('ovRewards');}
+
+function startAfterRewards(){
+  closeOv('ovRewards');
+  // Initialize full G state
+  Object.assign(G,{flux:G._welcomeFlux,gauge:0,gaugeCP:[],cycle:1,round:1,totalR:0,
+    cards:G._welcomeCards,
+    usedThemes:{},ultiCharge:0,correct:0,ultiAutoQ:0,ultiLock:0,
+    gear:[G._welcomeGear],equippedGear:G._welcomeGear,freeErrUsed:false,
+    portfolio:[...G._myThemes],themePass:{},bourseQueue:[],gestionUsed:false,
+    _ap:CEO_CL[G.classId]?.paStart||5,
+    _bourse_revealLevel:0,bots:[],
+    bourse:{active:false,phase:'none',themeId:null,themeObj:null,reservePrice:20,bids:[],forcedTheme:null},
+    bourseSession:{phase:'idle',sellerPid:null,themeId:null,themeName:null,themeIcon:null,
+      reservePrice:20,bids:[],eepAtList:null,eepAtReveal:null,revealLevel:0}});
+  // Build EEP.players based on Sprint rankings
+  const classIds=Object.keys(CEO_CL);
+  const allPlayers=[
+    {id:_SOLO_PLAYER_PID,name:'Vous',classId:G.classId,gauge:0,flux:G._welcomeFlux,
+     cards:[...G._welcomeCards],correct:0,order:1,gaugeCP:[],debt:0,isHuman:true,
+     freeSwap:G._isSprintWinner}// winner gets free theme swap
+  ];
+  const rankings=G._rankings||[];
+  BOT_NAMES.forEach((name,i)=>{
+    const rank=rankings.findIndex(r=>r.pid===`solo_bot_${i}`);
+    allPlayers.push({id:`solo_bot_${i}`,name,classId:pick(classIds),gauge:0,flux:20,
+      cards:[pickCard(),pickCard()],
+      correct:0,order:rank>=0?rank+1:i+2,gaugeCP:[],debt:0,isHuman:false,icon:BOT_ICONS[i]});});
+  allPlayers.sort((a,b)=>a.order-b.order);
+  allPlayers.forEach((p,i)=>p.order=i+1);
+  EEP.active=true;EEP.candidateIdx=0;EEP.players=allPlayers;
+  showScreen('game');
+  $('gClass').textContent=CEO_CL[G.classId].icon+' '+CEO_CL[G.classId].name;
+  $('gClass').style.color=CEO_CL[G.classId].color;
+  $('candBanner').style.display='';$('tlGrid').style.display='grid';
+  $('bufferBar').style.display='none';$('soloHandBar').style.display='';
+  $('soloAnswerPanel').style.display='none';
+  updGauge();updFlux();_updSoloHandBar();
+  eepStartNextCandidate();}
 
 // ── Main de cartes — barre persistante ───────────────────────────────────
 function _updSoloHandBar(){
@@ -2058,42 +2281,8 @@ function soloBotRx(pid,d){
       $('gTicker').textContent=`⚠️ ${bot.icon||'🤖'} ${bot.name} charge ${card.icon} ${card.name} dans le buffer...`;
       updBufferUI();},Math.random()*3000);}}
 
-function openSoloOnboarding(){
-const suggestions=['Dinosaures','Cuisine française','Espace & Astronomie','Cinéma','Histoire mondiale','Musique','Sport','Architecture','Philosophie','Biologie','Jeux vidéo','Mode & Luxe','Environnement','Psychologie','Gastronomie'];
-shuffle(suggestions);
-// Construire les 5 champs avec suggestions aléatoires en placeholder
-const fields=Array.from({length:5},(_,i)=>`
-<div style="position:relative;margin-bottom:6px;">
-  <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);font-weight:700;">${i+1}</span>
-  <input class="inp" id="soloT${i}" placeholder="${suggestions[i]}" maxlength="40"
-    style="padding-left:28px;font-size:13px;letter-spacing:1px;text-transform:capitalize;">
-</div>`).join('');
-$('soloOnboardBody').innerHTML=fields;
-$('soloOnboardStatus').textContent='';
-$('soloOnboardBtn').disabled=false;$('soloOnboardBtn').textContent='🤖 ANALYSER LE MARCHÉ';
-showOv('ovSoloOnboard');}
-
-async function soloOnboardConfirm(){
-const names=Array.from({length:5},(_,i)=>$('soloT'+i)?.value.trim()).filter(Boolean);
-if(names.length<1){$('soloOnboardStatus').textContent='⚠️ Entrez au moins un thème.';return;}
-$('soloOnboardBtn').disabled=true;$('soloOnboardBtn').textContent='⏳ Enregistrement...';
-$('soloOnboardStatus').innerHTML=`<div style="margin-top:8px;">
-<div style="background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:2px;height:5px;overflow:hidden;max-width:280px;margin:0 auto 6px;">
-  <div style="height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));animation:aiLoad 1.8s ease-in-out infinite;"></div>
-</div>
-<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">Récupération des icônes pour : ${names.join(', ')}...</div>
-</div>`;
-// Appel léger : icônes uniquement. Si ça échoue, on continue avec des icônes par défaut.
-try{await fetchAIThemes(names);}
-catch(e){
-  console.warn('[CEO-AI] Icônes non récupérées, icônes par défaut utilisées:',e.message);
-  // Enregistrer quand même les thèmes sans icônes Gemini
-  names.forEach(name=>{
-    const tId=name.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
-    if(!THEMES.find(t=>t.id===tId))THEMES.push({id:tId,name,icon:'📚',aiGenerated:true});
-    if(G.aiThemeIds instanceof Set)G.aiThemeIds.add(tId);});}
-$('gTicker').textContent=`📊 ${names.length} thèmes définis — questions générées à la volée par Gemini.`;
-closeOv('ovSoloOnboard');showScreen('game');G.round=1;openThemeSel();}
+function openSoloOnboarding(){startSoloGame();}// compat redirect
+async function soloOnboardConfirm(){confirmThemeDraft();}// compat redirect
 
 function openThemeSel(){
 G.selTheme=null;$('btnConfTheme').disabled=true;const g=$('ovThemeGrid');g.innerHTML='';
@@ -2120,9 +2309,9 @@ async function confirmTheme(){
 if(!G.selTheme)return;
 const newThemeId=G.selTheme;
 closeOv('ovTheme');
-// Portfolio limit — max 2 thèmes simultanés
+// Portfolio limit — max 3 thèmes simultanés
 if(G.portfolio&&!G.portfolio.includes(newThemeId)){
-  if(G.portfolio.length>=2){
+  if(G.portfolio.length>=3){
     const newTh=THEMES.find(t=>t.id===newThemeId);
     $('restructNewTheme').textContent=`${newTh?.icon||'📚'} ${newTh?.name||newThemeId}`;
     $('restructGrid').innerHTML=G.portfolio.map(pid=>{
@@ -2303,28 +2492,37 @@ startTimer();showQ();}
 async function _streamGenerateNext(){
   const idx=G._streamGenerated;
   if(idx>=G._streamTotal)return;
+  const _N1_TO=6000;
   try{
-    const q=await generateOneQuestion(G._streamThemeName,idx,G._streamTotal,G._streamContext);
+    const timeoutP=new Promise((_,rej)=>setTimeout(()=>rej(new Error('N1_TIMEOUT')),_N1_TO));
+    const q=await Promise.race([generateOneQuestion(G._streamThemeName,idx,G._streamTotal,G._streamContext),timeoutP]);
     G._streamQueue.push(q);
     G._streamGenerated++;
     console.log(`[CEO-AI] Q${idx+1} générée:`,q.q?.slice(0,40));
-    // Si le jeu attend cette question (G.qs vide), l'afficher maintenant
     if(G._streamMode&&G.phase==='playing'&&G.qs.length===0){
       G.qs=[q];showQStream();}
   }catch(e){
-    console.warn(`[CEO-AI] Échec Q${idx+1}:`,e.message);
-    G._streamGenerated++;// ne pas bloquer — question sautée
-    if(G._streamMode&&G.phase==='playing'&&G.qs.length===0){
-      // Fallback: utiliser une question statique
-      const fallbackQ=_getStaticFallbackQ();
-      if(fallbackQ){G.qs=[fallbackQ];showQStream();}}}
-  // Pré-générer la suivante en background (sans await — non-bloquant)
+    console.warn(`[CEO-AI] Q${idx+1} ${e.message==='N1_TIMEOUT'?'timeout 6s':'erreur'}:`,e.message);
+    G._streamGenerated++;
+    const fallbackQ=_getStaticFallbackQ();
+    if(fallbackQ){
+      G._streamQueue.push(fallbackQ);
+      if(G._streamMode&&G.phase==='playing'&&G.qs.length===0){
+        G.qs=[fallbackQ];showQStream();}
+      if(e.message==='N1_TIMEOUT')_bossNotif('⚠️ IA lente — question de secours chargée.');}}
   if(G._streamGenerated<G._streamTotal){
     _streamGenerateNext().catch(e=>console.warn('[CEO-AI bg]',e.message));}}
 
 function _getStaticFallbackQ(){
-  const k=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>0&&!G.aiThemeIds.has(k));
-  return k?pick(QDB[k]):null;}
+  // Use OFFLINE_QDB for current theme first, then QDB
+  const tid=G.theme||'';
+  if(typeof OFFLINE_QDB!=='undefined'&&OFFLINE_QDB[tid]&&OFFLINE_QDB[tid].length){
+    const pool=[...OFFLINE_QDB[tid]];shuffle(pool);
+    const q=pool.find(q=>!G._usedOffline?.has(q.q));
+    if(q){if(!G._usedOffline)G._usedOffline=new Set();G._usedOffline.add(q.q);return{...q,source:'offline'};}
+    return{...pick(pool),source:'offline'};}
+  const k=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>0);
+  return k?{...pick(QDB[k]),source:'offline'}:null;}
 
 function showQStream(){
   if(!G._streamMode){showQ();return;}
@@ -2339,8 +2537,14 @@ function showQStream(){
     $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(13px,3vw,16px);color:var(--cyan);">GEMINI PRÉPARE...</span>`;
     $('qChoices').innerHTML=`<div style="max-width:200px;margin:12px auto;"><div style="background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:2px;height:4px;overflow:hidden;"><div style="height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));animation:aiLoad 1s ease-in-out infinite;"></div></div></div>`;
     $('gTimer').textContent='';
-    // Attendre que la question arrive (poll toutes les 300ms)
-    const wait=setInterval(()=>{if(G._streamQueue.length>0||!G._streamMode){clearInterval(wait);showQStream();}},300);}}
+    // Attendre que la question arrive (poll 300ms, timeout 6s)
+    let _pollT=0;
+    const wait=setInterval(()=>{_pollT+=300;
+      if(G._streamQueue.length>0||!G._streamMode){clearInterval(wait);showQStream();}
+      else if(_pollT>=6000){clearInterval(wait);const fb=_getStaticFallbackQ();
+        if(fb){G._streamQueue.push(fb);_bossNotif('⚠️ IA trop lente — question locale.');showQStream();}
+        else endRound();}
+    },300);}}
 
 function startTimer(){/* Timer géré question par question dans _renderQuestion */}
 function updTimerD(){/* idem */}
