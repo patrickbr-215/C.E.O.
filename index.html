@@ -1363,6 +1363,22 @@ La réponse correcte doit être à l'index "a" (entier 0-3). Les 4 choix doivent
   else throw new Error('Type inconnu');
   return q;}
 
+// ── fetchQuestionsForTheme — génère 10 questions pour un thème via Gemini ──
+async function fetchQuestionsForTheme(themeName){
+  const tId=_slugify(themeName);
+  if(!QDB[tId])QDB[tId]=[];
+  let count=0;
+  // Générer 10 questions par lots de 3 (évite rate limit)
+  for(let batch=0;batch<10;batch+=3){
+    const tasks=[];
+    for(let i=batch;i<Math.min(batch+3,10);i++){
+      tasks.push(generateOneQuestion(themeName,i,10)
+        .then(q=>{QDB[tId].push(q);count++;})
+        .catch(e=>console.warn(`[CEO-AI] fetchQ "${themeName}" Q${i+1}:`,e.message)));}
+    await Promise.allSettled(tasks);}
+  console.log(`[CEO-AI] fetchQuestionsForTheme("${themeName}"): ${count}/10`);
+  return count;}
+
 // ==================== BOSS CEO — NOTIFICATIONS CHAT ========================
 const BOSS_PERSONA='Tu es le C.E.O. de la Firme dans le jeu C.E.O. — Capitalism: Eternal Optimization. Tu es une IA inspirée de GLaDOS : passif-agressive, cynique, hautaine, corporate jusqu\'au grotesque. Tu utilises du vocabulaire de manager impitoyable (synergie, KPI, licenciement, optimisation humaine, restructuration, downsizing, deliverables). Ne sois JAMAIS neutre. Chaque message contient 2-3 phrases. Ton humour est noir, condescendant, et toujours en français. Sans guillemets autour de ta réponse.';
 const BOSS_STATIC_WRONG=[
