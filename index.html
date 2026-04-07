@@ -1991,10 +1991,8 @@ async function confirmThemeDraft(){
   const poolCopy=[...THEME_DECK];shuffle(poolCopy);
   DRAFT.playerPortfolio={};
   const qdbKeys=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);
-  // Human gets 2 from their picks (guaranteed playable)
-  const humanThemes=playerThemes.filter(id=>QDB[id]&&QDB[id].length>=3).slice(0,2);
-  if(humanThemes.length<2){const extra=qdbKeys.filter(k=>!humanThemes.includes(k));
-    while(humanThemes.length<2&&extra.length)humanThemes.push(extra.shift());}
+  // Human gets 2 from their actual picks (custom/AI themes included — they'll use streaming)
+  const humanThemes=[...playerThemes].slice(0,2);
   DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...humanThemes];
   G.portfolio=[...humanThemes];
   // Bots get 2 themes with QDB entries
@@ -3715,11 +3713,14 @@ else{
   else{themeObj=pick(THEMES);}
 }
 EEP.theme=themeObj.id;EEP.fmt=Math.random()<.5?'qcm':'vf';
+G.theme=EEP.theme;// sync pour que les fallbacks trouvent le bon thème
 
 // ── Questions : IA ou statique ──────────────────────────────────────
-const isAITheme=G.aiThemeIds instanceof Set&&G.aiThemeIds.has(EEP.theme);
+const hasStaticQ=QDB[EEP.theme]&&QDB[EEP.theme].length>=3;
+const isAITheme=(G.aiThemeIds instanceof Set&&G.aiThemeIds.has(EEP.theme))||!hasStaticQ;
 if(isAITheme){
   // Streaming Gemini : génère Q1 tout de suite, les suivantes en background
+  // Utilise le NOM du thème (pas l'id) pour que Gemini génère des questions pertinentes
   EEP._aiStream={queue:[],generated:0,total:10,themeName:themeObj.name,ready:false};
   _eepStreamStart();
 }else{
