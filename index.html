@@ -431,6 +431,16 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .boss-txt{font-family:'Rajdhani',sans-serif;font-size:12px;color:#e0e0e0;line-height:1.35;word-break:break-word;}
 @keyframes bossIn{from{opacity:0;transform:translateY(-20px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
 @keyframes bossOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-30px) scale(.9);}}
+/* ── #pBossChat — notification smartphone style Slack ── */
+#pBossChat{width:100%;min-height:0;}
+.pbc-notif{display:flex;gap:8px;align-items:flex-start;background:linear-gradient(135deg,rgba(15,17,24,.97),rgba(25,28,40,.97));border:1px solid rgba(212,168,50,.4);border-radius:10px;padding:8px 10px;margin-bottom:4px;box-shadow:0 4px 16px rgba(0,0,0,.6),0 0 10px rgba(212,168,50,.1);animation:pbcIn .35s cubic-bezier(.22,1,.36,1) forwards;overflow:hidden;}
+.pbc-notif.out{animation:pbcOut .4s ease-in forwards;}
+.pbc-avi{font-size:18px;flex-shrink:0;filter:drop-shadow(0 0 4px rgba(212,168,50,.5));}
+.pbc-body{flex:1;min-width:0;}
+.pbc-from{font-family:'Orbitron',monospace;font-size:8px;color:var(--gold);letter-spacing:1px;margin-bottom:2px;}
+.pbc-txt{font-size:10px;color:var(--text);line-height:1.4;font-family:'Share Tech Mono',monospace;}
+@keyframes pbcIn{from{opacity:0;transform:translateY(-16px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes pbcOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-20px);height:0;padding:0;margin:0;}}
 </style>
 </head>
 <body>
@@ -500,6 +510,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 <div style="height:10px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:2px;margin-bottom:5px;overflow:hidden;"><div id="pGauge" style="height:100%;background:linear-gradient(90deg,#1a6e3a,#22c55e);width:0%;transition:width .4s;"></div></div>
 <div class="mob-q" id="pQ">En attente...</div>
+<div id="pBossChat" style="margin-bottom:6px;min-height:0;"></div>
 <div id="pAns"></div>
 <div id="pHand" class="sab-hand"></div>
 <div class="mob-log" id="pLog"><div style="opacity:.5;">Connexion...</div></div>
@@ -1191,7 +1202,12 @@ function _pipelinePrefetch(){
     generateOneQuestion(name,idx,10),
     new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT_6S')),6000))
   ]).then(q=>{_qPipeline.nextReady=q;_qPipeline.generating=false;return q;})
-   .catch(e=>{console.warn('[N+1] Timeout/err, offline fallback:',e.message);
+   .catch(e=>{
+    const isTimeout=e.message==='TIMEOUT_6S';
+    console.warn('[N+1]',isTimeout?'Timeout 6s':'Erreur Gemini','→ fallback offline:',e.message);
+    if(isTimeout){
+      // Message boss "connexion satellite instable"
+      setTimeout(()=>_bossNotif('⚠️ Connexion satellite instable. Je vais vous poser une question de stagiaire en attendant que mes serveurs daignent répondre.'),100);}
     const fb=_getOfflineFallback();_qPipeline.nextReady=fb;_qPipeline.generating=false;return fb;});}
 
 async function _pipelineGet(){
@@ -1248,6 +1264,9 @@ async function _getGenAI(){
     _bossNotif('⚠️ Module IA indisponible — mode local activé.');
     return null;}}
 
+// ── Persona racine — injectée dans TOUS les appels ────────────────────
+const CEO_SYSTEM_INSTRUCTION=`Tu es le C.E.O. de la Firme. Ton ton est calqué sur GLaDOS (Portal) : passif-agressif, hautain, adepte du jargon corporate absurde. Tu considères les joueurs comme des ressources jetables. Ne sois jamais neutre ou encourageant. Utilise des termes comme : optimisation humaine, KPI de survie, synergie toxique, licenciement immédiat. Réponds toujours en français, sans guillemets autour de ta réponse.`;
+
 const _MODEL_CHAIN=['gemini-2.0-flash-lite','gemini-2.0-flash','gemini-1.5-flash'];
 
 async function _geminiGenerate(prompt,model=null){
@@ -1257,28 +1276,43 @@ async function _geminiGenerate(prompt,model=null){
       try{
         const r=await fetch('/api/gemini',{method:'POST',
           headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({prompt,model})});
+          body:JSON.stringify({prompt,model,systemInstruction:CEO_SYSTEM_INSTRUCTION})});
         if(r.status===503&&attempt<2){await _sleep(2000);continue;}
-        if(!r.ok)throw new Error('Proxy HTTP '+r.status);
+        if(!r.ok){
+          // ── LOG VERCEL DÉTAILLÉ ──────────────────────────────────────
+          let errBody='(vide)';
+          try{errBody=await r.text();}catch(_){}
+          console.error(`[CEO-GEMINI] Proxy HTTP ${r.status} (tentative ${attempt+1}/3)`);
+          console.error('[CEO-GEMINI] Headers:', JSON.stringify(Object.fromEntries(r.headers)));
+          console.error('[CEO-GEMINI] Body:', errBody);
+          console.error('[CEO-GEMINI] Diagnostic: vérifier GEMINI_API_KEY dans Vercel → Settings → Environment Variables');
+          throw new Error(`Proxy HTTP ${r.status}: ${errBody.slice(0,120)}`);}
         const d=await r.json();
-        if(d.error)throw new Error(d.error);
+        if(d.error){
+          console.error('[CEO-GEMINI] Erreur API:', d.error);
+          throw new Error(d.error);}
         return d.text;
       }catch(e){
+        console.error(`[CEO-GEMINI] Tentative ${attempt+1} échouée:`,e.message);
         if(attempt===2)throw new Error('IA indisponible (proxy): '+e.message);
         await _sleep(1500+attempt*1500);}}
     throw new Error('IA proxy: max retries');}
-  // ── MODE LOCAL : SDK direct ──────────────────────────────────────────
+  // ── MODE LOCAL : SDK direct avec systemInstruction ───────────────────
   const genAI=await _getGenAI();
   if(!genAI)throw new Error('IA désactivée — SDK non chargé');
   const modelsToTry=model?[model]:[..._MODEL_CHAIN];
   for(const m of modelsToTry){
     for(let attempt=0;attempt<2;attempt++){
       try{
-        const mdl=genAI.getGenerativeModel({model:m,generationConfig:{temperature:0.8,maxOutputTokens:300}});
+        const mdl=genAI.getGenerativeModel({
+          model:m,
+          systemInstruction:CEO_SYSTEM_INSTRUCTION,
+          generationConfig:{temperature:0.9,maxOutputTokens:300}});
         const result=await mdl.generateContent(prompt);
         return result.response.text();
       }catch(e){
         const is429=e.message?.includes('429')||e.status===429;
+        console.warn(`[CEO-GEMINI] ${m} tentative ${attempt+1}:`,e.message);
         if(is429&&attempt===0){await _sleep(6000);continue;}
         if(!is429)break;}}}
   throw new Error('Tous les modèles Gemini ont échoué.');}
@@ -1367,16 +1401,28 @@ function _bossBeep(){
     o.start();o.stop(ctx.currentTime+0.15);
   }catch(e){}}
 
-// ── Affichage Bubble ──
+// ── Affichage Bubble — TV (boss-notif) + Smartphone (pBossChat) ──
 function _bossNotif(text){
-  const box=$('boss-notif');if(!box)return;
   _bossBeep();
-  const bubble=document.createElement('div');
-  bubble.className='boss-bubble';
-  bubble.innerHTML=`<div class="boss-avi">💼</div><div class="boss-body"><div class="boss-name">C.E.O. de la Firme</div><div class="boss-txt">${text}</div></div>`;
-  box.appendChild(bubble);
-  setTimeout(()=>{bubble.classList.add('out');setTimeout(()=>bubble.remove(),500);},12000);
-  // Also show on ticker for TV
+  // ── TV notification (haut de l'écran) ─────────────────────────────
+  const box=$('boss-notif');
+  if(box){
+    const bubble=document.createElement('div');
+    bubble.className='boss-bubble';
+    bubble.innerHTML=`<div class="boss-avi">💼</div><div class="boss-body"><div class="boss-name">C.E.O. de la Firme</div><div class="boss-txt">${text}</div></div>`;
+    box.appendChild(bubble);
+    setTimeout(()=>{bubble.classList.add('out');setTimeout(()=>bubble.remove(),500);},12000);}
+  // ── Smartphone notification (glisse du haut, reste 10s) ────────────
+  const phoneBox=$('pBossChat');
+  if(phoneBox){
+    const notif=document.createElement('div');
+    notif.className='pbc-notif';
+    notif.innerHTML=`<div class="pbc-avi">💼</div><div class="pbc-body"><div class="pbc-from">C.E.O. — MESSAGE PRIORITAIRE</div><div class="pbc-txt">${text}</div></div>`;
+    phoneBox.insertBefore(notif,phoneBox.firstChild);
+    // Max 2 notifs visibles sur le téléphone
+    while(phoneBox.children.length>2)phoneBox.removeChild(phoneBox.lastChild);
+    setTimeout(()=>{notif.classList.add('out');setTimeout(()=>{if(notif.parentNode)notif.remove();},450);},10000);}
+  // ── Ticker TV (texte court) ─────────────────────────────────────────
   const tk=$('gTicker');
   if(tk)tk.innerHTML=`<span class="glados-tick">${text}</span>`;
 }
@@ -1524,6 +1570,11 @@ garant:{id:'garant',name:'LE GARANT',icon:'🛡️',role:'Défense / Assurance R
 // ── PA (Points d'Action) ─────────────────────────────────────────────────────
 // Garant commence avec 7 PA, les autres avec 5. Consommés par les actions d'inter-tour.
 const PA_COSTS={pioche:2,pioqueRequin:1,poubelle:1,bourse:3,capacite:3};
+// ── Coût en Flux pour jouer une carte Attaque (Sabotage Payant) ──────────
+// sniper = 30⚡ (redirection de Q, fort impact)
+// brouillage = 15⚡ (timer+texte, impact modéré)
+// pression = 5⚡ (pénalité jauge, faible impact)
+const ATTACK_FLUX_COSTS={sniper:30,brouillage:15,pression:5};
 
 function _getPlayerAP(){
   // En solo, le joueur humain
@@ -1929,16 +1980,19 @@ async function confirmThemeDraft(){
   await _sleep(3000);
   _startSoloSprint();}
 
-// ── SIGNATURE SPRINT (60s) ──────────────────────────────────────────────
+// ── SIGNATURE SPRINT (60s) — clauses générées par Gemini en temps réel ──
 function _startSoloSprint(){
   _sprintState={timer:60,int:null,score:0,botScores:BOT_NAMES.map(()=>0),contracts:[...BULLSHIT_CONTRACTS]};
   shuffle(_sprintState.contracts);
   $('sprintTimer').textContent='60';
+  $('sprintTimer').style.color='var(--gold)';
   $('sprintScore').textContent='Contrats signés: 0';
   $('sprintContractText').textContent=_sprintState.contracts[0]||'Clause de bonheur obligatoire';
   _initSprintCanvas();
   showOv('ovSoloSprint');
   _bossNotif('Phase d\'intégration : Signature Sprint. Signez ces contrats absurdes le plus vite possible. Votre score déterminera votre rang dans la hiérarchie — et votre chance de survie.');
+  // Pré-générer des clauses Gemini en arrière-plan (non-bloquant)
+  _sprintFetchGeminiClauses();
   // Start countdown
   _sprintState.int=setInterval(()=>{
     _sprintState.timer--;
@@ -1949,6 +2003,26 @@ function _startSoloSprint(){
       if(Math.random()<0.03)_sprintState.botScores[i]++;});
     if(_sprintState.timer<=0){clearInterval(_sprintState.int);_endSoloSprint();}
   },1000);}
+
+// Génère 6 clauses absurdes via Gemini pendant que le joueur signe
+async function _sprintFetchGeminiClauses(){
+  try{
+    const raw=await Promise.race([
+      _bossGemini(`Génère 6 clauses de contrat corporate absurdes en français, style passif-agressif. FORMAT: retourne un tableau JSON uniquement, exemple: ["Clause A","Clause B","Clause C","Clause D","Clause E","Clause F"]. Pas d'explication, pas de guillemets extérieurs, juste le tableau JSON.`),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),8000))
+    ]);
+    if(!raw)return;
+    const cleaned=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    const m=cleaned.match(/\[[\s\S]+\]/);
+    if(!m)return;
+    const clauses=JSON.parse(m[0]);
+    if(Array.isArray(clauses)&&clauses.length>=3){
+      // Injecter les clauses Gemini dans le pool du sprint
+      _sprintState.contracts=[...clauses,..._sprintState.contracts];
+      // Mettre à jour le contrat actuel si on en est encore aux premiers
+      if(_sprintState.score===0){$('sprintContractText').textContent=_sprintState.contracts[0];}
+    }
+  }catch(e){/* Silencieux — le sprint continue avec les clauses statiques */}}
 
 function _initSprintCanvas(){
   const c=$('sprintCanvas');if(!c)return;
@@ -3897,9 +3971,9 @@ bots.forEach(bot=>{
   const delay=needsStack?300+Math.random()*800:500+Math.random()*3000;
   setTimeout(()=>{
     if(!EEP.latencyActive)return;
-    EEP.buffer.push({card,fromPid:bot.id,fromName:bot.name,triggersAt:EEP.questionIdx+2,revealed:false});
+    EEP.buffer.push({card,fromPid:bot.id,fromName:bot.name,triggersAt:EEP.questionIdx+2,revealed:false,sealed:true});
     const stackNote=needsStack?' [STACK 🔥]':'';
-    $('gTicker').textContent=`${bot.icon||'🤖'} ${bot.name} lance ${card.icon} ${card.name}${stackNote}!`;
+    $('gTicker').textContent=`🔒 ${bot.name} dépose un dossier scellé (Q${EEP.questionIdx+3})${stackNote}`;
     updBufferUI();
     // Mettre à jour le panneau combat si actif
     if($('soloAnswerPanel')?.classList.contains('show')){
@@ -3929,8 +4003,24 @@ if(isHumanCand){
     EEP.activeEffects.push(card.type);
     $('gTicker').textContent=`🔍 ${card.icon} ${card.name} — effet Intel actif!`;}
 }else{
-  EEP.buffer.push({card,fromPid:_SOLO_PLAYER_PID,fromName:'Vous',triggersAt:EEP.questionIdx+2,revealed:false});
-  $('gTicker').textContent=`⚔️ ${card.icon} ${card.name} → buffer Q${EEP.questionIdx+3}!`;}
+  // ── SABOTAGE PAYANT : attaques coûtent du Flux ─────────────────────
+  const fluxCost=ATTACK_FLUX_COSTS[card.type]||5;
+  const player2=EEP.players.find(p=>p.id===_SOLO_PLAYER_PID);
+  const currentFlux=player2?.flux??G.flux;
+  if(currentFlux<fluxCost){
+    // Remettre la carte en main — pas assez de Flux
+    player.cards.splice(cardIdx,0,card);
+    if(gi>=0)G.cards.splice(gi,0,card);
+    _updSoloHandBar();
+    _bossNotif(`💸 Flux insuffisant. ${card.name} coûte ${fluxCost}⚡ — vous n'en avez que ${currentFlux}⚡. L'incompétence financière est aussi une forme d'incompétence.`);
+    $('gTicker').textContent=`💸 Pas assez de Flux — ${card.name} coûte ${fluxCost}⚡`;
+    return;}
+  // Déduire le coût
+  if(player2)player2.flux=Math.max(0,player2.flux-fluxCost);
+  G.flux=Math.max(0,G.flux-fluxCost);
+  updFlux();
+  EEP.buffer.push({card,fromPid:_SOLO_PLAYER_PID,fromName:'Vous',triggersAt:EEP.questionIdx+2,revealed:false,fluxCost});
+  $('gTicker').textContent=`⚔️ ${card.icon} ${card.name} → buffer Q${EEP.questionIdx+3} (−${fluxCost}⚡)!`;}
 updBufferUI();_updSoloHandBar();
 // Flash vert sur la colonne N+2 de la timeline
 const n2=$('tlStack2');if(n2){n2.style.transition='none';n2.style.background='rgba(212,168,50,.15)';setTimeout(()=>{n2.style.background='';},400);}}
@@ -4232,12 +4322,19 @@ if(tlGrid){
     attacks.forEach((b,i)=>{
       const isBlocked=i<blocked;
       const chip=document.createElement('div');
-      // Dossier scellé : afficher 🔒 si bot et non encore révélé
-      const isSealed=b.sealed&&!b.revealed&&b.fromPid!==_SOLO_PLAYER_PID;
+      const isSealed=!b.revealed&&b.fromPid===_SOLO_PLAYER_PID&&b.card.cat==='attack';
+      const isBotSealed=!b.revealed&&b.sealed&&b.fromPid!==_SOLO_PLAYER_PID;
       chip.className='tl-chip '+(b.revealed?'blk':isBlocked?'def':'atk');
       if(isSealed){
-        chip.innerHTML=`🔒<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;opacity:.6;">N+${b.triggersAt-(EEP.questionIdx||0)}</span>`;
-        chip.title=`Dossier scellé — Q${b.triggersAt+1}`;}
+        // 💰 si le joueur humain a payé pour ce dossier
+        const fluxBadge=b.fluxCost?`<span style="font-size:6px;color:var(--gold);position:absolute;bottom:1px;right:1px;">💰${b.fluxCost}</span>`:'';
+        chip.style.position='relative';
+        chip.innerHTML=`🔒${fluxBadge}<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;opacity:.6;">N+${b.triggersAt-(EEP.questionIdx||0)}</span>`;
+        chip.title=`Dossier scellé — Q${b.triggersAt+1}${b.fluxCost?' · '+b.fluxCost+'⚡ payés':''}`;}
+      else if(!b.revealed&&b.fromPid!==_SOLO_PLAYER_PID){
+        // Dossier bot scellé : icône 🔒 sans coût
+        chip.innerHTML=`🔒<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;opacity:.6;">${b.fromName.split(' ').pop()}</span>`;
+        chip.title=`Dossier scellé bot — Q${b.triggersAt+1}`;}
       else{
         chip.innerHTML=`${b.card.icon}<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;">${b.fromName.split(' ').pop()}</span>`;}
       if(isBlocked){const s=document.createElement('div');s.className='d-strike';chip.style.position='relative';chip.appendChild(s);}
@@ -4757,3 +4854,4 @@ $('ovThemeGrid').addEventListener('click',function(e){const tc=e.target.closest(
 </script>
 </body>
 </html>
+
