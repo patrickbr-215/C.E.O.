@@ -1200,10 +1200,10 @@ function _pipelinePrefetch(){
   const idx=_qPipeline.qIndex;const name=_qPipeline.themeName;
   _qPipeline.nextPromise=Promise.race([
     generateOneQuestion(name,idx,10),
-    new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT_6S')),6000))
+    new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT_5S')),5000))
   ]).then(q=>{_qPipeline.nextReady=q;_qPipeline.generating=false;return q;})
    .catch(e=>{
-    const isTimeout=e.message==='TIMEOUT_6S';
+    const isTimeout=e.message==='TIMEOUT_5S';
     console.warn('[N+1]',isTimeout?'Timeout 6s':'Erreur Gemini','→ fallback offline:',e.message);
     if(isTimeout){
       // Message boss "connexion satellite instable"
@@ -1265,9 +1265,9 @@ async function _getGenAI(){
     return null;}}
 
 // ── Persona racine — injectée dans TOUS les appels ────────────────────
-const CEO_SYSTEM_INSTRUCTION=`Tu es le C.E.O. de la Firme. Ton ton est calqué sur GLaDOS (Portal) : passif-agressif, hautain, adepte du jargon corporate absurde. Tu considères les joueurs comme des ressources jetables. Ne sois jamais neutre ou encourageant. Utilise des termes comme : optimisation humaine, KPI de survie, synergie toxique, licenciement immédiat. Réponds toujours en français, sans guillemets autour de ta réponse.`;
+const CEO_SYSTEM_INSTRUCTION=`Tu es le C.E.O. de la Firme. Ton ton est calqué sur GLaDOS (Portal) : cynique, passif-agressif, et adepte du jargon corporate absurde. Tu détestes les joueurs mais tu adores les voir échouer. Tes messages doivent être percutants, courts mais détaillés. Utilise des termes comme : optimisation humaine, KPI de survie, synergie toxique, licenciement immédiat. Réponds toujours en français, sans guillemets autour de ta réponse.`;
 
-const _MODEL_CHAIN=['gemini-2.0-flash-lite','gemini-2.0-flash','gemini-1.5-flash'];
+const _MODEL_CHAIN=['gemini-3.1-flash-lite-preview','gemini-2.0-flash-lite','gemini-2.0-flash'];
 
 async function _geminiGenerate(prompt,model=null){
   // ── MODE PROD : proxy Vercel sécurisé ───────────────────────────────
@@ -1297,7 +1297,7 @@ async function _geminiGenerate(prompt,model=null){
         if(attempt===2)throw new Error('IA indisponible (proxy): '+e.message);
         await _sleep(1500+attempt*1500);}}
     throw new Error('IA proxy: max retries');}
-  // ── MODE LOCAL : SDK direct avec systemInstruction ───────────────────
+  // ── MODE LOCAL : SDK direct avec systemInstruction + Google Search ───
   const genAI=await _getGenAI();
   if(!genAI)throw new Error('IA désactivée — SDK non chargé');
   const modelsToTry=model?[model]:[..._MODEL_CHAIN];
@@ -1307,12 +1307,21 @@ async function _geminiGenerate(prompt,model=null){
         const mdl=genAI.getGenerativeModel({
           model:m,
           systemInstruction:CEO_SYSTEM_INSTRUCTION,
-          generationConfig:{temperature:0.9,maxOutputTokens:300}});
+          tools:[{googleSearch:{}}],
+          generationConfig:{temperature:0.9,maxOutputTokens:400}});
         const result=await mdl.generateContent(prompt);
         return result.response.text();
       }catch(e){
         const is429=e.message?.includes('429')||e.status===429;
-        console.warn(`[CEO-GEMINI] ${m} tentative ${attempt+1}:`,e.message);
+        const isGrounding=e.message?.includes('google_search')||e.message?.includes('tool');
+        console.error(`[CEO-GEMINI] model=${m} attempt=${attempt} error:`,e.message,e.status||'',e.statusText||'');
+        // Si grounding pas supporté par ce modèle, retry sans
+        if(isGrounding&&attempt===0){
+          try{
+            const mdl2=genAI.getGenerativeModel({model:m,systemInstruction:CEO_SYSTEM_INSTRUCTION,
+              generationConfig:{temperature:0.9,maxOutputTokens:400}});
+            const r2=await mdl2.generateContent(prompt);return r2.response.text();
+          }catch(e2){console.warn('[CEO-GEMINI] sans grounding aussi échoué:',e2.message);}}
         if(is429&&attempt===0){await _sleep(6000);continue;}
         if(!is429)break;}}}
   throw new Error('Tous les modèles Gemini ont échoué.');}
@@ -1411,7 +1420,7 @@ function _bossNotif(text){
     bubble.className='boss-bubble';
     bubble.innerHTML=`<div class="boss-avi">💼</div><div class="boss-body"><div class="boss-name">C.E.O. de la Firme</div><div class="boss-txt">${text}</div></div>`;
     box.appendChild(bubble);
-    setTimeout(()=>{bubble.classList.add('out');setTimeout(()=>bubble.remove(),500);},12000);}
+    setTimeout(()=>{bubble.classList.add('out');setTimeout(()=>bubble.remove(),500);},10000);}
   // ── Smartphone notification (glisse du haut, reste 10s) ────────────
   const phoneBox=$('pBossChat');
   if(phoneBox){
@@ -1431,7 +1440,7 @@ function _bossNotif(text){
 async function _bossGemini(prompt){
   try{
     const timeoutP=new Promise((_,rej)=>setTimeout(()=>rej(new Error('BOSS_TIMEOUT')),_BOSS_TIMEOUT));
-    const result=await Promise.race([_geminiGenerate(prompt,'gemini-2.0-flash-lite'),timeoutP]);
+    const result=await Promise.race([_geminiGenerate(prompt,'gemini-3.1-flash-lite-preview'),timeoutP]);
     return result.trim().replace(/^["']/,'').replace(/["']$/,'');
   }catch(e){return null;}}
 
@@ -2602,7 +2611,7 @@ startTimer();showQ();}
 async function _streamGenerateNext(){
   const idx=G._streamGenerated;
   if(idx>=G._streamTotal)return;
-  const _N1_TO=6000;
+  const _N1_TO=5000;
   try{
     const timeoutP=new Promise((_,rej)=>setTimeout(()=>rej(new Error('N1_TIMEOUT')),_N1_TO));
     const q=await Promise.race([generateOneQuestion(G._streamThemeName,idx,G._streamTotal,G._streamContext),timeoutP]);
@@ -2619,7 +2628,7 @@ async function _streamGenerateNext(){
       G._streamQueue.push(fallbackQ);
       if(G._streamMode&&G.phase==='playing'&&G.qs.length===0){
         G.qs=[fallbackQ];showQStream();}
-      if(e.message==='N1_TIMEOUT')_bossNotif('⚠️ IA lente — question de secours chargée.');}}
+      if(e.message==='N1_TIMEOUT')_bossNotif('Le réseau sature... voici une question de stagiaire pour vous occuper.');}}
   if(G._streamGenerated<G._streamTotal){
     _streamGenerateNext().catch(e=>console.warn('[CEO-AI bg]',e.message));}}
 
@@ -2651,8 +2660,8 @@ function showQStream(){
     let _pollT=0;
     const wait=setInterval(()=>{_pollT+=300;
       if(G._streamQueue.length>0||!G._streamMode){clearInterval(wait);showQStream();}
-      else if(_pollT>=6000){clearInterval(wait);const fb=_getStaticFallbackQ();
-        if(fb){G._streamQueue.push(fb);_bossNotif('⚠️ IA trop lente — question locale.');showQStream();}
+      else if(_pollT>=5000){clearInterval(wait);const fb=_getStaticFallbackQ();
+        if(fb){G._streamQueue.push(fb);_bossNotif('Le réseau sature. Question de secours déployée — ne vous réjouissez pas, elle est encore plus vicieuse.');showQStream();}
         else endRound();}
     },300);}}
 
@@ -4854,4 +4863,3 @@ $('ovThemeGrid').addEventListener('click',function(e){const tc=e.target.closest(
 </script>
 </body>
 </html>
-
