@@ -992,19 +992,32 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <button class="btn sm" style="width:100%;max-width:360px;margin-top:4px;" onclick="closeOv('ovThemeDraft');showScreen('classSelect')">← RETOUR</button>
 </div>
 
-<!-- ÉCRAN 3 : SIGNATURE SPRINT (60s) -->
-<div id="ovSoloSprint" class="ov">
-<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;">📝 SIGNATURE SPRINT</div>
-<div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Signez le maximum de contrats absurdes en 60 secondes!</div>
-<div id="sprintTimer" style="font-family:'Orbitron',monospace;font-size:36px;color:var(--gold);">60</div>
-<div id="sprintScore" style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--cyan);margin-bottom:6px;">Contrats signés: 0</div>
-<div id="sprintContract" style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px;max-width:320px;width:100%;margin-bottom:8px;">
-<div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);margin-bottom:3px;">📋 CONTRAT</div>
-<div id="sprintContractText" style="font-size:11px;color:var(--text);line-height:1.3;">En attente...</div>
+<!-- ÉCRAN TITRE — Intro phase (réutilisable) -->
+<div id="ovPhaseIntro" class="ov" style="overflow-y:auto;">
+<div id="phaseIntroContent" style="max-width:380px;width:100%;padding:10px;"></div>
+<button class="btn gold" id="phaseIntroBtn" style="width:100%;max-width:380px;margin-top:12px;" onclick="closeOv('ovPhaseIntro');if(window._phaseIntroCb)window._phaseIntroCb();">▶️ COMMENCER</button>
 </div>
-<canvas id="sprintCanvas" width="300" height="100" style="border:1px solid var(--border);border-radius:4px;background:rgba(0,0,0,.3);touch-action:none;margin-bottom:6px;"></canvas>
-<button class="btn gold" onclick="submitSprintSig()" style="width:100%;max-width:300px;">✍️ SIGNER & SUIVANT</button>
-<div id="sprintLeaderboard" style="margin-top:8px;max-width:300px;width:100%;font-size:10px;color:var(--muted);"></div>
+
+<!-- ÉCRAN 3 : SIGNATURE SPRINT (60s) -->
+<div id="ovSoloSprint" class="ov" style="overflow-y:auto;">
+<div style="display:flex;justify-content:space-between;align-items:center;max-width:340px;width:100%;margin-bottom:4px;">
+  <div id="sprintScore" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--cyan);">Contrats: 0</div>
+  <div id="sprintTimer" style="font-family:'Orbitron',monospace;font-size:28px;color:var(--gold);">60</div>
+</div>
+<div id="sprintContract" style="background:linear-gradient(180deg,rgba(20,18,15,.95),rgba(12,10,8,.98));border:2px solid rgba(212,168,50,.3);border-radius:4px;padding:14px 16px;max-width:340px;width:100%;margin-bottom:8px;position:relative;">
+<div style="text-align:center;border-bottom:1px solid rgba(212,168,50,.2);padding-bottom:6px;margin-bottom:8px;">
+  <div style="font-family:'Orbitron',monospace;font-size:8px;color:var(--gold);letter-spacing:3px;">LA FIRME — DÉPARTEMENT JURIDIQUE</div>
+  <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--text);font-weight:700;margin-top:4px;" id="sprintContractTitle">CONTRAT N°001</div>
+</div>
+<div id="sprintContractText" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text);line-height:1.6;min-height:120px;">En attente...</div>
+<div style="border-top:1px solid rgba(212,168,50,.15);margin-top:10px;padding-top:8px;display:flex;justify-content:space-between;font-size:7px;color:var(--muted);font-family:'Share Tech Mono',monospace;">
+  <span>Réf: CEO-2026-§42</span><span>Confidentiel — Usage interne</span>
+</div>
+</div>
+<canvas id="sprintCanvas" width="300" height="80" style="border:1px solid rgba(212,168,50,.25);border-radius:4px;background:rgba(0,0,0,.3);touch-action:none;margin-bottom:4px;"></canvas>
+<div style="font-size:7px;color:var(--muted);text-align:center;margin-bottom:4px;font-family:'Share Tech Mono',monospace;">↑ Signez ci-dessus ↑</div>
+<button class="btn gold" onclick="submitSprintSig()" style="width:100%;max-width:340px;">✍️ SIGNER & SUIVANT</button>
+<div id="sprintLeaderboard" style="margin-top:6px;max-width:340px;width:100%;font-size:10px;color:var(--muted);"></div>
 </div>
 
 <!-- ÉCRAN 4 : RÉCOMPENSES & WELCOME PACK -->
@@ -1646,7 +1659,36 @@ function _updPADisplay(){
   _updGestionButtons();}
 
 const TICKERS=["BREAKING: Suppression pauses café. +0.3% productivité.","FLASH: Toilettes 3ème → coworking premium.","MEMO: Bonheur = KPI non-négociable.","URGENT: Volontariat obligatoire ce weekend.","INFO: Congés maladie facturés comme consulting.","BREAKING: 47 buzzwords en une réunion.","MEMO: Larmes autorisées en B3 et B7 uniquement.","ALERTE: Le sommeil n'est pas un droit acquis."];
-const BULLSHIT_CONTRACTS=["Cession Totale de l'Âme (rétroactive)","Abandon Volontaire des Congés Payés","Renoncement au Droit de Dormir","Cession des Droits sur Votre Prénom","Clause de Sourire Permanent","Transfert de Propriété de Vos Idées","Engagement à Rire aux Blagues du CEO","Renonciation au Concept de Weekend","Accord de Surveillance Émotionnelle","Cession de Vos Pauses Toilettes","Pacte de Fidélité au PowerPoint","Abandon du Droit de Dire Non","Clause d'Enthousiasme Minimum Garanti","Engagement: Réunions = Loisirs","Renoncement au Libre Arbitre (Premium)","Disponibilité 25h/24, 8j/7"];
+const BULLSHIT_CONTRACTS=[
+{title:"CESSION TOTALE DE L'ÂME (Rétroactive)",body:`ARTICLE 1 — Le Salarié (ci-après "la Ressource") cède par la présente l'intégralité de ses droits moraux, émotionnels et spirituels à La Firme, de manière irrévocable et rétroactive jusqu'à sa date de naissance.\n\nARTICLE 2 — Cette cession inclut, sans s'y limiter : rêves, souvenirs agréables, capacité à ressentir de la joie un lundi matin, et tout sentiment d'accomplissement personnel.\n\nARTICLE 3 — En contrepartie, La Firme s'engage à fournir un badge d'accès au parking B2 (sous réserve de disponibilité).`},
+{title:"ABANDON VOLONTAIRE DES CONGÉS PAYÉS",body:`ARTICLE 1 — Le Collaborateur reconnaît que le concept de "repos" est un frein à l'optimisation de sa productivité et constitue une forme de sabotage passif envers La Firme.\n\nARTICLE 2 — En signant ce document, le Collaborateur renonce définitivement à ses congés payés, RTT, jours fériés, pauses déjeuner, et au droit de cligner des yeux plus de 3 fois par minute.\n\nARTICLE 3 — Toute tentative de prise de congé sera considérée comme une démission et facturée 500⚡ de pénalité.`},
+{title:"CLAUSE DE SOURIRE PERMANENT",body:`ARTICLE 1 — Le Salarié s'engage contractuellement à maintenir un sourire visible et mesurable (angle minimum : 15°) pendant l'intégralité de ses heures de travail.\n\nARTICLE 2 — Un capteur facial certifié ISO-42069 sera installé sur le poste de travail du Salarié pour vérification en temps réel. Tout froncement de sourcils sera déduit du bonus trimestriel.\n\nARTICLE 3 — Le sourire doit être maintenu y compris lors des entretiens de licenciement, des réunions budgétaires, et de la lecture du présent contrat.`},
+{title:"TRANSFERT DE PROPRIÉTÉ INTELLECTUELLE",body:`ARTICLE 1 — Toute idée, pensée, intuition, rêverie ou réflexion sous la douche ayant lieu pendant, avant, après, ou à proximité temporelle du travail devient propriété exclusive de La Firme.\n\nARTICLE 2 — Le Salarié s'interdit de penser à des solutions innovantes en dehors des créneaux autorisés (mardi 14h-14h07) sans autorisation écrite du C.E.O.\n\nARTICLE 3 — Toute violation sera poursuivie par le département de Propriété Cérébrale.`},
+{title:"ENGAGEMENT DE DISPONIBILITÉ 25h/24",body:`ARTICLE 1 — Le Collaborateur accepte d'être joignable 25 heures sur 24, 8 jours sur 7, y compris dans les dimensions parallèles et les fuseaux horaires qui n'existent pas encore.\n\nARTICLE 2 — L'absence de réponse à un email dans les 30 secondes sera considérée comme un acte d'insubordination passif, punissable par un stage de team building de 72 heures en open space.\n\nARTICLE 3 — La Firme fournira gracieusement un oreiller corporatif pour dormir sous le bureau (taille unique, non lavable).`},
+{title:"RENONCEMENT AU LIBRE ARBITRE (Édition Premium)",body:`ARTICLE 1 — Le Salarié reconnaît que ses décisions personnelles sont statistiquement inférieures à celles de l'algorithme RH de La Firme et consent à déléguer l'ensemble de ses choix de vie.\n\nARTICLE 2 — Cela inclut : choix vestimentaires, alimentaires, relationnels, existentiels, et la couleur de son fond d'écran (imposée : bleu corporate #003366).\n\nARTICLE 3 — Le Salarié pourra exprimer un avis personnel une fois par trimestre, sous réserve de validation par le comité d'Optimisation Humaine.`},
+{title:"PACTE DE FIDÉLITÉ AU POWERPOINT",body:`ARTICLE 1 — Le Collaborateur jure allégeance éternelle au logiciel Microsoft PowerPoint® et s'engage à ne jamais utiliser d'alternative (Keynote, Google Slides, un tableau blanc, la parole).\n\nARTICLE 2 — Chaque présentation devra contenir un minimum de 47 slides, 12 graphiques circulaires, et au moins 3 animations de transition "Tourbillon".\n\nARTICLE 3 — L'utilisation du mot "synergie" moins de 8 fois par deck constitue une faute professionnelle grave.`},
+{title:"ACCORD DE SURVEILLANCE ÉMOTIONNELLE",body:`ARTICLE 1 — La Firme se réserve le droit de monitorer en continu l'état émotionnel du Salarié via des capteurs biométriques, analyse faciale, et interprétation de ses soupirs.\n\nARTICLE 2 — Toute émotion non productive (nostalgie, empathie, amusement, espoir) sera signalée au département de Conformité Affective.\n\nARTICLE 3 — Les émotions autorisées sont : stress productif, angoisse motivationnelle, et gratitude envers le C.E.O.`},
+];
+
+// ── Phase Intro Screen ──────────────────────────────────────────────
+function _showPhaseIntro(title,icon,bodyHtml,btnText,callback){
+  window._phaseIntroCb=callback||null;
+  $('phaseIntroContent').innerHTML=`
+    <div style="text-align:center;margin-bottom:12px;">
+      <div style="font-size:42px;margin-bottom:8px;">${icon}</div>
+      <div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(15px,4vw,20px);color:var(--gold);letter-spacing:3px;text-transform:uppercase;">${title}</div>
+    </div>
+    <div style="background:linear-gradient(180deg,rgba(20,18,15,.9),rgba(8,6,4,.95));border:1px solid rgba(212,168,50,.2);border-radius:6px;padding:14px 16px;">
+      <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8860b);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">💼</div>
+        <div>
+          <div style="font-family:'Orbitron',monospace;font-size:7px;color:var(--gold);letter-spacing:1.5px;">C.E.O. DE LA FIRME</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#e0e0e0;line-height:1.45;margin-top:4px;">${bodyHtml}</div>
+        </div>
+      </div>
+    </div>`;
+  $('phaseIntroBtn').textContent=btnText||'▶️ COMMENCER';
+  showOv('ovPhaseIntro');}
 
 // ==================== GEAR SYSTEM ====================
 const GEAR_ITEMS=[
@@ -1961,71 +2003,99 @@ function addCustomTheme(){
 
 async function confirmThemeDraft(){
   closeOv('ovThemeDraft');
-  // Build GLOBAL_THEME_POOL: player's 5 + 9 bots × 5 = 50
-  const playerThemes=[..._draftSelected];
-  THEME_DECK=[...playerThemes];
-  const botPool=STATIC_THEMES.filter(t=>!_draftSelected.has(t.id)).map(t=>t.id);
-  for(let b=0;b<9;b++){
-    shuffle(botPool);
-    for(let i=0;i<5&&THEME_DECK.length<50;i++){
-      THEME_DECK.push(botPool[i%botPool.length]);}}
-  shuffle(THEME_DECK);
-  // Register AI themes
+  // ── ÉTAPE 1 : Collecter les 50 thèmes (5 par joueur × 10) ──
+  const playerPicks=[..._draftSelected];// les 5 thèmes du joueur humain
+  // Register AI/custom themes
   if(!(G.aiThemeIds instanceof Set))G.aiThemeIds=new Set();
-  playerThemes.forEach(id=>{const t=THEMES.find(x=>x.id===id);if(t?.aiGenerated)G.aiThemeIds.add(id);});
+  playerPicks.forEach(id=>{const t=THEMES.find(x=>x.id===id);if(t?.aiGenerated)G.aiThemeIds.add(id);});
   const customNames=[...G.aiThemeIds].map(id=>THEMES.find(t=>t.id===id)?.name).filter(Boolean);
   if(customNames.length)fetchAIThemes(customNames).catch(()=>{});
-  // ── TV Announcement: Draft Protocol ──
+
+  // Bots choisissent 5 thèmes chacun (parmi ceux non pris par le joueur)
+  const botPool=STATIC_THEMES.filter(t=>!_draftSelected.has(t.id)).map(t=>t.id);
+  const allPicks=[...playerPicks];// commence avec les 5 du joueur
+  for(let b=0;b<9;b++){
+    shuffle(botPool);
+    for(let i=0;i<5;i++) allPicks.push(botPool[i%botPool.length]);}
+
+  // ── ÉTAPE 2 : Pioche commune = tous les thèmes mélangés ──
+  THEME_DECK=[...allPicks];// 50 thèmes
+  shuffle(THEME_DECK);
+
+  // ── TV Announcement ──
   showScreen('game');
   $('qTheme').textContent='⚙️ PROTOCOLE DE DRAFT';
   $('qNum').textContent='';
   $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(12px,3vw,16px);color:var(--gold);letter-spacing:2px;">RECOUPLAGE DES ACTIFS</span>`;
   $('qChoices').innerHTML=`<div style="max-width:300px;margin:12px auto;text-align:center;">
-    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">50 thèmes collectés — Distribution aléatoire en cours...</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">${THEME_DECK.length} thèmes dans la pioche — Distribution aléatoire...</div>
     <div style="background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:2px;height:5px;overflow:hidden;">
       <div style="height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));animation:aiLoad 2s ease-in-out infinite;"></div>
     </div></div>`;
   $('gTimer').textContent='';
-  _bossNotif('Protocole de Draft activé. 50 thèmes en recouplage. Votre destin professionnel se joue maintenant — enfin, ce qu\'il en reste.');
-  // Distribute 2 themes per player from pool
-  const poolCopy=[...THEME_DECK];shuffle(poolCopy);
+  _bossNotif('Protocole de Draft activé. La pioche commune est constituée. Distribution aléatoire en cours — priez pour ne pas hériter de Droit Fiscal.');
+
+  // ── ÉTAPE 3 : Distribuer 2 thèmes au hasard à chaque joueur ──
   DRAFT.playerPortfolio={};
-  const qdbKeys=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);
-  // Human gets 2 from their actual picks (custom/AI themes included — they'll use streaming)
-  const humanThemes=[...playerThemes].slice(0,2);
-  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...humanThemes];
-  G.portfolio=[...humanThemes];
-  // Bots get 2 themes with QDB entries
+  // Humain reçoit 2 thèmes tirés au hasard de la pioche
+  const humanDraw=[THEME_DECK.shift(),THEME_DECK.shift()];
+  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...humanDraw];
+  G.portfolio=[...humanDraw];
+  // Bots reçoivent 2 thèmes au hasard chacun
   BOT_NAMES.forEach((_,i)=>{
-    shuffle(qdbKeys);
-    DRAFT.playerPortfolio[`solo_bot_${i}`]=[qdbKeys[0]||'finance',qdbKeys[1]||'tech'];});
-  // Wait 3s for dramatic effect then launch Sprint
+    const t1=THEME_DECK.shift()||'finance';
+    const t2=THEME_DECK.shift()||'tech';
+    DRAFT.playerPortfolio[`solo_bot_${i}`]=[t1,t2];});
+  // THEME_DECK contient maintenant les thèmes restants (la pioche résiduelle pour le swap)
+  G._piocheRestante=[...THEME_DECK];
+
   await _sleep(3000);
   _startSoloSprint();}
 
 // ── SIGNATURE SPRINT (60s) — clauses générées par Gemini en temps réel ──
 function _startSoloSprint(){
-  _sprintState={timer:60,int:null,score:0,botScores:BOT_NAMES.map(()=>0),contracts:[...BULLSHIT_CONTRACTS]};
+  // ── Écran titre CEO avant le Sprint ──
+  _showPhaseIntro(
+    'SIGNATURE SPRINT','📝',
+    `Bienvenue dans la première épreuve de votre processus d'intégration, cher candidat.<br><br>
+    Le département juridique a préparé une série de contrats que vous devez signer le plus rapidement possible. Ne vous souciez pas du contenu — <em>personne ne lit les contrats ici</em>.<br><br>
+    <strong>Règles :</strong><br>
+    • Vous avez <span style="color:var(--gold);font-weight:700;">60 secondes</span> pour signer un maximum de contrats<br>
+    • Griffonnez une signature dans la zone prévue, puis validez<br>
+    • Le classement déterminera l'ordre de passage des entretiens<br>
+    • Le vainqueur recevra une <span style="color:var(--gold);">Loot Box Premium</span> et le droit de choisir le premier candidat<br><br>
+    <em style="color:var(--muted);font-size:10px;">— Note : La Firme décline toute responsabilité quant au contenu des clauses ci-dessous. En signant, vous reconnaissez ne pas les avoir lues. C'est le but.</em>`,
+    '✍️ COMMENCER LE SPRINT',
+    ()=>{_launchSprint();});}
+
+function _launchSprint(){
+  _sprintState={timer:60,int:null,score:0,contractIdx:0,botScores:BOT_NAMES.map(()=>0),contracts:[...BULLSHIT_CONTRACTS]};
   shuffle(_sprintState.contracts);
   $('sprintTimer').textContent='60';
   $('sprintTimer').style.color='var(--gold)';
-  $('sprintScore').textContent='Contrats signés: 0';
-  $('sprintContractText').textContent=_sprintState.contracts[0]||'Clause de bonheur obligatoire';
+  $('sprintScore').textContent='Contrats: 0';
+  _showFullContract(0);
   _initSprintCanvas();
   showOv('ovSoloSprint');
-  _bossNotif('Phase d\'intégration : Signature Sprint. Signez ces contrats absurdes le plus vite possible. Votre score déterminera votre rang dans la hiérarchie — et votre chance de survie.');
-  // Pré-générer des clauses Gemini en arrière-plan (non-bloquant)
   _sprintFetchGeminiClauses();
-  // Start countdown
   _sprintState.int=setInterval(()=>{
     _sprintState.timer--;
     $('sprintTimer').textContent=_sprintState.timer;
     if(_sprintState.timer<=10)$('sprintTimer').style.color='var(--red)';
-    // Bots sign randomly (0.3-1.5 signs/sec average)
     _sprintState.botScores.forEach((_,i)=>{
       if(Math.random()<0.03)_sprintState.botScores[i]++;});
     if(_sprintState.timer<=0){clearInterval(_sprintState.int);_endSoloSprint();}
   },1000);}
+
+function _showFullContract(idx){
+  const c=_sprintState.contracts[idx%_sprintState.contracts.length];
+  if(typeof c==='object'&&c.title){
+    $('sprintContractTitle').textContent=`CONTRAT N°${String(idx+1).padStart(3,'0')}`;
+    $('sprintContractText').innerHTML=c.body.replace(/\\n/g,'<br>').replace(/\n/g,'<br>');
+  }else{
+    // Fallback: old-style string contract
+    $('sprintContractTitle').textContent=`CONTRAT N°${String(idx+1).padStart(3,'0')}`;
+    $('sprintContractText').textContent=typeof c==='string'?c:'Clause de résilience maximale';}}
 
 // Génère 6 clauses absurdes via Gemini pendant que le joueur signe
 async function _sprintFetchGeminiClauses(){
@@ -2065,12 +2135,10 @@ function submitSprintSig(){
   let px=0;for(let i=3;i<d.length;i+=4)if(d[i]>0)px++;
   if(px<20){_bossNotif('Griffonnez quelque chose au moins!');return;}
   _sprintState.score++;
-  $('sprintScore').textContent=`Contrats signés: ${_sprintState.score}`;
-  // Next contract
+  _sprintState.contractIdx=(_sprintState.contractIdx||0)+1;
+  $('sprintScore').textContent=`Contrats: ${_sprintState.score}`;
   ctx.clearRect(0,0,c.width,c.height);
-  const ci=_sprintState.score%_sprintState.contracts.length;
-  $('sprintContractText').textContent=_sprintState.contracts[ci]||'Clause de résilience maximale';
-  // Update leaderboard
+  _showFullContract(_sprintState.contractIdx);
   _updSprintLB();}
 
 function _updSprintLB(){
@@ -2155,26 +2223,37 @@ function _showRewards(winner,playerRank,rankings){
 
 function startAfterRewards(){
   closeOv('ovRewards');
+  // Afficher l'écran titre de la phase Entretien
+  const portfolio=[...(G.portfolio||G._myThemes||[])];
+  const themeNames=portfolio.map(id=>{const t=THEMES.find(x=>x.id===id);return(t?.icon||'📚')+' '+(t?.name||id);}).join(', ');
+  _showPhaseIntro(
+    'ENTRETIENS D\'ÉVALUATION','🏢',
+    `Les festivités sont terminées. Place aux choses sérieuses.<br><br>
+    Chaque candidat passera un entretien de <strong>10 questions</strong> sur l'un de ses thèmes. Pendant que le candidat répond, les autres joueurs peuvent saboter ses performances avec des cartes d'attaque.<br><br>
+    <strong>Votre portfolio :</strong> ${themeNames}<br><br>
+    <strong>Déroulement :</strong><br>
+    • <span style="color:var(--cyan);">Briefing 10s</span> — Le candidat pose ses défenses<br>
+    • <span style="color:var(--gold);">Questions</span> — Répondez correctement pour remplir votre jauge<br>
+    • <span style="color:var(--red);">Sabotage</span> — Les adversaires attaquent entre chaque question<br><br>
+    <em style="color:var(--muted);font-size:10px;">Le C.E.O. observe. Le C.E.O. juge. Le C.E.O. est déçu d'avance.</em>`,
+    '▶️ LANCER LES ENTRETIENS',
+    ()=>{_initAndStartEEP();});}
+
+function _initAndStartEEP(){
+  const currentPortfolio=[...(G.portfolio||G._myThemes||[])];
   // Initialize full G state
   Object.assign(G,{flux:G._welcomeFlux,gauge:0,gaugeCP:[],cycle:1,round:1,totalR:0,
     cards:G._welcomeCards,
     usedThemes:{},ultiCharge:0,correct:0,ultiAutoQ:0,ultiLock:0,
     gear:[G._welcomeGear],equippedGear:G._welcomeGear,freeErrUsed:false,
-    portfolio:[...G._myThemes],themePass:{},bourseQueue:[],gestionUsed:false,
+    portfolio:currentPortfolio,themePass:{},bourseQueue:[],gestionUsed:false,
     _ap:CEO_CL[G.classId]?.paStart||5,
     _bourse_revealLevel:0,bots:[],
     bourse:{active:false,phase:'none',themeId:null,themeObj:null,reservePrice:20,bids:[],forcedTheme:null},
     bourseSession:{phase:'idle',sellerPid:null,themeId:null,themeName:null,themeIcon:null,
       reservePrice:20,bids:[],eepAtList:null,eepAtReveal:null,revealLevel:0}});
-  // ── Sync DRAFT.playerPortfolio (human + bots) ──
-  DRAFT.playerPortfolio={};
-  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G._myThemes];
-  // Bots get 2 random themes each from the static themes that have QDB entries
-  const qdbKeys=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);
-  BOT_NAMES.forEach((_,i)=>{
-    const botId=`solo_bot_${i}`;
-    shuffle(qdbKeys);
-    DRAFT.playerPortfolio[botId]=[qdbKeys[0]||'finance',qdbKeys[1]||'tech'];});
+  // DRAFT.playerPortfolio already set — just sync human in case of swap
+  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...currentPortfolio];
   // Build EEP.players based on Sprint rankings
   const classIds=Object.keys(CEO_CL);
   const allPlayers=[
@@ -3534,7 +3613,7 @@ MP.peer.on('error',e=>{$('lobbyStatus').textContent='❌ '+e.type;$('lobbyStatus
 
 function hostRx(conn,d){
 if(d.type==='join'){if(MP.conns.find(c=>c.conn===conn))return;MP.conns.push({conn,pid:conn.peer,name:d.name,classId:null,sigScore:0});conn.send({type:'joined',roomCode:MP.roomCode});updLobby();}
-else if(d.type==='signature'&&MP.hostPhase==='s0'){const p=MP.conns.find(c=>c.conn===conn);if(!p)return;p.sigScore=(p.sigScore||0)+1;conn.send({type:'newContract',contract:pick(BULLSHIT_CONTRACTS),score:p.sigScore});updS0Board();$('s0Last').textContent=`📝 ${p.name} vient de signer!`;}
+else if(d.type==='signature'&&MP.hostPhase==='s0'){const p=MP.conns.find(c=>c.conn===conn);if(!p)return;p.sigScore=(p.sigScore||0)+1;conn.send({type:'newContract',contract:(pick(BULLSHIT_CONTRACTS)).title||pick(BULLSHIT_CONTRACTS),score:p.sigScore});updS0Board();$('s0Last').textContent=`📝 ${p.name} vient de signer!`;}
 else if(d.type==='classSel'){const p=MP.conns.find(c=>c.conn===conn);if(p)p.classId=d.classId;updDraftBoard();}
 else if(d.type==='draftPick'){const p=MP.conns.find(c=>c.conn===conn);if(!p)return;Object.keys(MP.draftSlots).forEach(k=>{if(MP.draftSlots[k]===p.pid)delete MP.draftSlots[k];});MP.draftSlots[d.slot]=p.pid;conn.send({type:'draftConfirm',slot:d.slot});updDraftBoard();mpBroadcast({type:'draftUpdate',slots:MP.draftSlots});}
 // ===== THEME DRAFT: joueur pioche un thème du pool =====
@@ -3817,12 +3896,38 @@ function _eepBriefingPhase(cand){
   $('gTicker').textContent=`🛡️ BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
   $('gTimer').textContent=`${t}s`;
   if(isHumanCand&&G.mode==='solo'){_updSoloHandBar();}
-  // ── Avantage 1er candidat : échange gratuit de thème ──
+  // ── Avantage 1er candidat : échange gratuit contre la pioche ──
   if(EEP.candidateIdx===0&&isHumanCand&&cand.freeSwap){
     cand.freeSwap=false;
-    _bossNotif('Avantage du premier candidat : vous pouvez échanger gratuitement un de vos thèmes. Profitez-en — c\'est la dernière fois que je suis généreux.');
-    // Open theme selection briefly (non-blocking, player can ignore)
-    setTimeout(()=>{if(EEP.latencyActive)openThemeSel();},500);}
+    _bossNotif('Avantage du premier candidat : vous pouvez échanger un de vos thèmes contre la pioche. Profitez-en — c\'est la dernière fois que je suis généreux.');
+    const pioche=G._piocheRestante||[];
+    if(pioche.length>0){
+      // Afficher les 2 thèmes du joueur + option de swap
+      const p=G.portfolio||[];
+      const swapHtml=p.map((tid,i)=>{
+        const th=THEMES.find(x=>x.id===tid);
+        return`<button class="btn sm" style="width:100%;margin:3px 0;" onclick="_doFreeSwap(${i})">${th?.icon||'📚'} ${th?.name||tid} ↔ 🎲 ÉCHANGER</button>`;}).join('');
+      setTimeout(()=>{
+        if(!EEP.latencyActive)return;
+        $('qChoices').innerHTML=`<div style="max-width:300px;margin:8px auto;text-align:center;">
+          <div style="font-size:10px;color:var(--gold);margin-bottom:6px;font-family:'Orbitron',monospace;">🔄 ÉCHANGE GRATUIT — Cliquez pour remplacer</div>
+          ${swapHtml}
+          <button class="btn sm" style="width:100%;margin-top:6px;opacity:.6;" onclick="_skipFreeSwap()">✓ GARDER MES THÈMES</button>
+        </div>`;},500);}}
+  window._doFreeSwap=function(slotIdx){
+    const pioche=G._piocheRestante||[];
+    if(!pioche.length)return;
+    shuffle(pioche);
+    const newId=pioche.shift();
+    const oldId=G.portfolio[slotIdx];
+    const oldTh=THEMES.find(t=>t.id===oldId);
+    const newTh=THEMES.find(t=>t.id===newId);
+    G.portfolio[slotIdx]=newId;
+    DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G.portfolio];
+    _bossNotif(`Échange effectué : ${oldTh?.icon||''} ${oldTh?.name||oldId} → ${newTh?.icon||''} ${newTh?.name||newId}. Espérons que vous ne le regretterez pas.`);
+    $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--green);">✅ Portfolio mis à jour</div>`;};
+  window._skipFreeSwap=function(){
+    $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--muted);">Thèmes conservés — le briefing continue...</div>`;};
   mpBroadcast({type:'briefingStart',candidateId:cand.id,duration:10});
   bossIntro(cand.name,EEP.theme||G.theme||'évaluation');
   EEP._briefingInt=setInterval(()=>{
@@ -4616,7 +4721,7 @@ const DRAFT_PICK_COUNT=5,DRAFT_PORTFOLIO_SIZE=3;
 function playerRx(d){
 if(d.type==='joined'){showScreen('player');$('pBadge').textContent=MP.myName;pLog('✅ Salle '+d.roomCode);$('pQ').innerHTML='<div style="color:var(--muted);">En attente...</div>';$('pAns').innerHTML='';}
 // PHASE 0
-else if(d.type==='startS0'){pLog('📝 Sprint!');showPSig(pick(BULLSHIT_CONTRACTS));}
+else if(d.type==='startS0'){pLog('📝 Sprint!');showPSig((pick(BULLSHIT_CONTRACTS)).body||(pick(BULLSHIT_CONTRACTS)).title||'Contrat absurde');}
 else if(d.type==='s0Timer'){$('pTimer').textContent=d.t+'s';$('pTimer').style.color=d.t<=10?'var(--red)':'var(--gold)';}
 else if(d.type==='newContract'){$('pFlux').textContent='📝'+d.score;showPSig(d.contract);}
 else if(d.type==='s0End'){pLog('🏆 Sprint fini!');P_themePool=d.themePool||[];P_draftedThemes=[];P_portfolio=[];showPDraft(d);}
