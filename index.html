@@ -1041,7 +1041,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(13px,3vw,16px);color:var(--gold);letter-spacing:2px;margin-bottom:6px;">🔄 ÉCHANGE GRATUIT</div>
 <div style="font-size:10px;color:var(--muted);max-width:340px;margin-bottom:10px;">En tant que premier candidat, vous pouvez échanger un de vos thèmes contre un thème de la pioche commune.</div>
 <div id="freeSwapContent" style="max-width:340px;width:100%;"></div>
-<button class="btn sm" style="width:100%;max-width:340px;margin-top:8px;" onclick="closeOv('ovFreeSwap')">✓ GARDER MES THÈMES</button>
+<button class="btn sm" style="width:100%;max-width:340px;margin-top:8px;" onclick="closeOv('ovFreeSwap');_showThemeChoice()">✓ GARDER MES THÈMES</button>
 </div>
 <!-- BOURSE AUX THÈMES -->
 <div id="ovBourse" class="ov">
@@ -1267,7 +1267,9 @@ function _setPortfolio(pid,themeIds){
   const owned=DRAFT.playerThemes[pid]||[];
   const valid=themeIds.filter(id=>owned.includes(id)).slice(0,DRAFT.portfolioSize);
   DRAFT.playerPortfolio[pid]=valid;return valid;}
-function _getPortfolio(pid){return(DRAFT.playerPortfolio[pid]||[]).map(id=>STATIC_THEMES.find(t=>t.id===id)).filter(Boolean);}
+function _getPortfolio(pid){
+  const ids=DRAFT.playerPortfolio[pid]||G.portfolio||[];
+  return ids.map(id=>THEMES.find(t=>t.id===id)||STATIC_THEMES.find(t=>t.id===id)||{id,name:id,icon:'📚'}).filter(Boolean);}
 
 // ==================== PA (Points d'Action) ====================
 function _getPA(classId){return classId==='garant'?7:5;}
@@ -3906,7 +3908,12 @@ if(staticQ.length>=3){
 }else{
   // ═══ CHEMIN IA — Gemini streaming JIT ═══
   EEP._aiStream={queue:[],generated:0,total:10,themeName:themeObj.name,ready:false};
-  _eepStreamStart();
+  // Pré-charger des questions QDB en cas d'échec total de l'IA
+  EEP.questions=[];
+  const fallKey=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>=5);
+  if(fallKey){shuffle(QDB[fallKey]);EEP.questions=[...QDB[fallKey]].slice(0,10);}
+  // Lancer le streaming (non-bloquant, ne doit JAMAIS bloquer)
+  _eepStreamStart().catch(e=>console.error('[CEO-EEP] Stream crash:',e.message));
 }
 
 // ── GLaDOS intro thème ──────────────────────────────────────────────
