@@ -2027,53 +2027,36 @@ function addCustomTheme(){
 
 async function confirmThemeDraft(){
   closeOv('ovThemeDraft');
-  // ── ÉTAPE 1 : Collecter les 50 thèmes (5 par joueur × 10) ──
-  const playerPicks=[..._draftSelected];// les 5 thèmes du joueur humain
-  // Register AI/custom themes
   if(!(G.aiThemeIds instanceof Set))G.aiThemeIds=new Set();
-  playerPicks.forEach(id=>{const t=THEMES.find(x=>x.id===id);if(t?.aiGenerated)G.aiThemeIds.add(id);});
-  const customNames=[...G.aiThemeIds].map(id=>THEMES.find(t=>t.id===id)?.name).filter(Boolean);
-  if(customNames.length)fetchAIThemes(customNames).catch(()=>{});
 
-  // Bots choisissent 5 thèmes chacun (parmi ceux non pris par le joueur)
-  const botPool=STATIC_THEMES.filter(t=>!_draftSelected.has(t.id)).map(t=>t.id);
-  const allPicks=[...playerPicks];// commence avec les 5 du joueur
-  for(let b=0;b<9;b++){
-    shuffle(botPool);
-    for(let i=0;i<5;i++) allPicks.push(botPool[i%botPool.length]);}
+  // ═══ PIOCHE COMMUNE : uniquement des thèmes JOUABLES (QDB) ═══
+  const qdbThemeIds=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);
+  // Construire la pioche : 3 copies de chaque thème QDB = 24 cartes
+  const pioche=[];
+  qdbThemeIds.forEach(id=>{pioche.push(id);pioche.push(id);pioche.push(id);});
+  shuffle(pioche);
 
-  // ── ÉTAPE 2 : Pioche commune = tous les thèmes mélangés ──
-  THEME_DECK=[...allPicks];// 50 thèmes
-  shuffle(THEME_DECK);
-
-  // ── TV Announcement ──
-  showScreen('game');
-  $('qTheme').textContent='⚙️ PROTOCOLE DE DRAFT';
-  $('qNum').textContent='';
-  $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(12px,3vw,16px);color:var(--gold);letter-spacing:2px;">RECOUPLAGE DES ACTIFS</span>`;
-  $('qChoices').innerHTML=`<div style="max-width:300px;margin:12px auto;text-align:center;">
-    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">${THEME_DECK.length} thèmes dans la pioche — Distribution aléatoire...</div>
-    <div style="background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:2px;height:5px;overflow:hidden;">
-      <div style="height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));animation:aiLoad 2s ease-in-out infinite;"></div>
-    </div></div>`;
-  $('gTimer').textContent='';
-  _bossNotif('Protocole de Draft activé. La pioche commune est constituée. Distribution aléatoire en cours — priez pour ne pas hériter de Droit Fiscal.');
-
-  // ── ÉTAPE 3 : Distribuer 2 thèmes au hasard à chaque joueur ──
+  // Distribuer 2 thèmes par joueur (humain + 9 bots)
   DRAFT.playerPortfolio={};
-  // Humain reçoit 2 thèmes tirés au hasard de la pioche
-  const humanDraw=[THEME_DECK.shift(),THEME_DECK.shift()];
-  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...humanDraw];
-  G.portfolio=[...humanDraw];
-  // Bots reçoivent 2 thèmes au hasard chacun
+  const humanT1=pioche.shift()||'finance';
+  const humanT2=pioche.shift()||'tech';
+  // Éviter les doublons pour le joueur
+  const h2=(humanT2===humanT1)?(pioche.find(t=>t!==humanT1)||'marketing'):humanT2;
+  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[humanT1,h2];
+  G.portfolio=[humanT1,h2];
   BOT_NAMES.forEach((_,i)=>{
-    const t1=THEME_DECK.shift()||'finance';
-    const t2=THEME_DECK.shift()||'tech';
-    DRAFT.playerPortfolio[`solo_bot_${i}`]=[t1,t2];});
-  // THEME_DECK contient maintenant les thèmes restants (la pioche résiduelle pour le swap)
-  G._piocheRestante=[...THEME_DECK];
+    const b1=pioche.shift()||qdbThemeIds[i%qdbThemeIds.length];
+    const b2=pioche.shift()||qdbThemeIds[(i+1)%qdbThemeIds.length];
+    DRAFT.playerPortfolio[`solo_bot_${i}`]=[b1,b2];});
+  // Pioche restante pour le swap du 1er candidat
+  G._piocheRestante=pioche.length>0?[...pioche]:[...qdbThemeIds];
 
-  await _sleep(3000);
+  // Afficher les thèmes reçus
+  const th1=THEMES.find(t=>t.id===humanT1)||{icon:'📚',name:humanT1};
+  const th2=THEMES.find(t=>t.id===h2)||{icon:'📚',name:h2};
+  _bossNotif(`Distribution terminée. Vos thèmes : ${th1.icon} ${th1.name} et ${th2.icon} ${th2.name}. Bonne chance — vous en aurez besoin.`);
+
+  // → Lancer le Sprint directement (pas de loading screen)
   _startSoloSprint();}
 
 // ── SIGNATURE SPRINT (60s) — clauses générées par Gemini en temps réel ──
@@ -3831,21 +3814,27 @@ _launchEEPWithTheme(thObj);}
 
 // ── Overlay choix de thème pour le joueur ──
 function _showThemeChoice(){
-  const portfolio=_getPortfolio(_SOLO_PLAYER_PID);
+  const ids=DRAFT.playerPortfolio[_SOLO_PLAYER_PID]||G.portfolio||[];
+  const portfolio=ids.map(id=>{
+    const t=THEMES.find(x=>x.id===id);
+    return t||{id,name:id.replace(/_/g,' '),icon:'📚'};});
   if(portfolio.length===0){
-    _launchEEPWithTheme(pick(THEMES));return;}
+    _launchEEPWithTheme(THEMES.find(t=>t.id==='finance')||pick(THEMES));return;}
   if(portfolio.length===1){
     _launchEEPWithTheme(portfolio[0]);return;}
-  // ── Overlay de choix de thème ──
-  const btns=$('pickThemeButtons');
-  btns.innerHTML=portfolio.map(t=>
-    `<button class="btn cy" style="width:100%;padding:14px;font-size:14px;" onclick="closeOv('ovPickTheme');_pickThemeForEEP('${t.id}')">
+  // ── Afficher les boutons de choix DIRECTEMENT sur l'écran ──
+  $('qTheme').textContent='📋 CHOIX DU THÈME';
+  $('qNum').textContent='';
+  $('qTxt').innerHTML=`<div style="font-family:'Orbitron',monospace;font-size:clamp(13px,3vw,17px);color:var(--gold);letter-spacing:2px;margin-bottom:8px;">CHOISISSEZ VOTRE TERRAIN</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:12px;">Sur quel thème voulez-vous passer votre entretien ?</div>`;
+  $('qChoices').innerHTML=portfolio.map(t=>
+    `<button class="btn cy" style="width:90%;max-width:340px;padding:16px;font-size:15px;margin:6px auto;display:block;" onclick="_pickThemeForEEP('${t.id}')">
       ${t.icon} ${t.name}</button>`).join('');
-  showOv('ovPickTheme');
+  $('gTimer').textContent='';
   _bossNotif('Choisissez votre thème. Quel que soit votre choix, je serai déçu.');}
 
 window._pickThemeForEEP=function(themeId){
-  closeOv('ovPickTheme');
+  closeOv('ovPickTheme');// au cas où
   const thObj=THEMES.find(t=>t.id===themeId)||{id:themeId,name:themeId,icon:'📚'};
   _launchEEPWithTheme(thObj);};
 
@@ -3887,48 +3876,34 @@ function doFreeSwap(slotIdx){
 
 // ── Lancer l'EEP avec le thème choisi ──
 function _launchEEPWithTheme(themeObj){
-if(!themeObj)themeObj=pick(THEMES);
+if(!themeObj)themeObj=THEMES.find(t=>t.id==='finance')||pick(THEMES);
 const cand=EEP.players[EEP.candidateIdx];
 EEP.theme=themeObj.id;EEP.fmt=Math.random()<.5?'qcm':'vf';
 G.theme=EEP.theme;
+EEP._aiStream=null;// JAMAIS de streaming — QDB uniquement
 
-// ── Questions : QDB D'ABORD, IA seulement si aucune question statique ──
-// RÈGLE ABSOLUE : si QDB a des questions pour ce thème, on les utilise.
-const staticQ=QDB[EEP.theme]||[];
-if(staticQ.length>=3){
-  // ═══ CHEMIN STATIQUE — questions locales ═══
-  const qcmPool=staticQ.filter(q=>q.c!==undefined);
-  const vfPool=staticQ.filter(q=>q.v!==undefined);
-  const passNum=EEP._candidatePass||0;
-  let pool;
-  if(staticQ.length>=15&&passNum===0)pool=qcmPool.length>=5?qcmPool:staticQ.filter((_,i)=>i<10);
-  else if(staticQ.length>=15&&passNum===1)pool=vfPool.length>=5?vfPool:staticQ.filter((_,i)=>i>=10);
-  else pool=[...staticQ];
-  if(pool.length<3)pool=[...staticQ];
-  shuffle(pool);EEP.questions=pool.slice(0,10);
-  EEP._aiStream=null;// pas de streaming
-}else{
-  // ═══ CHEMIN IA — Gemini streaming JIT ═══
-  EEP._aiStream={queue:[],generated:0,total:10,themeName:themeObj.name,ready:false};
-  // Pré-charger des questions QDB en cas d'échec total de l'IA
-  EEP.questions=[];
-  const fallKey=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>=5);
-  if(fallKey){shuffle(QDB[fallKey]);EEP.questions=[...QDB[fallKey]].slice(0,10);}
-  // Lancer le streaming (non-bloquant, ne doit JAMAIS bloquer)
-  _eepStreamStart().catch(e=>console.error('[CEO-EEP] Stream crash:',e.message));
-}
+// ═══ CHARGEMENT DES QUESTIONS — QDB UNIQUEMENT ═══
+let pool=QDB[EEP.theme]?[...QDB[EEP.theme]]:[];
+// Si pas de questions pour ce thème → utiliser un thème QDB au hasard
+if(pool.length<3){
+  const qdbKeys=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);
+  const fallKey=pick(qdbKeys)||'finance';
+  pool=[...QDB[fallKey]];
+  console.warn(`[CEO] Pas de QDB pour "${EEP.theme}", fallback sur "${fallKey}"`);}
+shuffle(pool);
+EEP.questions=pool.slice(0,10);
 
-// ── GLaDOS intro thème ──────────────────────────────────────────────
+// ── Boss intro thème ──
 _gladosIntroTheme(themeObj.name);
 
-// ── Notify players ──────────────────────────────────────────────────
+// ── Notify players ──
 mpBroadcast({type:'eepStart',candidateId:cand.id,candidateName:cand.name,
-  theme:themeObj.name,themeIcon:themeObj.icon,total:10});
+  theme:themeObj.name,themeIcon:themeObj.icon,total:EEP.questions.length});
 EEP.players.forEach(p=>{mpTo(p.id,{type:'eepRole',isCandidate:p.id===cand.id,
   cards:p.cards.map(c=>({id:c.id,name:c.name,icon:c.icon,desc:c.desc}))});});
 updBufferUI();updGaugeFromEEP(cand);
 
-// ── BRIEFING 10s (avant Q1) : candidat pose ses cartes, bots ne peuvent pas attaquer ──
+// ── BRIEFING 10s ──
 _eepBriefingPhase(cand);}
 
 // ── Streaming IA pour les EEPs sur thème Gemini ─────────────────────
