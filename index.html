@@ -1043,6 +1043,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div id="freeSwapContent" style="max-width:340px;width:100%;"></div>
 <button class="btn sm" style="width:100%;max-width:340px;margin-top:8px;" onclick="closeOv('ovFreeSwap');_showThemeChoice()">✓ GARDER MES THÈMES</button>
 </div>
+<!-- CHOIX DU THÈME (avant chaque EEP) -->
+<div id="ovPickTheme" class="ov">
+<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;margin-bottom:4px;">📋 VOTRE ENTRETIEN</div>
+<div style="font-size:11px;color:var(--muted);max-width:340px;margin-bottom:12px;">Sur quel thème souhaitez-vous passer votre entretien ?</div>
+<div id="pickThemeButtons" style="max-width:340px;width:100%;display:flex;flex-direction:column;gap:8px;"></div>
+</div>
 <!-- BOURSE AUX THÈMES -->
 <div id="ovBourse" class="ov">
 <div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;">📈 BOURSE AUX THÈMES</div>
@@ -2289,6 +2295,8 @@ function _initAndStartEEP(){
   allPlayers.forEach((p,i)=>p.order=i+1);
   EEP.active=true;EEP.candidateIdx=0;EEP.players=allPlayers;
   showScreen('game');
+  // Clear old "PROTOCOLE DE DRAFT" content
+  $('qTheme').textContent='';$('qNum').textContent='';$('qTxt').textContent='';$('qChoices').innerHTML='';
   $('gClass').textContent=CEO_CL[G.classId].icon+' '+CEO_CL[G.classId].name;
   $('gClass').style.color=CEO_CL[G.classId].color;
   $('candBanner').style.display='';$('tlGrid').style.display='grid';
@@ -3825,26 +3833,20 @@ _launchEEPWithTheme(thObj);}
 function _showThemeChoice(){
   const portfolio=_getPortfolio(_SOLO_PLAYER_PID);
   if(portfolio.length===0){
-    // Pas de thèmes → fallback
     _launchEEPWithTheme(pick(THEMES));return;}
   if(portfolio.length===1){
-    // Un seul thème → pas de choix
     _launchEEPWithTheme(portfolio[0]);return;}
-  // Afficher le choix
-  $('qTheme').textContent='📋 CHOIX DU THÈME';
-  $('qNum').textContent='';
-  $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(12px,3vw,16px);color:var(--gold);letter-spacing:2px;">CHOISISSEZ VOTRE TERRAIN</span>`;
-  $('qChoices').innerHTML=`<div style="max-width:340px;margin:12px auto;display:flex;flex-direction:column;gap:8px;">
-    <div style="font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px;">Sur quel thème voulez-vous passer votre entretien ?</div>
-    ${portfolio.map(t=>`<button class="btn cy" style="width:100%;padding:12px;font-size:13px;" onclick="_pickThemeForEEP('${t.id}')">
-      ${t.icon} ${t.name}</button>`).join('')}
-  </div>`;
-  $('gTimer').textContent='';
+  // ── Overlay de choix de thème ──
+  const btns=$('pickThemeButtons');
+  btns.innerHTML=portfolio.map(t=>
+    `<button class="btn cy" style="width:100%;padding:14px;font-size:14px;" onclick="closeOv('ovPickTheme');_pickThemeForEEP('${t.id}')">
+      ${t.icon} ${t.name}</button>`).join('');
+  showOv('ovPickTheme');
   _bossNotif('Choisissez votre thème. Quel que soit votre choix, je serai déçu.');}
 
 window._pickThemeForEEP=function(themeId){
-  const thObj=THEMES.find(t=>t.id===themeId);
-  if(!thObj)return;
+  closeOv('ovPickTheme');
+  const thObj=THEMES.find(t=>t.id===themeId)||{id:themeId,name:themeId,icon:'📚'};
   _launchEEPWithTheme(thObj);};
 
 // ── Free swap overlay PUIS choix de thème ──
