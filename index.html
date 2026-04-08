@@ -2394,28 +2394,72 @@ function soloPlayCardAnim(cardIdx, cardEl){
 function _makeSoloQChoicesClickable(d){
   if(!d.canAnswer)return;
   const isQCM=!!d.choices;
+  let _selectedIdx=null;// index sélectionné (pas encore validé)
+
   if(isQCM){
-    $('qChoices').querySelectorAll('.cbox-ceo').forEach((el,i)=>{
-      const isCorrect=(i===d.correctIdx);
+    const boxes=$('qChoices').querySelectorAll('.cbox-ceo');
+    boxes.forEach((el,i)=>{
       el.style.cursor='pointer';
       el.onclick=()=>{
-        if(!EEP.answered){EEP.answered=true;
-          $('qChoices').querySelectorAll('.cbox-ceo').forEach((b,j)=>{
-            b.classList.add(j===d.correctIdx?'ok':'ko');b.style.pointerEvents='none';});
-          eepProcessAnswer(_SOLO_PLAYER_PID,isCorrect);}};}); }
+        if(EEP.answered)return;
+        // Sélectionner cette réponse (highlight)
+        _selectedIdx=i;
+        boxes.forEach(b=>{b.style.borderColor='';b.style.background='';});
+        el.style.borderColor='var(--gold)';el.style.background='rgba(212,168,50,.12)';
+        // Afficher VALIDER / ANNULER
+        _showValidateBar(()=>{
+          // VALIDER
+          if(EEP.answered)return;EEP.answered=true;
+          _hideValidateBar();
+          const isCorrect=(i===d.correctIdx);
+          boxes.forEach((b,j)=>{b.classList.add(j===d.correctIdx?'ok':'ko');b.style.pointerEvents='none';});
+          eepProcessAnswer(_SOLO_PLAYER_PID,isCorrect);
+        },()=>{
+          // ANNULER
+          _selectedIdx=null;
+          boxes.forEach(b=>{b.style.borderColor='';b.style.background='';});
+          _hideValidateBar();
+        });};});}
   else{
     const vfBtns=$('qChoices').querySelectorAll('.vf-btn');
     [[true,0],[false,1]].forEach(([val,idx])=>{
       const btn=vfBtns[idx];if(!btn)return;
       btn.style.cursor='pointer';
       btn.onclick=()=>{
-        if(!EEP.answered){EEP.answered=true;
+        if(EEP.answered)return;
+        _selectedIdx=idx;
+        vfBtns.forEach(b=>{b.style.borderColor='';b.style.background='';b.style.opacity='1';});
+        btn.style.borderColor='var(--gold)';btn.style.background='rgba(212,168,50,.12)';
+        _showValidateBar(()=>{
+          if(EEP.answered)return;EEP.answered=true;
+          _hideValidateBar();
           vfBtns.forEach(b=>{b.style.pointerEvents='none';b.style.opacity='.5';});
           btn.style.opacity='1';
           const isCorrect=(val===d.correctVal||(String(val)===String(d.correctVal)));
           btn.style.borderColor=isCorrect?'var(--green)':'var(--red)';
           btn.style.color=isCorrect?'var(--green)':'var(--red)';
-          eepProcessAnswer(_SOLO_PLAYER_PID,isCorrect);}};}); }}
+          eepProcessAnswer(_SOLO_PLAYER_PID,isCorrect);
+        },()=>{
+          _selectedIdx=null;
+          vfBtns.forEach(b=>{b.style.borderColor='';b.style.background='';});
+          _hideValidateBar();
+        });};});}}
+
+// ── Barre VALIDER / ANNULER ──
+function _showValidateBar(onValidate,onCancel){
+  let bar=$('validateBar');
+  if(!bar){
+    bar=document.createElement('div');bar.id='validateBar';
+    bar.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:500;display:flex;gap:8px;padding:10px 16px;background:linear-gradient(180deg,transparent,rgba(8,9,14,.95) 30%);justify-content:center;';
+    document.body.appendChild(bar);}
+  bar.innerHTML=`<button id="btnValider" class="btn gold" style="flex:1;max-width:180px;padding:12px;font-size:14px;">✅ VALIDER</button>
+    <button id="btnAnnuler" class="btn" style="flex:1;max-width:180px;padding:12px;font-size:14px;border-color:var(--red);color:var(--red);">❌ ANNULER</button>`;
+  bar.style.display='flex';
+  $('btnValider').onclick=onValidate;
+  $('btnAnnuler').onclick=onCancel;}
+
+function _hideValidateBar(){
+  const bar=$('validateBar');if(bar)bar.style.display='none';}
 function soloHandleBroadcast(d){
   // Le broadcast en solo va à tous les joueurs
   EEP.players.forEach(p=>soloHandleTo(p.id,d));}
@@ -3822,14 +3866,18 @@ function _showThemeChoice(){
     _launchEEPWithTheme(THEMES.find(t=>t.id==='finance')||pick(THEMES));return;}
   if(portfolio.length===1){
     _launchEEPWithTheme(portfolio[0]);return;}
-  // ── Afficher les boutons de choix DIRECTEMENT sur l'écran ──
+  // Déterminer le format pour chaque thème
+  if(!EEP._themePassCount)EEP._themePassCount={};
   $('qTheme').textContent='📋 CHOIX DU THÈME';
   $('qNum').textContent='';
   $('qTxt').innerHTML=`<div style="font-family:'Orbitron',monospace;font-size:clamp(13px,3vw,17px);color:var(--gold);letter-spacing:2px;margin-bottom:8px;">CHOISISSEZ VOTRE TERRAIN</div>
     <div style="font-size:10px;color:var(--muted);margin-bottom:12px;">Sur quel thème voulez-vous passer votre entretien ?</div>`;
-  $('qChoices').innerHTML=portfolio.map(t=>
-    `<button class="btn cy" style="width:90%;max-width:340px;padding:16px;font-size:15px;margin:6px auto;display:block;" onclick="_pickThemeForEEP('${t.id}')">
-      ${t.icon} ${t.name}</button>`).join('');
+  $('qChoices').innerHTML=portfolio.map(t=>{
+    const pass=(EEP._themePassCount[t.id]||0);
+    const fmt=pass%2===0?'QCM':'VRAI/FAUX';
+    const fmtIcon=pass%2===0?'🔲':'✓✗';
+    return`<button class="btn cy" style="width:90%;max-width:340px;padding:14px;font-size:14px;margin:6px auto;display:block;" onclick="_pickThemeForEEP('${t.id}')">
+      ${t.icon} ${t.name} <span style="font-size:10px;opacity:.7;margin-left:8px;">${fmtIcon} ${fmt}</span></button>`;}).join('');
   $('gTimer').textContent='';
   _bossNotif('Choisissez votre thème. Quel que soit votre choix, je serai déçu.');}
 
@@ -3878,22 +3926,36 @@ function doFreeSwap(slotIdx){
 function _launchEEPWithTheme(themeObj){
 if(!themeObj)themeObj=THEMES.find(t=>t.id==='finance')||pick(THEMES);
 const cand=EEP.players[EEP.candidateIdx];
-EEP.theme=themeObj.id;EEP.fmt=Math.random()<.5?'qcm':'vf';
+EEP.theme=themeObj.id;
 G.theme=EEP.theme;
-EEP._aiStream=null;// JAMAIS de streaming — QDB uniquement
+EEP._aiStream=null;
+_hideValidateBar();// reset
 
-// ═══ CHARGEMENT DES QUESTIONS — QDB UNIQUEMENT ═══
-let pool=QDB[EEP.theme]?[...QDB[EEP.theme]]:[];
-// Si pas de questions pour ce thème → utiliser un thème QDB au hasard
-if(pool.length<3){
+// ═══ CHARGEMENT DES QUESTIONS — QCM et V/F SÉPARÉS ═══
+let allQ=QDB[EEP.theme]?[...QDB[EEP.theme]]:[];
+if(allQ.length<3){
   const qdbKeys=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);
   const fallKey=pick(qdbKeys)||'finance';
-  pool=[...QDB[fallKey]];
-  console.warn(`[CEO] Pas de QDB pour "${EEP.theme}", fallback sur "${fallKey}"`);}
-shuffle(pool);
-EEP.questions=pool.slice(0,10);
+  allQ=[...QDB[fallKey]];}
+// Séparer QCM et V/F
+const qcmPool=allQ.filter(q=>q.c!==undefined);
+const vfPool=allQ.filter(q=>q.v!==undefined);
+// Passage 1 = QCM, Passage 2 = V/F (alternance)
+const passNum=(EEP._themePassCount||{})[EEP.theme]||0;
+if(!EEP._themePassCount)EEP._themePassCount={};
+EEP._themePassCount[EEP.theme]=passNum+1;
+if(passNum%2===0&&qcmPool.length>=3){
+  EEP.fmt='qcm';shuffle(qcmPool);EEP.questions=qcmPool.slice(0,10);
+}else if(vfPool.length>=3){
+  EEP.fmt='vf';shuffle(vfPool);EEP.questions=vfPool.slice(0,10);
+}else{
+  EEP.fmt='mix';shuffle(allQ);EEP.questions=allQ.slice(0,10);}
 
 // ── Boss intro thème ──
+// Update round display with format
+const fmtLabel=EEP.fmt==='qcm'?'QCM':EEP.fmt==='vf'?'VRAI/FAUX':'MIX';
+$('gRound').textContent=`EEP ${EEP.candidateIdx+1}/${EEP.players.length} · ${fmtLabel}`;
+
 _gladosIntroTheme(themeObj.name);
 
 // ── Notify players ──
@@ -4350,7 +4412,7 @@ $('gTimer').textContent=time+'s';$('gTimer').className='timer-ceo';
 if(EEP.timerInt)clearInterval(EEP.timerInt);
 EEP.timerInt=setInterval(()=>{EEP.timer--;$('gTimer').textContent=EEP.timer+'s';
 if(EEP.timer<=10)$('gTimer').className='timer-ceo crit';
-if(EEP.timer<=0){clearInterval(EEP.timerInt);if(!EEP.answered){EEP.answered=true;eepProcessAnswer(null,false);}}},1000);}
+if(EEP.timer<=0){clearInterval(EEP.timerInt);_hideValidateBar();if(!EEP.answered){EEP.answered=true;eepProcessAnswer(null,false);}}},1000);}
 
 function eepProcessAnswer(fromPid,correct){
 if(EEP.timerInt)clearInterval(EEP.timerInt);
