@@ -3924,14 +3924,53 @@ function doFreeSwap(slotIdx){
   shuffle(pioche);
   const newId=pioche.shift();
   const oldId=G.portfolio[slotIdx];
-  const oldTh=THEMES.find(t=>t.id===oldId);
-  const newTh=THEMES.find(t=>t.id===newId);
-  G.portfolio[slotIdx]=newId;
-  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G.portfolio];
-  _bossNotif(`Échange : ${oldTh?.icon||''} ${oldTh?.name||oldId} → ${newTh?.icon||''} ${newTh?.name||newId}. Espérons que vous ne le regretterez pas.`);
-  closeOv('ovFreeSwap');
-  _updSoloHandBar();
-  _showThemeChoice();}
+  const oldTh=THEMES.find(t=>t.id===oldId)||{icon:'📚',name:oldId};
+  const newTh=THEMES.find(t=>t.id===newId)||{icon:'📚',name:newId};
+  // ── Animation roulette dans l'overlay ──
+  const content=$('freeSwapContent');
+  // Phase 1: spinning (1.5s)
+  let spinIdx=0;
+  const qdbKeys=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=3);
+  content.innerHTML=`
+    <div style="text-align:center;padding:16px;">
+      <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">🎰 ÉCHANGE EN COURS...</div>
+      <div style="font-size:14px;color:var(--gold);margin-bottom:4px;">${oldTh.icon} ${oldTh.name}</div>
+      <div style="font-size:20px;margin:8px 0;">↓</div>
+      <div id="swapSpin" style="font-size:18px;color:var(--cyan);font-family:'Orbitron',monospace;min-height:30px;transition:all .1s;">🎲 ...</div>
+    </div>`;
+  const spinEl=$('swapSpin');
+  const spinInt=setInterval(()=>{
+    const rk=qdbKeys[spinIdx%qdbKeys.length];
+    const rt=THEMES.find(t=>t.id===rk)||{icon:'❓',name:rk};
+    spinEl.textContent=`${rt.icon} ${rt.name}`;
+    spinIdx++;
+  },120);
+  // Phase 2: reveal after 1.5s
+  setTimeout(()=>{
+    clearInterval(spinInt);
+    // Appliquer l'échange
+    G.portfolio[slotIdx]=newId;
+    DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G.portfolio];
+    _updSoloHandBar();
+    // Afficher le résultat
+    const p=G.portfolio;
+    const th0=THEMES.find(t=>t.id===p[0])||{icon:'📚',name:p[0]};
+    const th1=p[1]?(THEMES.find(t=>t.id===p[1])||{icon:'📚',name:p[1]}):null;
+    content.innerHTML=`
+      <div style="text-align:center;padding:12px;">
+        <div style="font-size:12px;color:var(--green);font-family:'Orbitron',monospace;margin-bottom:8px;">✅ ÉCHANGE EFFECTUÉ</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">${oldTh.icon} ${oldTh.name} → ${newTh.icon} ${newTh.name}</div>
+        <div style="border-top:1px solid var(--border);margin:10px 0;padding-top:10px;">
+          <div style="font-size:9px;color:var(--gold);font-family:'Orbitron',monospace;letter-spacing:1px;margin-bottom:6px;">VOS THÈMES</div>
+          <div style="display:flex;gap:8px;justify-content:center;">
+            <div style="padding:10px 16px;background:var(--card);border:2px solid var(--cyan);border-radius:6px;font-size:13px;">${th0.icon} ${th0.name}</div>
+            ${th1?`<div style="padding:10px 16px;background:var(--card);border:2px solid var(--cyan);border-radius:6px;font-size:13px;">${th1.icon} ${th1.name}</div>`:''}
+          </div>
+        </div>
+        <button class="btn gold" style="width:100%;margin-top:12px;padding:14px;" onclick="closeOv('ovFreeSwap');_showThemeChoice()">▶️ CHOISIR MON THÈME D'ENTRETIEN</button>
+      </div>`;
+    _bossNotif(`Échange : ${oldTh.icon} ${oldTh.name} → ${newTh.icon} ${newTh.name}. Espérons que vous ne le regretterez pas.`);
+  },1500);}
 
 // ── Lancer l'EEP avec le thème choisi ──
 function _launchEEPWithTheme(themeObj){
@@ -4051,20 +4090,6 @@ function _eepBriefingPhase(cand){
       EEP.latencyActive=false;
       closeOv('ovFreeSwap');// fermer si encore ouvert
       _eepSendNextQuestion();}},1000);}
-
-function doFreeSwap(slotIdx){
-  const pioche=G._piocheRestante||[];
-  if(!pioche.length){closeOv('ovFreeSwap');return;}
-  shuffle(pioche);
-  const newId=pioche.shift();
-  const oldId=G.portfolio[slotIdx];
-  const oldTh=THEMES.find(t=>t.id===oldId);
-  const newTh=THEMES.find(t=>t.id===newId);
-  G.portfolio[slotIdx]=newId;
-  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G.portfolio];
-  _bossNotif(`Échange effectué : ${oldTh?.icon||''} ${oldTh?.name||oldId} → ${newTh?.icon||''} ${newTh?.name||newId}. Espérons que vous ne le regretterez pas.`);
-  closeOv('ovFreeSwap');
-  _updSoloHandBar();}
 
 // ── Remplace eepLatencyWindow pour les phases inter-questions ─────────
 function eepLatencyWindow(){
@@ -4385,17 +4410,11 @@ const qData={type:'eepQuestion',qi:EEP.questionIdx,total:EEP.questions.length,
 question:q.q,themeIcon:th?.icon||'',candidateName:cand.name,
 choices:isQCM?q.c:null,correctIdx:isQCM?Number(q.a):null,correctVal:!isQCM?(q.v===true||String(q.v).toLowerCase()==='true'):null,
 effects:EEP.activeEffects};
-// Candidat/sniper : peut répondre + voit les bonnes réponses pour onClick
-mpTo(targetPid,{...qData,canAnswer:true,isSniped});
-// Spectateurs : voient les choix SANS la réponse correcte (anti-triche)
-const spectatorData={...qData,canAnswer:false,correctIdx:null,correctVal:null};
-EEP.players.forEach(p=>{if(p.id!==targetPid)mpTo(p.id,spectatorData);});
-// TV
+// TV — RENDER FIRST (avant mpTo, sinon les onclick ne trouvent pas le DOM)
 $('qTheme').textContent=(th?th.icon+' '+th.name+' — ':'')+(isQCM?'QCM':'V/F');
 $('qNum').textContent=`Q ${EEP.questionIdx+1}/${EEP.questions.length}`;$('qTxt').textContent=q.q;
 if(isQCM&&q.c){
   const L=['A','B','C','D'];
-  // Style TCG : cartes avec en-tête lettre + texte
   $('qChoices').innerHTML=`<div class="cgrid-ceo">${q.c.map((c,i)=>`
     <div class="cbox-ceo">
       <div class="cl">${L[i]}</div>
@@ -4412,6 +4431,10 @@ else{
       <div style="font-size:10px;font-family:'Orbitron',monospace;letter-spacing:1px;">FAUX</div>
     </div>
   </div>`;}
+// THEN send to players (onclick handlers attach to existing DOM)
+mpTo(targetPid,{...qData,canAnswer:true,isSniped});
+const spectatorData={...qData,canAnswer:false,correctIdx:null,correctVal:null};
+EEP.players.forEach(p=>{if(p.id!==targetPid)mpTo(p.id,spectatorData);});
 // Timer + modificateurs
 let time=EEP.timerBase;
 if(EEP.activeEffects.includes('brouillage'))time=Math.max(8,time-15);
