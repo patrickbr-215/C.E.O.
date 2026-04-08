@@ -1036,6 +1036,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div id="restructGrid" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;"></div>
 <button class="btn sm rd" style="width:100%;max-width:300px;" onclick="restructCancel()">← ANNULER — garder mon portfolio actuel</button>
 </div>
+<!-- FREE SWAP (1er candidat) -->
+<div id="ovFreeSwap" class="ov">
+<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(13px,3vw,16px);color:var(--gold);letter-spacing:2px;margin-bottom:6px;">🔄 ÉCHANGE GRATUIT</div>
+<div style="font-size:10px;color:var(--muted);max-width:340px;margin-bottom:10px;">En tant que premier candidat, vous pouvez échanger un de vos thèmes contre un thème de la pioche commune.</div>
+<div id="freeSwapContent" style="max-width:340px;width:100%;"></div>
+<button class="btn sm" style="width:100%;max-width:340px;margin-top:8px;" onclick="closeOv('ovFreeSwap')">✓ GARDER MES THÈMES</button>
+</div>
 <!-- BOURSE AUX THÈMES -->
 <div id="ovBourse" class="ov">
 <div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;">📈 BOURSE AUX THÈMES</div>
@@ -1197,7 +1204,16 @@ const OFFLINE_QDB=[
 {q:"Wi-Fi = Wireless Fidelity.",v:false},{q:"Netflix avant Google.",v:true}
 ];
 let _offlineIdx=0;
-function _getOfflineFallback(){_offlineIdx=(_offlineIdx+1)%OFFLINE_QDB.length;return{...OFFLINE_QDB[_offlineIdx],source:'offline'};}
+function _getOfflineFallback(){
+  // 1. Essayer QDB du thème courant
+  const tid=G.theme||EEP.theme||'';
+  if(QDB[tid]&&QDB[tid].length>0)return{...pick(QDB[tid]),source:'offline-qdb'};
+  // 2. Essayer n'importe quel QDB
+  const k=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>0);
+  if(k)return{...pick(QDB[k]),source:'offline-qdb'};
+  // 3. Dernier recours: OFFLINE_QDB générique
+  _offlineIdx=(_offlineIdx+1)%OFFLINE_QDB.length;
+  return{...OFFLINE_QDB[_offlineIdx],source:'offline'};}
 
 // ==================== PIPELINE N+1 (Just-in-Time, Anti-Freeze) ====================
 // Principe: dès que Q(N) est affichée, on lance Q(N+1) en background.
@@ -2726,15 +2742,16 @@ async function _streamGenerateNext(){
     _streamGenerateNext().catch(e=>console.warn('[CEO-AI bg]',e.message));}}
 
 function _getStaticFallbackQ(){
-  // Use OFFLINE_QDB for current theme first, then QDB
-  const tid=G.theme||'';
-  if(typeof OFFLINE_QDB!=='undefined'&&OFFLINE_QDB[tid]&&OFFLINE_QDB[tid].length){
-    const pool=[...OFFLINE_QDB[tid]];shuffle(pool);
-    const q=pool.find(q=>!G._usedOffline?.has(q.q));
-    if(q){if(!G._usedOffline)G._usedOffline=new Set();G._usedOffline.add(q.q);return{...q,source:'offline'};}
-    return{...pick(pool),source:'offline'};}
+  // 1. QDB du thème courant (TOUJOURS prioritaire)
+  const tid=G.theme||EEP.theme||'';
+  if(QDB[tid]&&QDB[tid].length>0){
+    if(!G._usedOffline)G._usedOffline=new Set();
+    const pool=QDB[tid].filter(q=>!G._usedOffline.has(q.q));
+    if(pool.length){const q=pick(pool);G._usedOffline.add(q.q);return{...q,source:'qdb-fallback'};}
+    return{...pick(QDB[tid]),source:'qdb-fallback'};}
+  // 2. N'importe quel QDB
   const k=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>0);
-  return k?{...pick(QDB[k]),source:'offline'}:null;}
+  return k?{...pick(QDB[k]),source:'qdb-fallback'}:null;}
 
 function showQStream(){
   if(!G._streamMode){showQ();return;}
@@ -3781,47 +3798,116 @@ $('gRound').textContent=`EEP ${EEP.candidateIdx+1}/${EEP.players.length}`;
 EEP.buffer=[];EEP.sniperRedirect=null;EEP.activeEffects=[];EEP.questionIdx=0;
 EEP._defenseQueue=[];EEP._multiplierQueue=[];
 
-// ── Choix du thème ──────────────────────────────────────────────────
-let themeObj;
-if(EEP.bourse?.forcedTheme){themeObj=THEMES.find(t=>t.id===EEP.bourse.forcedTheme);EEP.bourse.forcedTheme=null;
-$('gTicker').textContent=`📈 Thème imposé par la Bourse: ${themeObj?.name}!`;}
-else{
-  // Tirer du portfolio du candidat (3 thèmes actifs), sinon fallback global
-  const portfolio=_getPortfolio(cand.id);
-  if(portfolio.length>0){themeObj=pick(portfolio);}
-  else{themeObj=pick(THEMES);}
-}
-EEP.theme=themeObj.id;EEP.fmt=Math.random()<.5?'qcm':'vf';
-G.theme=EEP.theme;// sync pour que les fallbacks trouvent le bon thème
+const isHuman=cand.id===_SOLO_PLAYER_PID&&G.mode==='solo';
 
-// ── Questions : IA ou statique ──────────────────────────────────────
-const hasStaticQ=QDB[EEP.theme]&&QDB[EEP.theme].length>=3;
-const isAITheme=(G.aiThemeIds instanceof Set&&G.aiThemeIds.has(EEP.theme))||!hasStaticQ;
-if(isAITheme){
-  // Streaming Gemini : génère Q1 tout de suite, les suivantes en background
-  // Utilise le NOM du thème (pas l'id) pour que Gemini génère des questions pertinentes
-  EEP._aiStream={queue:[],generated:0,total:10,themeName:themeObj.name,ready:false};
-  _eepStreamStart();
-}else{
-  const all=QDB[EEP.theme]||[];
-  const qcmPool=all.filter(q=>q.c!==undefined);const vfPool=all.filter(q=>q.v!==undefined);
+// ── Thème imposé par la Bourse ? ──
+if(EEP.bourse?.forcedTheme){
+  const thObj=THEMES.find(t=>t.id===EEP.bourse.forcedTheme);EEP.bourse.forcedTheme=null;
+  $('gTicker').textContent=`📈 Thème imposé par la Bourse: ${thObj?.name}!`;
+  _launchEEPWithTheme(thObj);return;}
+
+// ── 1er candidat humain : proposer le swap d'abord ──
+if(EEP.candidateIdx===0&&isHuman&&cand.freeSwap){
+  cand.freeSwap=false;
+  _showFreeSwapThenChoose();return;}
+
+// ── Candidat humain : choisir son thème ──
+if(isHuman){_showThemeChoice();return;}
+
+// ── Bot : auto-pick ──
+const portfolio=_getPortfolio(cand.id);
+const thObj=portfolio.length>0?pick(portfolio):pick(THEMES);
+_launchEEPWithTheme(thObj);}
+
+// ── Overlay choix de thème pour le joueur ──
+function _showThemeChoice(){
+  const portfolio=_getPortfolio(_SOLO_PLAYER_PID);
+  if(portfolio.length===0){
+    // Pas de thèmes → fallback
+    _launchEEPWithTheme(pick(THEMES));return;}
+  if(portfolio.length===1){
+    // Un seul thème → pas de choix
+    _launchEEPWithTheme(portfolio[0]);return;}
+  // Afficher le choix
+  $('qTheme').textContent='📋 CHOIX DU THÈME';
+  $('qNum').textContent='';
+  $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(12px,3vw,16px);color:var(--gold);letter-spacing:2px;">CHOISISSEZ VOTRE TERRAIN</span>`;
+  $('qChoices').innerHTML=`<div style="max-width:340px;margin:12px auto;display:flex;flex-direction:column;gap:8px;">
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px;">Sur quel thème voulez-vous passer votre entretien ?</div>
+    ${portfolio.map(t=>`<button class="btn cy" style="width:100%;padding:12px;font-size:13px;" onclick="_pickThemeForEEP('${t.id}')">
+      ${t.icon} ${t.name}</button>`).join('')}
+  </div>`;
+  $('gTimer').textContent='';
+  _bossNotif('Choisissez votre thème. Quel que soit votre choix, je serai déçu.');}
+
+window._pickThemeForEEP=function(themeId){
+  const thObj=THEMES.find(t=>t.id===themeId);
+  if(!thObj)return;
+  _launchEEPWithTheme(thObj);};
+
+// ── Free swap overlay PUIS choix de thème ──
+function _showFreeSwapThenChoose(){
+  const pioche=G._piocheRestante||[];
+  const portfolio=G.portfolio||[];
+  if(pioche.length===0||portfolio.length===0){_showThemeChoice();return;}
+  // Afficher l'overlay de swap
+  let html=`<div style="font-size:10px;color:var(--text);margin-bottom:8px;">Vos thèmes actuels :</div>`;
+  html+=portfolio.map((tid,i)=>{
+    const th=THEMES.find(x=>x.id===tid);
+    return`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;">
+      <span style="font-size:12px;">${th?.icon||'📚'} ${th?.name||tid}</span>
+      <button class="btn sm gold" onclick="doFreeSwap(${i})">🔄 ÉCHANGER</button>
+    </div>`;}).join('');
+  html+=`<div style="font-size:9px;color:var(--muted);margin-top:4px;text-align:center;">La pioche contient ${pioche.length} thème(s) restant(s)</div>`;
+  $('freeSwapContent').innerHTML=html;
+  _bossNotif('Avantage du premier candidat. Vous pouvez échanger un thème contre la pioche. Profitez-en — ma générosité a une date d\'expiration.');
+  showOv('ovFreeSwap');
+  // Quand le joueur ferme le swap (bouton GARDER ou après swap) → choix du thème
+  const origClose=$('ovFreeSwap').querySelector('.btn.sm');
+  if(origClose)origClose.onclick=()=>{closeOv('ovFreeSwap');_showThemeChoice();};}
+
+function doFreeSwap(slotIdx){
+  const pioche=G._piocheRestante||[];
+  if(!pioche.length){closeOv('ovFreeSwap');_showThemeChoice();return;}
+  shuffle(pioche);
+  const newId=pioche.shift();
+  const oldId=G.portfolio[slotIdx];
+  const oldTh=THEMES.find(t=>t.id===oldId);
+  const newTh=THEMES.find(t=>t.id===newId);
+  G.portfolio[slotIdx]=newId;
+  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G.portfolio];
+  _bossNotif(`Échange : ${oldTh?.icon||''} ${oldTh?.name||oldId} → ${newTh?.icon||''} ${newTh?.name||newId}. Espérons que vous ne le regretterez pas.`);
+  closeOv('ovFreeSwap');
+  _updSoloHandBar();
+  _showThemeChoice();}
+
+// ── Lancer l'EEP avec le thème choisi ──
+function _launchEEPWithTheme(themeObj){
+if(!themeObj)themeObj=pick(THEMES);
+const cand=EEP.players[EEP.candidateIdx];
+EEP.theme=themeObj.id;EEP.fmt=Math.random()<.5?'qcm':'vf';
+G.theme=EEP.theme;
+
+// ── Questions : QDB D'ABORD, IA seulement si aucune question statique ──
+// RÈGLE ABSOLUE : si QDB a des questions pour ce thème, on les utilise.
+const staticQ=QDB[EEP.theme]||[];
+if(staticQ.length>=3){
+  // ═══ CHEMIN STATIQUE — questions locales ═══
+  const qcmPool=staticQ.filter(q=>q.c!==undefined);
+  const vfPool=staticQ.filter(q=>q.v!==undefined);
   const passNum=EEP._candidatePass||0;
   let pool;
-  if(all.length>=15&&passNum===0)pool=qcmPool.length>=5?qcmPool:all.filter((_,i)=>i<10);
-  else if(all.length>=15&&passNum===1)pool=vfPool.length>=5?vfPool:all.filter((_,i)=>i>=10);
-  else pool=[...all];
-  if(pool.length<3)pool=[...all];
-  // ── GUARD: si aucune question trouvée, fallback OFFLINE_QDB ──
-  if(pool.length===0){
-    // Essayer OFFLINE_QDB du thème puis fallback générique
-    if(typeof OFFLINE_QDB==='object'&&!Array.isArray(OFFLINE_QDB)&&OFFLINE_QDB[EEP.theme]){
-      pool=[...OFFLINE_QDB[EEP.theme]];}
-    else if(Array.isArray(OFFLINE_QDB)&&OFFLINE_QDB.length){
-      pool=[...OFFLINE_QDB];}
-    else{// Dernier recours: prendre un thème QDB au hasard
-      const fallKey=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>=5);
-      if(fallKey)pool=[...QDB[fallKey]];}}
-  shuffle(pool);EEP.questions=pool.slice(0,10);}
+  if(staticQ.length>=15&&passNum===0)pool=qcmPool.length>=5?qcmPool:staticQ.filter((_,i)=>i<10);
+  else if(staticQ.length>=15&&passNum===1)pool=vfPool.length>=5?vfPool:staticQ.filter((_,i)=>i>=10);
+  else pool=[...staticQ];
+  if(pool.length<3)pool=[...staticQ];
+  shuffle(pool);EEP.questions=pool.slice(0,10);
+  EEP._aiStream=null;// pas de streaming
+}else{
+  // ═══ CHEMIN IA — Gemini streaming JIT ═══
+  EEP._aiStream={queue:[],generated:0,total:10,themeName:themeObj.name,ready:false};
+  _eepStreamStart();
+}
 
 // ── GLaDOS intro thème ──────────────────────────────────────────────
 _gladosIntroTheme(themeObj.name);
@@ -3888,7 +3974,6 @@ function _eepBriefingPhase(cand){
   const isHumanCand=cand.id===_SOLO_PLAYER_PID;
   EEP.latencyActive=true;
   let t=10;
-  // ── TV: INITIATIVE DÉFENSIVE ──
   $('qTheme').textContent='🛡️ INITIATIVE DÉFENSIVE';
   $('qNum').textContent=`${cand.name}`;
   $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(11px,2.5vw,15px);color:var(--cyan);letter-spacing:2px;">PRÉPARATION DU CANDIDAT</span>`;
@@ -3896,50 +3981,33 @@ function _eepBriefingPhase(cand){
   $('gTicker').textContent=`🛡️ BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
   $('gTimer').textContent=`${t}s`;
   if(isHumanCand&&G.mode==='solo'){_updSoloHandBar();}
-  // ── Avantage 1er candidat : échange gratuit contre la pioche ──
-  if(EEP.candidateIdx===0&&isHumanCand&&cand.freeSwap){
-    cand.freeSwap=false;
-    _bossNotif('Avantage du premier candidat : vous pouvez échanger un de vos thèmes contre la pioche. Profitez-en — c\'est la dernière fois que je suis généreux.');
-    const pioche=G._piocheRestante||[];
-    if(pioche.length>0){
-      // Afficher les 2 thèmes du joueur + option de swap
-      const p=G.portfolio||[];
-      const swapHtml=p.map((tid,i)=>{
-        const th=THEMES.find(x=>x.id===tid);
-        return`<button class="btn sm" style="width:100%;margin:3px 0;" onclick="_doFreeSwap(${i})">${th?.icon||'📚'} ${th?.name||tid} ↔ 🎲 ÉCHANGER</button>`;}).join('');
-      setTimeout(()=>{
-        if(!EEP.latencyActive)return;
-        $('qChoices').innerHTML=`<div style="max-width:300px;margin:8px auto;text-align:center;">
-          <div style="font-size:10px;color:var(--gold);margin-bottom:6px;font-family:'Orbitron',monospace;">🔄 ÉCHANGE GRATUIT — Cliquez pour remplacer</div>
-          ${swapHtml}
-          <button class="btn sm" style="width:100%;margin-top:6px;opacity:.6;" onclick="_skipFreeSwap()">✓ GARDER MES THÈMES</button>
-        </div>`;},500);}}
-  window._doFreeSwap=function(slotIdx){
-    const pioche=G._piocheRestante||[];
-    if(!pioche.length)return;
-    shuffle(pioche);
-    const newId=pioche.shift();
-    const oldId=G.portfolio[slotIdx];
-    const oldTh=THEMES.find(t=>t.id===oldId);
-    const newTh=THEMES.find(t=>t.id===newId);
-    G.portfolio[slotIdx]=newId;
-    DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G.portfolio];
-    _bossNotif(`Échange effectué : ${oldTh?.icon||''} ${oldTh?.name||oldId} → ${newTh?.icon||''} ${newTh?.name||newId}. Espérons que vous ne le regretterez pas.`);
-    $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--green);">✅ Portfolio mis à jour</div>`;};
-  window._skipFreeSwap=function(){
-    $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--muted);">Thèmes conservés — le briefing continue...</div>`;};
   mpBroadcast({type:'briefingStart',candidateId:cand.id,duration:10});
   bossIntro(cand.name,EEP.theme||G.theme||'évaluation');
   EEP._briefingInt=setInterval(()=>{
     t--;
     $('gTicker').textContent=`🛡️ BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
-    $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--muted);">Le candidat pose ses cartes défensives face cachée — ${t}s</div>`;
+    $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--muted);">Défenses face cachée — ${t}s</div>`;
     $('gTimer').textContent=`${t}s`;
     mpBroadcast({type:'latencyTick',t});
     if(t<=0){
       clearInterval(EEP._briefingInt);
       EEP.latencyActive=false;
+      closeOv('ovFreeSwap');// fermer si encore ouvert
       _eepSendNextQuestion();}},1000);}
+
+function doFreeSwap(slotIdx){
+  const pioche=G._piocheRestante||[];
+  if(!pioche.length){closeOv('ovFreeSwap');return;}
+  shuffle(pioche);
+  const newId=pioche.shift();
+  const oldId=G.portfolio[slotIdx];
+  const oldTh=THEMES.find(t=>t.id===oldId);
+  const newTh=THEMES.find(t=>t.id===newId);
+  G.portfolio[slotIdx]=newId;
+  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G.portfolio];
+  _bossNotif(`Échange effectué : ${oldTh?.icon||''} ${oldTh?.name||oldId} → ${newTh?.icon||''} ${newTh?.name||newId}. Espérons que vous ne le regretterez pas.`);
+  closeOv('ovFreeSwap');
+  _updSoloHandBar();}
 
 // ── Remplace eepLatencyWindow pour les phases inter-questions ─────────
 function eepLatencyWindow(){
