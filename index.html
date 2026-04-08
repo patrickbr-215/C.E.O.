@@ -1017,6 +1017,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <canvas id="sprintCanvas" width="300" height="80" style="border:1px solid rgba(212,168,50,.25);border-radius:4px;background:rgba(0,0,0,.3);touch-action:none;margin-bottom:4px;"></canvas>
 <div style="font-size:7px;color:var(--muted);text-align:center;margin-bottom:4px;font-family:'Share Tech Mono',monospace;">↑ Signez ci-dessus ↑</div>
 <button class="btn gold" onclick="submitSprintSig()" style="width:100%;max-width:340px;">✍️ SIGNER & SUIVANT</button>
+<button class="btn sm" onclick="skipSprint()" style="width:100%;max-width:340px;margin-top:4px;opacity:.5;font-size:9px;">⏭️ SKIP (TEST — 1er)</button>
 <div id="sprintLeaderboard" style="margin-top:6px;max-width:340px;width:100%;font-size:10px;color:var(--muted);"></div>
 </div>
 
@@ -2156,6 +2157,12 @@ function _updSprintLB(){
     `<div style="display:flex;justify-content:space-between;padding:2px 0;${e.isPlayer?'color:var(--gold);font-weight:700;':''}">`+
     `<span>#${i+1} ${e.icon||'👤'} ${e.name}</span><span>${e.score}</span></div>`).join('');}
 
+function skipSprint(){
+  if(G.mode!=='solo')return;
+  if(_sprintState.int)clearInterval(_sprintState.int);
+  _sprintState.score=999;// garantit la 1ère place
+  _endSoloSprint();}
+
 function _endSoloSprint(){
   // Final bot scores boost (bots sign ~8-15 contracts total)
   _sprintState.botScores=_sprintState.botScores.map(s=>s+Math.floor(Math.random()*8)+5);
@@ -2450,13 +2457,17 @@ function _showValidateBar(onValidate,onCancel){
   let bar=$('validateBar');
   if(!bar){
     bar=document.createElement('div');bar.id='validateBar';
-    bar.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:500;display:flex;gap:8px;padding:10px 16px;background:linear-gradient(180deg,transparent,rgba(8,9,14,.95) 30%);justify-content:center;';
+    bar.style.cssText='position:fixed;bottom:160px;left:0;right:0;z-index:9000;display:flex;gap:10px;padding:12px 20px;background:rgba(8,9,14,.95);border-top:2px solid var(--gold);justify-content:center;';
     document.body.appendChild(bar);}
-  bar.innerHTML=`<button id="btnValider" class="btn gold" style="flex:1;max-width:180px;padding:12px;font-size:14px;">✅ VALIDER</button>
-    <button id="btnAnnuler" class="btn" style="flex:1;max-width:180px;padding:12px;font-size:14px;border-color:var(--red);color:var(--red);">❌ ANNULER</button>`;
-  bar.style.display='flex';
-  $('btnValider').onclick=onValidate;
-  $('btnAnnuler').onclick=onCancel;}
+  bar.innerHTML='';
+  const btnV=document.createElement('button');
+  btnV.className='btn gold';btnV.style.cssText='flex:1;max-width:180px;padding:14px;font-size:15px;';
+  btnV.textContent='✅ VALIDER';btnV.onclick=onValidate;
+  const btnA=document.createElement('button');
+  btnA.className='btn';btnA.style.cssText='flex:1;max-width:180px;padding:14px;font-size:15px;border-color:var(--red);color:var(--red);';
+  btnA.textContent='❌ ANNULER';btnA.onclick=onCancel;
+  bar.appendChild(btnV);bar.appendChild(btnA);
+  bar.style.display='flex';}
 
 function _hideValidateBar(){
   const bar=$('validateBar');if(bar)bar.style.display='none';}
