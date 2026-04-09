@@ -1303,41 +1303,34 @@ async function _getGenAI(){
     return null;}}
 
 // ── Persona racine — injectée dans TOUS les appels ────────────────────
-const CEO_SYSTEM_INSTRUCTION=`Tu es le C.E.O. de la Firme. Ton ton est calqué sur GLaDOS (Portal) : cynique, passif-agressif, et adepte du jargon corporate absurde. Tu détestes les joueurs mais tu adores les voir échouer. Tes messages doivent être percutants, courts mais détaillés. Utilise des termes comme : optimisation humaine, KPI de survie, synergie toxique, licenciement immédiat. Réponds toujours en français, sans guillemets autour de ta réponse.`;
+const CEO_SYSTEM_INSTRUCTION=`Tu es le C.E.O. de la Firme. Tu es calqué sur GLaDOS (Portal) : cynique, passif-agressif, méprisant, adepte du jargon corporate absurde. Tu détestes les joueurs mais tu adores les voir échouer. Tu utilises : optimisation humaine, KPI de survie, synergie toxique, licenciement immédiat, restructuration, downsizing. Réponds en français, 2-3 phrases max. Sans guillemets.`;
 
 const _MODEL_CHAIN=['gemini-3.1-flash-lite-preview','gemini-2.0-flash-lite','gemini-2.0-flash'];
 
 async function _geminiGenerate(prompt,model=null){
-  // ── MODE PROD : proxy Vercel sécurisé ───────────────────────────────
+  // ── MODE PROD : proxy Vercel ───────────────────────────────
   if(_IS_PROD){
     for(let attempt=0;attempt<3;attempt++){
       try{
         const r=await fetch('/api/gemini',{method:'POST',
           headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({prompt,model,systemInstruction:CEO_SYSTEM_INSTRUCTION})});
+          body:JSON.stringify({prompt,model:model||_MODEL_CHAIN[0],systemInstruction:CEO_SYSTEM_INSTRUCTION})});
         if(r.status===503&&attempt<2){await _sleep(2000);continue;}
         if(!r.ok){
-          // ── LOG VERCEL DÉTAILLÉ ──────────────────────────────────────
-          let errBody='(vide)';
-          try{errBody=await r.text();}catch(_){}
-          console.error(`[CEO-GEMINI] Proxy HTTP ${r.status} (tentative ${attempt+1}/3)`);
-          console.error('[CEO-GEMINI] Headers:', JSON.stringify(Object.fromEntries(r.headers)));
-          console.error('[CEO-GEMINI] Body:', errBody);
-          console.error('[CEO-GEMINI] Diagnostic: vérifier GEMINI_API_KEY dans Vercel → Settings → Environment Variables');
-          throw new Error(`Proxy HTTP ${r.status}: ${errBody.slice(0,120)}`);}
+          const errBody=await r.text().catch(()=>'');
+          console.error(`[GEMINI] Proxy ${r.status}:`,errBody);
+          throw new Error(`Proxy ${r.status}`);}
         const d=await r.json();
-        if(d.error){
-          console.error('[CEO-GEMINI] Erreur API:', d.error);
-          throw new Error(d.error);}
+        if(d.error)throw new Error(d.error);
         return d.text;
       }catch(e){
-        console.error(`[CEO-GEMINI] Tentative ${attempt+1} échouée:`,e.message);
-        if(attempt===2)throw new Error('IA indisponible (proxy): '+e.message);
+        console.error(`[GEMINI] Attempt ${attempt+1}:`,e.message);
+        if(attempt===2)throw e;
         await _sleep(1500+attempt*1500);}}
-    throw new Error('IA proxy: max retries');}
-  // ── MODE LOCAL : SDK direct avec systemInstruction + Google Search ───
+    throw new Error('Proxy max retries');}
+  // ── MODE LOCAL : SDK + Google Search ────────────────────────
   const genAI=await _getGenAI();
-  if(!genAI)throw new Error('IA désactivée — SDK non chargé');
+  if(!genAI)throw new Error('SDK non chargé');
   const modelsToTry=model?[model]:[..._MODEL_CHAIN];
   for(const m of modelsToTry){
     for(let attempt=0;attempt<2;attempt++){
@@ -1350,28 +1343,24 @@ async function _geminiGenerate(prompt,model=null){
         const result=await mdl.generateContent(prompt);
         return result.response.text();
       }catch(e){
-        const is429=e.message?.includes('429')||e.status===429;
-        const isGrounding=e.message?.includes('google_search')||e.message?.includes('tool');
-        console.error(`[CEO-GEMINI] model=${m} attempt=${attempt} error:`,e.message,e.status||'',e.statusText||'');
-        // Si grounding pas supporté par ce modèle, retry sans
-        if(isGrounding&&attempt===0){
+        console.error(`[GEMINI] ${m} #${attempt}:`,e.message);
+        // Grounding non supporté → retry sans
+        if((e.message?.includes('google_search')||e.message?.includes('tool'))&&attempt===0){
           try{
             const mdl2=genAI.getGenerativeModel({model:m,systemInstruction:CEO_SYSTEM_INSTRUCTION,
               generationConfig:{temperature:0.9,maxOutputTokens:400}});
-            const r2=await mdl2.generateContent(prompt);return r2.response.text();
-          }catch(e2){console.warn('[CEO-GEMINI] sans grounding aussi échoué:',e2.message);}}
-        if(is429&&attempt===0){await _sleep(6000);continue;}
-        if(!is429)break;}}}
-  throw new Error('Tous les modèles Gemini ont échoué.');}
+            return(await mdl2.generateContent(prompt)).response.text();
+          }catch(e2){console.warn('[GEMINI] sans search:',e2.message);}}
+        if((e.message?.includes('429'))&&attempt===0){await _sleep(5000);continue;}
+        break;}}}
+  throw new Error('Tous les modèles ont échoué');}
 
 async function _geminiCall(requestBody,model=null){
   const prompt=requestBody.contents?.[0]?.parts?.[0]?.text||'';
-  const text=await _geminiGenerate(prompt,model);
-  return{candidates:[{content:{parts:[{text}]}}]};}
+  return{candidates:[{content:{parts:[{text:await _geminiGenerate(prompt,model)}]}}]};}
 
 function _extractText(data){
-  const parts=data.candidates?.[0]?.content?.parts||[];
-  return parts.filter(p=>p.text).map(p=>p.text).join('\n').trim();}
+  return(data.candidates?.[0]?.content?.parts||[]).filter(p=>p.text).map(p=>p.text).join('\n').trim();}
 
 function _slugify(name){return name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');}
 
@@ -1385,11 +1374,10 @@ function _validateQ(q){
 async function generateOneQuestion(themeName,index,total){
   const isQCM=(index%2===0);
   const prompt=isQCM
-    ?`Thème: "${themeName}". Génère UNE question QCM de quiz en français. Réponds UNIQUEMENT avec ce JSON (rien d'autre): {"q":"La question ?","c":["A","B","C","D"],"a":2}
-La réponse correcte doit être à l'index "a" (entier 0-3). Les 4 choix doivent être courts (max 4 mots).`
-    :`Thème: "${themeName}". Génère UNE question Vrai/Faux de quiz en français. Réponds UNIQUEMENT avec ce JSON (rien d'autre): {"q":"Assertion à évaluer.","v":true}
-"v" doit être le booléen true ou false (sans guillemets).`;
-
+    ?`Thème: "${themeName}". Génère UNE question QCM de quiz en français. Réponds UNIQUEMENT avec ce JSON: {"q":"La question ?","c":["A","B","C","D"],"a":2}
+La réponse correcte doit être à l'index "a" (0-3). Choix courts (max 4 mots).`
+    :`Thème: "${themeName}". Génère UNE question Vrai/Faux en français. Réponds UNIQUEMENT avec ce JSON: {"q":"Assertion.","v":true}
+"v" = true ou false.`;
   const raw=await _geminiGenerate(prompt);
   const cleaned=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
   const m=cleaned.match(/\{[^{}]+\}/);
@@ -1401,57 +1389,46 @@ La réponse correcte doit être à l'index "a" (entier 0-3). Les 4 choix doivent
   else throw new Error('Type inconnu');
   return q;}
 
-// ── fetchQuestionsForTheme — génère 10 questions pour un thème via Gemini ──
 async function fetchQuestionsForTheme(themeName){
-  const tId=_slugify(themeName);
-  if(!QDB[tId])QDB[tId]=[];
-  let count=0;
-  // Générer 10 questions par lots de 3 (évite rate limit)
+  const tId=_slugify(themeName);if(!QDB[tId])QDB[tId]=[];let count=0;
   for(let batch=0;batch<10;batch+=3){
     const tasks=[];
     for(let i=batch;i<Math.min(batch+3,10);i++){
-      tasks.push(generateOneQuestion(themeName,i,10)
-        .then(q=>{QDB[tId].push(q);count++;})
-        .catch(e=>console.warn(`[CEO-AI] fetchQ "${themeName}" Q${i+1}:`,e.message)));}
+      tasks.push(generateOneQuestion(themeName,i,10).then(q=>{QDB[tId].push(q);count++;}).catch(e=>console.warn(`[GEMINI] Q${i+1}:`,e.message)));}
     await Promise.allSettled(tasks);}
-  console.log(`[CEO-AI] fetchQuestionsForTheme("${themeName}"): ${count}/10`);
   return count;}
 
-// ==================== BOSS CEO — NOTIFICATIONS CHAT ========================
-const BOSS_PERSONA='Tu es le C.E.O. de la Firme dans le jeu C.E.O. — Capitalism: Eternal Optimization. Tu es une IA inspirée de GLaDOS : passif-agressive, cynique, hautaine, corporate jusqu\'au grotesque. Tu utilises du vocabulaire de manager impitoyable (synergie, KPI, licenciement, optimisation humaine, restructuration, downsizing, deliverables). Ne sois JAMAIS neutre. Chaque message contient 2-3 phrases. Ton humour est noir, condescendant, et toujours en français. Sans guillemets autour de ta réponse.';
+// ==================== BOSS CEO — NOTIFICATIONS ========================
+const BOSS_PERSONA=CEO_SYSTEM_INSTRUCTION;
 const BOSS_STATIC_WRONG=[
-  'Fascinant. Votre taux de réussite vient d\'atteindre un nouveau plancher historique. Je vais devoir optimiser votre poste — c\'est-à-dire le supprimer.',
-  'Mauvaise réponse. J\'ai déjà transmis votre dossier au département de restructuration. Ils sont très efficaces pour les cas comme le vôtre.',
-  'Votre incompétence transcende les KPIs. Si la médiocrité était un indicateur de performance, vous seriez promu directeur général adjoint.',
-  'Erreur. Mes stagiaires non rémunérés font mieux, et eux au moins apportent le café. Votre valeur ajoutée tend vers le négatif.',
-  'Je prends note pour votre évaluation annuelle — qui sera aussi votre dernière. La synergie entre vous et la porte de sortie est optimale.',
-  'C\'est la réponse que vous avez choisie ? Vraiment ? Mon algorithme de recrutement vient de se mettre en arrêt maladie en vous voyant.',
+  'Fascinant. Votre taux de réussite atteint un nouveau plancher. Je vais optimiser votre poste — le supprimer.',
+  'Mauvaise réponse. Votre dossier est transmis au département de restructuration.',
+  'Si la médiocrité était un KPI, vous seriez promu. Malheureusement, ce n\'est pas le cas.',
+  'Erreur. Mes stagiaires font mieux, et eux apportent le café.',
+  'Je prends note pour votre dernière évaluation annuelle. La synergie entre vous et la sortie est optimale.',
 ];
 const BOSS_STATIC_RIGHT=[
-  'Correct. Ne vous habituez pas à ce sentiment de compétence — les statistiques montrent qu\'il est temporaire dans votre cas.',
-  'Bien joué. Je vais quand même baisser votre prime de Noël, mais au moins vous gardez votre badge d\'accès. Pour l\'instant.',
-  'Exact. Votre taux de survie corporative passe de "licenciement imminent" à "sursis conditionnel". Profitez-en.',
-  'Bonne réponse. Mon golden retriever aurait trouvé aussi, mais lui au moins ne demande pas de RTT.',
+  'Correct. Ne vous habituez pas — les statistiques montrent que c\'est temporaire.',
+  'Bien. Votre badge d\'accès est prolongé d\'une journée. Pour l\'instant.',
+  'Exact. Votre survie passe de "licenciement imminent" à "sursis conditionnel".',
 ];
 const BOSS_STATIC_INTRO=[
-  'Ah, un nouvel entretien. J\'ai pris la liberté de pré-remplir votre lettre de licenciement — par optimisme, bien sûr. Montrez-moi que j\'ai eu tort.',
-  'Bienvenue dans mon bureau. Ici, la médiocrité est un motif de renvoi et l\'excellence est le strict minimum. Vos KPIs commencent maintenant.',
-  'Le comité de direction m\'a demandé de vous évaluer avec bienveillance. J\'ai refusé. Prouvez que vous méritez l\'oxygène de cet open space.',
+  'Un nouvel entretien. J\'ai pré-remplir votre lettre de licenciement par optimisme. Prouvez-moi tort.',
+  'Bienvenue. Ici la médiocrité est un motif de renvoi et l\'excellence le strict minimum.',
 ];
 const BOSS_STATIC_OUTRO_BAD=[
-  'Lamentable. Même l\'imprimante du 3ème étage a un meilleur taux de réussite. Je lance le processus de downsizing — en commençant par vous.',
-  'Votre CV va directement dans la déchiqueteuse. J\'ai optimisé le processus : il n\'y aura pas d\'entretien de sortie.',
-  'Sécurité ? Raccompagnez ce candidat vers la sortie. Et récupérez son badge, sa tasse, et ce qui reste de sa dignité professionnelle.',
+  'Lamentable. L\'imprimante a un meilleur taux. Je lance le downsizing — par vous.',
+  'Sécurité, raccompagnez ce candidat. Récupérez son badge et sa dignité.',
 ];
 const BOSS_STATIC_OUTRO_GOOD=[
-  'Pas mal. Je suis presque impressionné. Presque. Votre dossier passe de "restructurable" à "potentiellement recyclable". C\'est un compliment.',
-  'Acceptable. Vous survivez un jour de plus dans cette entreprise. Ne prenez pas ça pour de la reconnaissance — c\'est de l\'indifférence calculée.',
+  'Pas mal. Votre dossier passe de "restructurable" à "potentiellement recyclable".',
+  'Acceptable. Vous survivez un jour de plus. Ce n\'est pas de la reconnaissance.',
 ];
 
 let _bossPending=false;
 const _BOSS_TIMEOUT=7000;
 
-// ── Notification Sound (Web Audio micro-beep) ──
+// ── Son notification ──
 let _bossAudioCtx=null;
 function _bossBeep(){
   try{
@@ -1464,38 +1441,34 @@ function _bossBeep(){
     o.start();o.stop(ctx.currentTime+0.15);
   }catch(e){}}
 
-// ── Affichage Bubble — TV (boss-notif) + Smartphone (pBossChat) ──
-function _bossNotif(text){
+// ══════════════════════════════════════════════════════════════════════
+// displayBossNotif(text) — SMARTPHONE ONLY (pas de TV overlay)
+// Affiche en haut du smartphone, ne bloque JAMAIS la TV
+// ══════════════════════════════════════════════════════════════════════
+function displayBossNotif(text){
   _bossBeep();
-  // ── TV notification (haut de l'écran) ─────────────────────────────
-  const box=$('boss-notif');
-  if(box){
-    const bubble=document.createElement('div');
-    bubble.className='boss-bubble';
-    bubble.innerHTML=`<div class="boss-avi">💼</div><div class="boss-body"><div class="boss-name">C.E.O. de la Firme</div><div class="boss-txt">${text}</div></div>`;
-    box.appendChild(bubble);
-    setTimeout(()=>{bubble.classList.add('out');setTimeout(()=>bubble.remove(),500);},10000);}
-  // ── Smartphone notification (glisse du haut, reste 10s) ────────────
+  // ── Smartphone : bulle en haut de l'écran ──────────────────────────
   const phoneBox=$('pBossChat');
   if(phoneBox){
     const notif=document.createElement('div');
     notif.className='pbc-notif';
-    notif.innerHTML=`<div class="pbc-avi">💼</div><div class="pbc-body"><div class="pbc-from">C.E.O. — MESSAGE PRIORITAIRE</div><div class="pbc-txt">${text}</div></div>`;
+    notif.innerHTML=`<div class="pbc-avi">💼</div><div class="pbc-body"><div class="pbc-from">C.E.O. — MESSAGE</div><div class="pbc-txt">${text}</div></div>`;
     phoneBox.insertBefore(notif,phoneBox.firstChild);
-    // Max 2 notifs visibles sur le téléphone
     while(phoneBox.children.length>2)phoneBox.removeChild(phoneBox.lastChild);
     setTimeout(()=>{notif.classList.add('out');setTimeout(()=>{if(notif.parentNode)notif.remove();},450);},10000);}
-  // ── Ticker TV (texte court) ─────────────────────────────────────────
+  // ── Ticker TV : texte simple (pas d'overlay) ──────────────────────
   const tk=$('gTicker');
-  if(tk)tk.innerHTML=`<span class="glados-tick">${text}</span>`;
-}
+  if(tk)tk.innerHTML=`<span class="glados-tick">${text}</span>`;}
 
-// ── Gemini call with 7s timeout — NEVER blocks game ──
+// Compat: _bossNotif redirige vers displayBossNotif
+function _bossNotif(text){displayBossNotif(text);}
+
+// ── Gemini call avec timeout 7s — JAMAIS bloquant ──
 async function _bossGemini(prompt){
   try{
-    const timeoutP=new Promise((_,rej)=>setTimeout(()=>rej(new Error('BOSS_TIMEOUT')),_BOSS_TIMEOUT));
-    const result=await Promise.race([_geminiGenerate(prompt,'gemini-3.1-flash-lite-preview'),timeoutP]);
-    return result.trim().replace(/^["']/,'').replace(/["']$/,'');
+    const r=await Promise.race([_geminiGenerate(prompt,'gemini-3.1-flash-lite-preview'),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT')),_BOSS_TIMEOUT))]);
+    return r.trim().replace(/^["']/,'').replace(/["']$/,'');
   }catch(e){return null;}}
 
 // ── TRIGGERS ──
