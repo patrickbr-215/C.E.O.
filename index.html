@@ -301,32 +301,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .mob-log{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;max-height:70px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);}
 /* SABOTAGE CARDS (player hand during latency) */
 .sab-hand{display:flex;gap:5px;justify-content:center;padding:5px;flex-wrap:wrap;}
-.sab-card{width:88px;height:118px;border-radius:8px;padding:6px 5px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;font-family:'Orbitron',monospace;}
-.sab-card:active{transform:scale(.94);}
-.sab-card.disabled{opacity:.3;pointer-events:none;filter:grayscale(.85);}
-.sab-card .tier-band{font-size:6px;letter-spacing:1.5px;font-weight:900;text-align:center;padding:2px 0;border-radius:2px;}
-.sab-card .card-cat{font-size:6px;letter-spacing:1.2px;text-align:center;opacity:.55;margin-top:3px;text-transform:uppercase;}
-.sab-card .card-name{font-size:8.5px;font-weight:700;text-align:center;line-height:1.15;flex:1;display:flex;align-items:center;justify-content:center;padding:2px 1px;letter-spacing:.3px;}
-.sab-card .card-cost{font-size:13px;font-weight:900;text-align:center;padding:3px 0;border-top:1px solid rgba(255,255,255,.08);font-family:'Share Tech Mono',monospace;}
-/* 🟡 GOLD */
-.sab-card.tier-gold{background:linear-gradient(135deg,#1a1608 0%,#2b2010 55%,#1a1608 100%);border:2px solid #d4a832;box-shadow:0 0 10px rgba(212,168,50,.25),inset 0 0 18px rgba(212,168,50,.06);}
-.sab-card.tier-gold .tier-band{background:linear-gradient(90deg,#8a6e1e,#d4a832,#f4c842,#d4a832,#8a6e1e);color:#1a1608;}
-.sab-card.tier-gold .card-name{color:#f4d882;}
-.sab-card.tier-gold .card-cost{color:#d4a832;}
-.sab-card.tier-gold .card-cat{color:#d4a832;}
-/* ⚪ PLATINUM */
-.sab-card.tier-platinum{background:linear-gradient(135deg,#1a1c24 0%,#2c3040 55%,#1a1c24 100%);border:2px solid #c8cdd8;box-shadow:0 0 12px rgba(200,205,216,.25),inset 0 0 18px rgba(200,205,216,.06);}
-.sab-card.tier-platinum .tier-band{background:linear-gradient(90deg,#6a6f7a,#c8cdd8,#e8edf5,#c8cdd8,#6a6f7a);color:#1a1c24;}
-.sab-card.tier-platinum .card-name{color:#e8edf5;}
-.sab-card.tier-platinum .card-cost{color:#c8cdd8;}
-.sab-card.tier-platinum .card-cat{color:#c8cdd8;}
-/* ⚫ BLACK — Infinite */
-.sab-card.tier-black{background:linear-gradient(135deg,#050507 0%,#0f0f14 50%,#050507 100%);border:2px solid #d4a832;box-shadow:0 0 18px rgba(212,168,50,.4),inset 0 0 28px rgba(0,0,0,.95);position:relative;}
-.sab-card.tier-black::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 25% 15%,rgba(212,168,50,.15),transparent 55%);pointer-events:none;}
-.sab-card.tier-black .tier-band{background:#000;color:#d4a832;border:1px solid #d4a832;}
-.sab-card.tier-black .card-name{color:#d4a832;text-shadow:0 0 4px rgba(212,168,50,.6);position:relative;z-index:1;}
-.sab-card.tier-black .card-cost{color:#f4c842;font-weight:900;position:relative;z-index:1;}
-.sab-card.tier-black .card-cat{color:#d4a832;position:relative;z-index:1;}
+.sab-card{width:64px;height:78px;border:2px solid var(--orange);border-radius:6px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:7px;font-family:'Orbitron',monospace;color:var(--orange);cursor:pointer;transition:all .15s;}
+.sab-card:active{transform:scale(.93);background:rgba(249,115,22,.1);}.sab-card .sc-icon{font-size:22px;margin-bottom:2px;}.sab-card .sc-name{font-size:7px;letter-spacing:.5px;}
 .rcode{font-family:'Orbitron',monospace;font-size:36px;font-weight:900;color:var(--gold);letter-spacing:8px;text-shadow:0 0 20px rgba(212,168,50,.3);margin:6px 0;}
 .p-tag{padding:6px 10px;background:rgba(255,255,255,.03);border-radius:4px;margin-bottom:3px;font-size:12px;display:flex;align-items:center;gap:6px;}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block;}.dot.on{background:var(--green);box-shadow:0 0 5px var(--green);}
@@ -455,6 +431,16 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .boss-txt{font-family:'Rajdhani',sans-serif;font-size:12px;color:#e0e0e0;line-height:1.35;word-break:break-word;}
 @keyframes bossIn{from{opacity:0;transform:translateY(-20px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
 @keyframes bossOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-30px) scale(.9);}}
+/* ── #pBossChat — notification smartphone style Slack ── */
+#pBossChat{width:100%;min-height:0;}
+.pbc-notif{display:flex;gap:8px;align-items:flex-start;background:linear-gradient(135deg,rgba(15,17,24,.97),rgba(25,28,40,.97));border:1px solid rgba(212,168,50,.4);border-radius:10px;padding:8px 10px;margin-bottom:4px;box-shadow:0 4px 16px rgba(0,0,0,.6),0 0 10px rgba(212,168,50,.1);animation:pbcIn .35s cubic-bezier(.22,1,.36,1) forwards;overflow:hidden;}
+.pbc-notif.out{animation:pbcOut .4s ease-in forwards;}
+.pbc-avi{font-size:18px;flex-shrink:0;filter:drop-shadow(0 0 4px rgba(212,168,50,.5));}
+.pbc-body{flex:1;min-width:0;}
+.pbc-from{font-family:'Orbitron',monospace;font-size:8px;color:var(--gold);letter-spacing:1px;margin-bottom:2px;}
+.pbc-txt{font-size:10px;color:var(--text);line-height:1.4;font-family:'Share Tech Mono',monospace;}
+@keyframes pbcIn{from{opacity:0;transform:translateY(-16px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes pbcOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-20px);height:0;padding:0;margin:0;}}
 </style>
 </head>
 <body>
@@ -463,14 +449,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div id="menu" class="S active">
 <div class="logo-main">C.E.O.</div><div class="logo-sub">CAPITALISM: ETERNAL OPTIMIZATION</div><div class="logo-tagline">"Votre souffrance est notre KPI."</div>
 <div class="menu-grid">
-<button class="btn gold" onclick="showScreen('classSelect')">🏢 PARTIE SOLO (vs 9 IAs)</button>
+<button class="btn gold" onclick="showScreen('classSelect')">🏢 PARTIE SOLO (vs 9 IAs) 🏢</button>
 <div class="sep">MULTIJOUEUR</div>
 <button class="btn cy" onclick="showScreen('hostSetup')">📡 CRÉER SALLE (TV)</button>
 <button class="btn" onclick="showScreen('join')">📱 REJOINDRE</button>
 <div class="sep" style="margin-top:6px;"></div>
 <button class="btn sm" onclick="showOv('ovCodex')" style="width:100%;border-color:var(--muted);color:var(--muted);">📖 CODEX — RÈGLES & CLASSES</button>
 </div>
-<div style="margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:2px;">v1.3 — SOLO COMPETITION · EEP PROTOCOL · PRIORITÉ DÉFENSIVE</div>
+<div style="margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--muted);letter-spacing:2px;">v5.1 — INTEGRATION SPRINT · EEP PROTOCOL · PRIORITÉ DÉFENSIVE</div>
 </div>
 <!-- CLASS SELECT (solo) -->
 <div id="classSelect" class="S" style="padding:12px;overflow-y:auto;"><div class="cs-title">🏢 DÉPARTEMENT</div><div class="class-grid-ceo" id="classGrid"></div>
@@ -524,6 +510,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 <div style="height:10px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:2px;margin-bottom:5px;overflow:hidden;"><div id="pGauge" style="height:100%;background:linear-gradient(90deg,#1a6e3a,#22c55e);width:0%;transition:width .4s;"></div></div>
 <div class="mob-q" id="pQ">En attente...</div>
+<div id="pBossChat" style="margin-bottom:6px;min-height:0;"></div>
 <div id="pAns"></div>
 <div id="pHand" class="sab-hand"></div>
 <div class="mob-log" id="pLog"><div style="opacity:.5;">Connexion...</div></div>
@@ -989,16 +976,58 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div><!-- /cb -->
 </div>
 
-<!-- SOLO ONBOARDING — Saisie des thèmes IA -->
-<div id="ovSoloOnboard" class="ov">
-<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;margin-bottom:4px;">📊 DÉFINIR VOS MARCHÉS</div>
-<div style="font-size:11px;color:var(--muted);max-width:360px;margin-bottom:14px;">Entrez vos 5 thèmes d'évaluation — Gemini génère des questions exclusives en temps réel.</div>
-<div id="soloOnboardBody" style="width:100%;max-width:360px;"></div>
-<div id="soloOnboardStatus" style="min-height:20px;width:100%;max-width:360px;text-align:center;"></div>
-<div style="display:flex;flex-direction:column;gap:6px;width:100%;max-width:360px;margin-top:10px;">
-<button class="btn gold" id="soloOnboardBtn" onclick="soloOnboardConfirm()" style="width:100%;">🤖 ANALYSER LE MARCHÉ</button>
-<button class="btn sm" style="width:100%;" onclick="closeOv('ovSoloOnboard');showScreen('classSelect')">← RETOUR AU DÉPARTEMENT</button>
+<!-- ═══ V4.0 INTEGRATION SPRINT ═══════════════════════════════════════ -->
+<!-- ÉCRAN 2 : SÉLECTION DES 5 THÈMES -->
+<div id="ovThemeDraft" class="ov" style="overflow-y:auto;">
+<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(13px,3vw,17px);color:var(--gold);letter-spacing:3px;margin-bottom:2px;">📊 SÉLECTION DES MARCHÉS</div>
+<div style="font-size:10px;color:var(--muted);max-width:400px;margin-bottom:8px;">Choisissez 5 thèmes. Les bots choisiront aussi — 50 thèmes au total dans le deck.</div>
+<div id="themeDraftCount" style="font-family:'Orbitron',monospace;font-size:11px;color:var(--cyan);margin-bottom:6px;">0/5 sélectionnés</div>
+<div id="themeDraftGrid" class="tgrid-ceo" style="max-height:40vh;overflow-y:auto;margin-bottom:8px;"></div>
+<div style="max-width:360px;width:100%;margin-bottom:8px;">
+<div style="font-size:9px;color:var(--muted);margin-bottom:4px;font-family:'Share Tech Mono',monospace;">THÈME PERSONNALISÉ (optionnel) :</div>
+<input id="customThemeInput" type="text" maxlength="40" placeholder="Ex: Cuisine japonaise, Formule 1..." style="width:100%;padding:8px;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;box-sizing:border-box;">
+<button class="btn sm cy" style="width:100%;margin-top:4px;" onclick="addCustomTheme()">+ AJOUTER CE THÈME</button>
 </div>
+<button class="btn gold" id="btnDraftConfirm" onclick="confirmThemeDraft()" disabled style="width:100%;max-width:360px;">VALIDER MES 5 MARCHÉS →</button>
+<button class="btn sm" style="width:100%;max-width:360px;margin-top:4px;" onclick="closeOv('ovThemeDraft');showScreen('classSelect')">← RETOUR</button>
+</div>
+
+<!-- ÉCRAN TITRE — Intro phase (réutilisable) -->
+<div id="ovPhaseIntro" class="ov" style="overflow-y:auto;">
+<div id="phaseIntroContent" style="max-width:380px;width:100%;padding:10px;"></div>
+<button class="btn gold" id="phaseIntroBtn" style="width:100%;max-width:380px;margin-top:12px;" onclick="closeOv('ovPhaseIntro');if(window._phaseIntroCb)window._phaseIntroCb();">▶️ COMMENCER</button>
+</div>
+
+<!-- ÉCRAN 3 : SIGNATURE SPRINT (60s) -->
+<div id="ovSoloSprint" class="ov" style="overflow-y:auto;">
+<div style="display:flex;justify-content:space-between;align-items:center;max-width:340px;width:100%;margin-bottom:4px;">
+  <div id="sprintScore" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--cyan);">Contrats: 0</div>
+  <div id="sprintTimer" style="font-family:'Orbitron',monospace;font-size:28px;color:var(--gold);">60</div>
+</div>
+<div id="sprintContract" style="background:linear-gradient(180deg,rgba(20,18,15,.95),rgba(12,10,8,.98));border:2px solid rgba(212,168,50,.3);border-radius:4px;padding:14px 16px;max-width:340px;width:100%;margin-bottom:8px;position:relative;">
+<div style="text-align:center;border-bottom:1px solid rgba(212,168,50,.2);padding-bottom:6px;margin-bottom:8px;">
+  <div style="font-family:'Orbitron',monospace;font-size:8px;color:var(--gold);letter-spacing:3px;">LA FIRME — DÉPARTEMENT JURIDIQUE</div>
+  <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--text);font-weight:700;margin-top:4px;" id="sprintContractTitle">CONTRAT N°001</div>
+</div>
+<div id="sprintContractText" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text);line-height:1.6;min-height:120px;">En attente...</div>
+<div style="border-top:1px solid rgba(212,168,50,.15);margin-top:10px;padding-top:8px;display:flex;justify-content:space-between;font-size:7px;color:var(--muted);font-family:'Share Tech Mono',monospace;">
+  <span>Réf: CEO-2026-§42</span><span>Confidentiel — Usage interne</span>
+</div>
+</div>
+<canvas id="sprintCanvas" width="300" height="80" style="border:1px solid rgba(212,168,50,.25);border-radius:4px;background:rgba(0,0,0,.3);touch-action:none;margin-bottom:4px;"></canvas>
+<div style="font-size:7px;color:var(--muted);text-align:center;margin-bottom:4px;font-family:'Share Tech Mono',monospace;">↑ Signez ci-dessus ↑</div>
+<button class="btn gold" onclick="submitSprintSig()" style="width:100%;max-width:340px;">✍️ SIGNER & SUIVANT</button>
+<button class="btn sm" onclick="skipSprint()" style="width:100%;max-width:340px;margin-top:4px;opacity:.5;font-size:9px;">⏭️ SKIP (TEST — 1er)</button>
+<div id="sprintLeaderboard" style="margin-top:6px;max-width:340px;width:100%;font-size:10px;color:var(--muted);"></div>
+</div>
+
+<!-- ÉCRAN 4 : RÉCOMPENSES & WELCOME PACK -->
+<div id="ovRewards" class="ov">
+<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;margin-bottom:6px;">🏆 RÉSULTATS DU SPRINT</div>
+<div id="rewardsSummary" style="max-width:340px;width:100%;"></div>
+<div id="rewardsWelcome" style="max-width:340px;width:100%;margin-top:10px;"></div>
+<div id="rewardsNomination" style="max-width:340px;width:100%;margin-top:10px;"></div>
+<button class="btn gold" id="btnStartEEP" onclick="startAfterRewards()" style="width:100%;max-width:340px;margin-top:12px;">▶️ LANCER L'ENTRETIEN</button>
 </div>
 <!-- RESTRUCTURATION PORTFOLIO (limite 2 thèmes) -->
 <div id="ovRestructuration" class="ov">
@@ -1007,6 +1036,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div style="font-size:11px;color:var(--cyan);margin-bottom:8px;">Nouveau thème : <span id="restructNewTheme" style="color:var(--gold);font-weight:700;"></span></div>
 <div id="restructGrid" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;"></div>
 <button class="btn sm rd" style="width:100%;max-width:300px;" onclick="restructCancel()">← ANNULER — garder mon portfolio actuel</button>
+</div>
+<!-- FREE SWAP (1er candidat) -->
+<div id="ovFreeSwap" class="ov">
+<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(13px,3vw,16px);color:var(--gold);letter-spacing:2px;margin-bottom:6px;">🔄 ÉCHANGE GRATUIT</div>
+<div style="font-size:10px;color:var(--muted);max-width:340px;margin-bottom:10px;">En tant que premier candidat, vous pouvez échanger un de vos thèmes contre un thème de la pioche commune.</div>
+<div id="freeSwapContent" style="max-width:340px;width:100%;"></div>
+<button class="btn sm" style="width:100%;max-width:340px;margin-top:8px;" onclick="closeOv('ovFreeSwap');_showThemeChoice()">✓ GARDER MES THÈMES</button>
+</div>
+<!-- CHOIX DU THÈME (avant chaque EEP) -->
+<div id="ovPickTheme" class="ov">
+<div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3vw,18px);color:var(--gold);letter-spacing:3px;margin-bottom:4px;">📋 VOTRE ENTRETIEN</div>
+<div style="font-size:11px;color:var(--muted);max-width:340px;margin-bottom:12px;">Sur quel thème souhaitez-vous passer votre entretien ?</div>
+<div id="pickThemeButtons" style="max-width:340px;width:100%;display:flex;flex-direction:column;gap:8px;"></div>
 </div>
 <!-- BOURSE AUX THÈMES -->
 <div id="ovBourse" class="ov">
@@ -1169,7 +1211,16 @@ const OFFLINE_QDB=[
 {q:"Wi-Fi = Wireless Fidelity.",v:false},{q:"Netflix avant Google.",v:true}
 ];
 let _offlineIdx=0;
-function _getOfflineFallback(){_offlineIdx=(_offlineIdx+1)%OFFLINE_QDB.length;return{...OFFLINE_QDB[_offlineIdx],source:'offline'};}
+function _getOfflineFallback(){
+  // 1. Essayer QDB du thème courant
+  const tid=G.theme||EEP.theme||'';
+  if(QDB[tid]&&QDB[tid].length>0)return{...pick(QDB[tid]),source:'offline-qdb'};
+  // 2. Essayer n'importe quel QDB
+  const k=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>0);
+  if(k)return{...pick(QDB[k]),source:'offline-qdb'};
+  // 3. Dernier recours: OFFLINE_QDB générique
+  _offlineIdx=(_offlineIdx+1)%OFFLINE_QDB.length;
+  return{...OFFLINE_QDB[_offlineIdx],source:'offline'};}
 
 // ==================== PIPELINE N+1 (Just-in-Time, Anti-Freeze) ====================
 // Principe: dès que Q(N) est affichée, on lance Q(N+1) en background.
@@ -1185,9 +1236,14 @@ function _pipelinePrefetch(){
   const idx=_qPipeline.qIndex;const name=_qPipeline.themeName;
   _qPipeline.nextPromise=Promise.race([
     generateOneQuestion(name,idx,10),
-    new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT_6S')),6000))
+    new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT_5S')),5000))
   ]).then(q=>{_qPipeline.nextReady=q;_qPipeline.generating=false;return q;})
-   .catch(e=>{console.warn('[N+1] Timeout/err, offline fallback:',e.message);
+   .catch(e=>{
+    const isTimeout=e.message==='TIMEOUT_5S';
+    console.warn('[N+1]',isTimeout?'Timeout 6s':'Erreur Gemini','→ fallback offline:',e.message);
+    if(isTimeout){
+      // Message boss "connexion satellite instable"
+      setTimeout(()=>_bossNotif('⚠️ Connexion satellite instable. Je vais vous poser une question de stagiaire en attendant que mes serveurs daignent répondre.'),100);}
     const fb=_getOfflineFallback();_qPipeline.nextReady=fb;_qPipeline.generating=false;return fb;});}
 
 async function _pipelineGet(){
@@ -1218,7 +1274,9 @@ function _setPortfolio(pid,themeIds){
   const owned=DRAFT.playerThemes[pid]||[];
   const valid=themeIds.filter(id=>owned.includes(id)).slice(0,DRAFT.portfolioSize);
   DRAFT.playerPortfolio[pid]=valid;return valid;}
-function _getPortfolio(pid){return(DRAFT.playerPortfolio[pid]||[]).map(id=>STATIC_THEMES.find(t=>t.id===id)).filter(Boolean);}
+function _getPortfolio(pid){
+  const ids=DRAFT.playerPortfolio[pid]||G.portfolio||[];
+  return ids.map(id=>THEMES.find(t=>t.id===id)||STATIC_THEMES.find(t=>t.id===id)||{id,name:id,icon:'📚'}).filter(Boolean);}
 
 // ==================== PA (Points d'Action) ====================
 function _getPA(classId){return classId==='garant'?7:5;}
@@ -1244,49 +1302,65 @@ async function _getGenAI(){
     _bossNotif('⚠️ Module IA indisponible — mode local activé.');
     return null;}}
 
-const _MODEL_CHAIN=['gemini-2.0-flash-lite','gemini-2.0-flash','gemini-1.5-flash'];
+// ── Persona racine — injectée dans TOUS les appels ────────────────────
+const CEO_SYSTEM_INSTRUCTION=`Tu es le C.E.O. de la Firme. Tu es calqué sur GLaDOS (Portal) : cynique, passif-agressif, méprisant, adepte du jargon corporate absurde. Tu détestes les joueurs mais tu adores les voir échouer. Tu utilises : optimisation humaine, KPI de survie, synergie toxique, licenciement immédiat, restructuration, downsizing. Réponds en français, 2-3 phrases max. Sans guillemets.`;
+
+const _MODEL_CHAIN=['gemini-3.1-flash-lite-preview','gemini-2.0-flash-lite','gemini-2.0-flash'];
 
 async function _geminiGenerate(prompt,model=null){
-  // ── MODE PROD : proxy Vercel sécurisé ───────────────────────────────
+  // ── MODE PROD : proxy Vercel ───────────────────────────────
   if(_IS_PROD){
     for(let attempt=0;attempt<3;attempt++){
       try{
         const r=await fetch('/api/gemini',{method:'POST',
           headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({prompt,model})});
+          body:JSON.stringify({prompt,model:model||_MODEL_CHAIN[0],systemInstruction:CEO_SYSTEM_INSTRUCTION})});
         if(r.status===503&&attempt<2){await _sleep(2000);continue;}
-        if(!r.ok)throw new Error('Proxy HTTP '+r.status);
+        if(!r.ok){
+          const errBody=await r.text().catch(()=>'');
+          console.error(`[GEMINI] Proxy ${r.status}:`,errBody);
+          throw new Error(`Proxy ${r.status}`);}
         const d=await r.json();
         if(d.error)throw new Error(d.error);
         return d.text;
       }catch(e){
-        if(attempt===2)throw new Error('IA indisponible (proxy): '+e.message);
+        console.error(`[GEMINI] Attempt ${attempt+1}:`,e.message);
+        if(attempt===2)throw e;
         await _sleep(1500+attempt*1500);}}
-    throw new Error('IA proxy: max retries');}
-  // ── MODE LOCAL : SDK direct ──────────────────────────────────────────
+    throw new Error('Proxy max retries');}
+  // ── MODE LOCAL : SDK + Google Search ────────────────────────
   const genAI=await _getGenAI();
-  if(!genAI)throw new Error('IA désactivée — SDK non chargé');
+  if(!genAI)throw new Error('SDK non chargé');
   const modelsToTry=model?[model]:[..._MODEL_CHAIN];
   for(const m of modelsToTry){
     for(let attempt=0;attempt<2;attempt++){
       try{
-        const mdl=genAI.getGenerativeModel({model:m,generationConfig:{temperature:0.8,maxOutputTokens:300}});
+        const mdl=genAI.getGenerativeModel({
+          model:m,
+          systemInstruction:CEO_SYSTEM_INSTRUCTION,
+          tools:[{googleSearch:{}}],
+          generationConfig:{temperature:0.9,maxOutputTokens:400}});
         const result=await mdl.generateContent(prompt);
         return result.response.text();
       }catch(e){
-        const is429=e.message?.includes('429')||e.status===429;
-        if(is429&&attempt===0){await _sleep(6000);continue;}
-        if(!is429)break;}}}
-  throw new Error('Tous les modèles Gemini ont échoué.');}
+        console.error(`[GEMINI] ${m} #${attempt}:`,e.message);
+        // Grounding non supporté → retry sans
+        if((e.message?.includes('google_search')||e.message?.includes('tool'))&&attempt===0){
+          try{
+            const mdl2=genAI.getGenerativeModel({model:m,systemInstruction:CEO_SYSTEM_INSTRUCTION,
+              generationConfig:{temperature:0.9,maxOutputTokens:400}});
+            return(await mdl2.generateContent(prompt)).response.text();
+          }catch(e2){console.warn('[GEMINI] sans search:',e2.message);}}
+        if((e.message?.includes('429'))&&attempt===0){await _sleep(5000);continue;}
+        break;}}}
+  throw new Error('Tous les modèles ont échoué');}
 
 async function _geminiCall(requestBody,model=null){
   const prompt=requestBody.contents?.[0]?.parts?.[0]?.text||'';
-  const text=await _geminiGenerate(prompt,model);
-  return{candidates:[{content:{parts:[{text}]}}]};}
+  return{candidates:[{content:{parts:[{text:await _geminiGenerate(prompt,model)}]}}]};}
 
 function _extractText(data){
-  const parts=data.candidates?.[0]?.content?.parts||[];
-  return parts.filter(p=>p.text).map(p=>p.text).join('\n').trim();}
+  return(data.candidates?.[0]?.content?.parts||[]).filter(p=>p.text).map(p=>p.text).join('\n').trim();}
 
 function _slugify(name){return name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');}
 
@@ -1300,11 +1374,10 @@ function _validateQ(q){
 async function generateOneQuestion(themeName,index,total){
   const isQCM=(index%2===0);
   const prompt=isQCM
-    ?`Thème: "${themeName}". Génère UNE question QCM de quiz en français. Réponds UNIQUEMENT avec ce JSON (rien d'autre): {"q":"La question ?","c":["A","B","C","D"],"a":2}
-La réponse correcte doit être à l'index "a" (entier 0-3). Les 4 choix doivent être courts (max 4 mots).`
-    :`Thème: "${themeName}". Génère UNE question Vrai/Faux de quiz en français. Réponds UNIQUEMENT avec ce JSON (rien d'autre): {"q":"Assertion à évaluer.","v":true}
-"v" doit être le booléen true ou false (sans guillemets).`;
-
+    ?`Thème: "${themeName}". Génère UNE question QCM de quiz en français. Réponds UNIQUEMENT avec ce JSON: {"q":"La question ?","c":["A","B","C","D"],"a":2}
+La réponse correcte doit être à l'index "a" (0-3). Choix courts (max 4 mots).`
+    :`Thème: "${themeName}". Génère UNE question Vrai/Faux en français. Réponds UNIQUEMENT avec ce JSON: {"q":"Assertion.","v":true}
+"v" = true ou false.`;
   const raw=await _geminiGenerate(prompt);
   const cleaned=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
   const m=cleaned.match(/\{[^{}]+\}/);
@@ -1316,41 +1389,46 @@ La réponse correcte doit être à l'index "a" (entier 0-3). Les 4 choix doivent
   else throw new Error('Type inconnu');
   return q;}
 
-// ==================== BOSS CEO — NOTIFICATIONS CHAT ========================
-const BOSS_PERSONA='Tu es le C.E.O. tout-puissant du jeu C.E.O. — Capitalism: Eternal Optimization. Tu parles comme un patron tyrannique, sarcastique, condescendant, avec un humour noir corporate. Style: une phrase cinglante, jamais plus de 20 mots. Français uniquement. Sans guillemets.';
+async function fetchQuestionsForTheme(themeName){
+  const tId=_slugify(themeName);if(!QDB[tId])QDB[tId]=[];let count=0;
+  for(let batch=0;batch<10;batch+=3){
+    const tasks=[];
+    for(let i=batch;i<Math.min(batch+3,10);i++){
+      tasks.push(generateOneQuestion(themeName,i,10).then(q=>{QDB[tId].push(q);count++;}).catch(e=>console.warn(`[GEMINI] Q${i+1}:`,e.message)));}
+    await Promise.allSettled(tasks);}
+  return count;}
+
+// ==================== BOSS CEO — NOTIFICATIONS ========================
+const BOSS_PERSONA=CEO_SYSTEM_INSTRUCTION;
 const BOSS_STATIC_WRONG=[
-  'Pathétique. Mon stagiaire de 12 ans aurait fait mieux.',
-  'Vous êtes viré. Enfin, pas encore. Mais mentalement, oui.',
-  'Mauvaise réponse. Je prends note pour votre dossier de licenciement.',
-  'Je suis le C.E.O. et même moi je suis gêné pour vous.',
-  'Votre incompétence est presque impressionnante. Presque.',
-  'Mon algorithme de recrutement vient de planter en vous voyant.',
+  'Fascinant. Votre taux de réussite atteint un nouveau plancher. Je vais optimiser votre poste — le supprimer.',
+  'Mauvaise réponse. Votre dossier est transmis au département de restructuration.',
+  'Si la médiocrité était un KPI, vous seriez promu. Malheureusement, ce n\'est pas le cas.',
+  'Erreur. Mes stagiaires font mieux, et eux apportent le café.',
+  'Je prends note pour votre dernière évaluation annuelle. La synergie entre vous et la sortie est optimale.',
 ];
 const BOSS_STATIC_RIGHT=[
-  'Correct. Ne vous habituez pas, la chute sera brutale.',
-  'Bien. Je vais quand même baisser votre prime de Noël.',
-  'Exact. Votre taux de survie passe de critique à médiocre.',
-  'Bonne réponse. Mon golden retriever aurait trouvé aussi.',
+  'Correct. Ne vous habituez pas — les statistiques montrent que c\'est temporaire.',
+  'Bien. Votre badge d\'accès est prolongé d\'une journée. Pour l\'instant.',
+  'Exact. Votre survie passe de "licenciement imminent" à "sursis conditionnel".',
 ];
 const BOSS_STATIC_INTRO=[
-  'Ah, un nouvel entretien. Essayez de ne pas me faire perdre mon temps.',
-  'Bienvenue dans mon bureau. Ici, la médiocrité est un motif de renvoi.',
-  'Vous pensez mériter ce poste ? Prouvez-le. Maintenant.',
+  'Un nouvel entretien. J\'ai pré-remplir votre lettre de licenciement par optimisme. Prouvez-moi tort.',
+  'Bienvenue. Ici la médiocrité est un motif de renvoi et l\'excellence le strict minimum.',
 ];
 const BOSS_STATIC_OUTRO_BAD=[
-  'Lamentable. Même l\'imprimante a un meilleur taux de réussite.',
-  'Votre CV va directement dans la déchiqueteuse.',
-  'Sécurité ? Raccompagnez ce candidat vers la sortie.',
+  'Lamentable. L\'imprimante a un meilleur taux. Je lance le downsizing — par vous.',
+  'Sécurité, raccompagnez ce candidat. Récupérez son badge et sa dignité.',
 ];
 const BOSS_STATIC_OUTRO_GOOD=[
-  'Pas mal. Je suis presque impressionné. Presque.',
-  'Acceptable. Vous survivez un jour de plus dans cette entreprise.',
+  'Pas mal. Votre dossier passe de "restructurable" à "potentiellement recyclable".',
+  'Acceptable. Vous survivez un jour de plus. Ce n\'est pas de la reconnaissance.',
 ];
 
 let _bossPending=false;
 const _BOSS_TIMEOUT=7000;
 
-// ── Notification Sound (Web Audio micro-beep) ──
+// ── Son notification ──
 let _bossAudioCtx=null;
 function _bossBeep(){
   try{
@@ -1363,26 +1441,34 @@ function _bossBeep(){
     o.start();o.stop(ctx.currentTime+0.15);
   }catch(e){}}
 
-// ── Affichage Bubble ──
-function _bossNotif(text){
-  const box=$('boss-notif');if(!box)return;
+// ══════════════════════════════════════════════════════════════════════
+// displayBossNotif(text) — SMARTPHONE ONLY (pas de TV overlay)
+// Affiche en haut du smartphone, ne bloque JAMAIS la TV
+// ══════════════════════════════════════════════════════════════════════
+function displayBossNotif(text){
   _bossBeep();
-  const bubble=document.createElement('div');
-  bubble.className='boss-bubble';
-  bubble.innerHTML=`<div class="boss-avi">💼</div><div class="boss-body"><div class="boss-name">Directeur Général</div><div class="boss-txt">${text}</div></div>`;
-  box.appendChild(bubble);
-  setTimeout(()=>{bubble.classList.add('out');setTimeout(()=>bubble.remove(),500);},9000);
-  // Also show on ticker for TV
+  // ── Smartphone : bulle en haut de l'écran ──────────────────────────
+  const phoneBox=$('pBossChat');
+  if(phoneBox){
+    const notif=document.createElement('div');
+    notif.className='pbc-notif';
+    notif.innerHTML=`<div class="pbc-avi">💼</div><div class="pbc-body"><div class="pbc-from">C.E.O. — MESSAGE</div><div class="pbc-txt">${text}</div></div>`;
+    phoneBox.insertBefore(notif,phoneBox.firstChild);
+    while(phoneBox.children.length>2)phoneBox.removeChild(phoneBox.lastChild);
+    setTimeout(()=>{notif.classList.add('out');setTimeout(()=>{if(notif.parentNode)notif.remove();},450);},10000);}
+  // ── Ticker TV : texte simple (pas d'overlay) ──────────────────────
   const tk=$('gTicker');
-  if(tk)tk.innerHTML=`<span class="glados-tick">${text}</span>`;
-}
+  if(tk)tk.innerHTML=`<span class="glados-tick">${text}</span>`;}
 
-// ── Gemini call with 7s timeout — NEVER blocks game ──
+// Compat: _bossNotif redirige vers displayBossNotif
+function _bossNotif(text){displayBossNotif(text);}
+
+// ── Gemini call avec timeout 7s — JAMAIS bloquant ──
 async function _bossGemini(prompt){
   try{
-    const timeoutP=new Promise((_,rej)=>setTimeout(()=>rej(new Error('BOSS_TIMEOUT')),_BOSS_TIMEOUT));
-    const result=await Promise.race([_geminiGenerate(prompt,'gemini-2.0-flash-lite'),timeoutP]);
-    return result.trim().replace(/^["']/,'').replace(/["']$/,'');
+    const r=await Promise.race([_geminiGenerate(prompt,'gemini-3.1-flash-lite-preview'),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT')),_BOSS_TIMEOUT))]);
+    return r.trim().replace(/^["']/,'').replace(/["']$/,'');
   }catch(e){return null;}}
 
 // ── TRIGGERS ──
@@ -1390,7 +1476,7 @@ async function _bossGemini(prompt){
 // Début d'entretien — systématique
 function bossIntro(candName,themeName){
   _bossNotif(pick(BOSS_STATIC_INTRO));
-  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" commence son entretien sur le thème "${themeName}". Génère une phrase d\'introduction menaçante.`).then(r=>{if(r&&r.length>5)_bossNotif(r);});
+  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" commence son entretien sur le thème "${themeName}". Génère 2-3 phrases d\'introduction menaçantes et corporate. Mentionne le thème avec mépris.`).then(r=>{if(r&&r.length>10)_bossNotif(r);});
 }
 
 // Fin d'entretien — systématique
@@ -1399,8 +1485,8 @@ function bossOutro(candName,score,total){
   if(pct<50)_bossNotif(pick(BOSS_STATIC_OUTRO_BAD));
   else if(pct>=80)_bossNotif(pick(BOSS_STATIC_OUTRO_GOOD));
   else _bossNotif(`${score}/${total}. Mouais. On a vu mieux.`);
-  const verdict=pct<50?'a lamentablement échoué':pct>=80?'a étonnamment bien réussi':'a fait un score médiocre';
-  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" ${verdict} avec ${score}/${total} (${pct}%). Commente en 15 mots max.`).then(r=>{if(r&&r.length>5)_bossNotif(r);});
+  const verdict=pct<50?'a lamentablement échoué':'a fait un score médiocre';
+  _bossGemini(`${BOSS_PERSONA} Le candidat "${candName}" ${verdict} avec ${score}/${total} (${pct}%). Génère 2-3 phrases de jugement. Si < 50%: insulte et menace de licenciement. Si > 80%: sarcasme condescendant style "pas mal pour un humain".`).then(r=>{if(r&&r.length>10)_bossNotif(r);});
 }
 
 // Action inter-tour — 20% de chance
@@ -1408,13 +1494,13 @@ function bossMaybeComment(actionLabel){
   if(_bossPending||Math.random()>0.20)return;
   _bossPending=true;
   const statics=[
-    `Ah, ${actionLabel}. Intéressant choix stratégique. Enfin, "stratégique"...`,
-    `${actionLabel} ? J\'aurais fait l\'inverse. Mais bon, je suis le CEO.`,
-    `Notez bien : ${actionLabel} est rarement la bonne décision.`,
+    `Ah, ${actionLabel}. Un choix stratégique intéressant — si par "stratégique" on entend "désespéré". Vos KPIs de prise de décision sont en chute libre.`,
+    `${actionLabel} ? Mon analyse prédictive donne 73% de chances que ça se retourne contre vous. Mais ne vous inquiétez pas, je prends des notes pour votre dossier.`,
+    `Notez bien : ${actionLabel} est rarement la bonne décision. Mais dans votre cas, même la bonne décision serait probablement la mauvaise.`,
   ];
   _bossNotif(pick(statics));
-  _bossGemini(`${BOSS_PERSONA} Le joueur vient de faire: "${actionLabel}" pendant l\'inter-tour. Commente en 12 mots max.`).then(r=>{
-    if(r&&r.length>5)_bossNotif(r);_bossPending=false;
+  _bossGemini(`${BOSS_PERSONA} Le joueur vient de faire: "${actionLabel}" pendant l\'inter-tour. Commente en 2-3 phrases passives-agressives et corporate.`).then(r=>{
+    if(r&&r.length>10)_bossNotif(r);_bossPending=false;
   }).catch(()=>{_bossPending=false;});
 }
 
@@ -1459,39 +1545,38 @@ async function fetchAIQuestions(themeNames){
     catch(e){console.warn(`[CEO-AI] Échec pour "${name}":`,e.message);}}
   return total;}
 
-// ===== SABOTAGE CARDS — TIER SYSTEM (Flux-based) =====
-// 🟡 GOLD (5⚡) — Routine · ⚪ PLATINUM (15⚡) — Investissement · ⚫ BLACK (30⚡) — Ultime
+// ===== SABOTAGE CARDS =====
+// ==================== SYSTÈME DE CARTES — TIERS BANCAIRES ====================
+// 🟡 BUSINESS GOLD (5⚡) · ⚪ EXECUTIVE PLATINUM (15⚡) · ⚫ INFINITE BLACK (30⚡)
 const CARD_COLORS={attack:'#ef4444',defense:'#22c55e',multiplier:'#d4a832',intel:'#22d3ee'};
 const CARD_TIERS={gold:{label:'BUSINESS GOLD',cost:5,color:'#d4a832'},platinum:{label:'EXECUTIVE PLATINUM',cost:15,color:'#c8cdd8'},black:{label:'INFINITE BLACK',cost:30,color:'#0a0a0c'}};
 const SAB_CARDS={
-// ── 🟡 BUSINESS GOLD (5⚡) ────────────────────────────────────────────
-brouillage_g:{id:'brouillage_g',name:'BROUILLAGE',icon:'[BR]',tier:'gold',cost:5,cat:'attack',type:'brouillage',desc:'Flou 2s + timer −10s sur la prochaine Q.',priority:3},
-audit_g:{id:'audit_g',name:'AUDIT FLASH',icon:'[AU]',tier:'gold',cost:5,cat:'intel',type:'intel',desc:'Élimine 1 mauvaise réponse sur la prochaine QCM.',priority:3},
-turbo_g:{id:'turbo_g',name:'TURBO',icon:'[TB]',tier:'gold',cost:5,cat:'multiplier',type:'mult_timer',desc:'+10s sur le timer de la prochaine Q.',priority:3},
-parefeu_g:{id:'parefeu_g',name:'PARE-FEU',icon:'[PF]',tier:'gold',cost:5,cat:'defense',type:'defense_shield',desc:'Bloque 1 attaque entrante.',priority:3},
-// ── ⚪ EXECUTIVE PLATINUM (15⚡) ───────────────────────────────────────
-sniper_p:{id:'sniper_p',name:'VOL DE CRÉDIT',icon:'[VC]',tier:'platinum',cost:15,cat:'attack',type:'sniper',desc:'Vol de la prochaine Q : les points vous reviennent.',priority:2},
-pression_p:{id:'pression_p',name:'PRESSION',icon:'[PR]',tier:'platinum',cost:15,cat:'attack',type:'pression',desc:'Erreur = pénalité jauge doublée.',priority:2},
-doubleur_p:{id:'doubleur_p',name:'DOUBLE PRIME',icon:'[x2]',tier:'platinum',cost:15,cat:'multiplier',type:'mult_double',desc:'Prochaine bonne réponse ×2 Flux et Jauge.',priority:2},
-fuite_p:{id:'fuite_p',name:'FUITE DE DONNÉES',icon:'[FD]',tier:'platinum',cost:15,cat:'intel',type:'intel_fuite',desc:'Révèle la bonne réponse 2s au candidat.',priority:2},
-bouclier_p:{id:'bouclier_p',name:'BOUCLIER ACIER',icon:'[BA]',tier:'platinum',cost:15,cat:'defense',type:'defense_shield_2',desc:'Bloque 2 attaques entrantes.',priority:2},
-// ── ⚫ INFINITE BLACK (30⚡) — priorité absolue ────────────────────────
-antivirus_b:{id:'antivirus_b',name:'ANTIVIRUS',icon:'[AV]',tier:'black',cost:30,cat:'defense',type:'defense_clear',desc:'Purge TOUTES les attaques + immunité 1 Q.',priority:1},
-blackout_b:{id:'blackout_b',name:'BLACK OUT',icon:'[BO]',tier:'black',cost:30,cat:'attack',type:'brouillage_black',desc:'Question cachée 5s, timer −20s.',priority:1},
-hostile_b:{id:'hostile_b',name:'HOSTILE TAKEOVER',icon:'[HT]',tier:'black',cost:30,cat:'attack',type:'hostile',desc:'Vol de Q + −5% jauge candidat peu importe la réponse.',priority:1},
-dossier_b:{id:'dossier_b',name:'DOSSIER COMPROMETTANT',icon:'[DC]',tier:'black',cost:30,cat:'attack',type:'dossier',n2:true,desc:'Dossier scellé qui explose dans 2 questions (effet dévastateur).',priority:1}
+// ── GOLD (5⚡) — routine ──────────────────────────────────────────────
+brouillage:{id:'brouillage',name:'BROUILLAGE',icon:'[BR]',tier:'gold',cost:5,cat:'attack',type:'brouillage',desc:'Flou 2s + timer −10s.',priority:3,counters:[]},
+audit:{id:'audit',name:'AUDIT FLASH',icon:'[AU]',tier:'gold',cost:5,cat:'intel',type:'intel',desc:'Élimine 1 mauvaise réponse QCM.',priority:3,counters:[]},
+turbo:{id:'turbo',name:'TURBO',icon:'[TB]',tier:'gold',cost:5,cat:'multiplier',type:'mult_timer',desc:'+10s sur le timer.',priority:3,counters:[]},
+bouclier:{id:'bouclier',name:'PARE-FEU',icon:'[PF]',tier:'gold',cost:5,cat:'defense',type:'defense_shield',desc:'Bloque 1 attaque.',priority:3,counters:[]},
+// ── PLATINUM (15⚡) — investissement ──────────────────────────────────
+sniper:{id:'sniper',name:'VOL DE CRÉDIT',icon:'[VC]',tier:'platinum',cost:15,cat:'attack',type:'sniper',desc:'La prochaine Q va sur votre écran.',priority:2,counters:['bouclier','antivirus']},
+pression:{id:'pression',name:'PRESSION',icon:'[PR]',tier:'platinum',cost:15,cat:'attack',type:'pression',desc:'Erreur = pénalité ×2.',priority:2,counters:['bouclier']},
+doubleur:{id:'doubleur',name:'DOUBLE PRIME',icon:'[x2]',tier:'platinum',cost:15,cat:'multiplier',type:'mult_double',desc:'Prochaine bonne réponse ×2.',priority:2,counters:[]},
+fuite:{id:'fuite',name:'FUITE DONNÉES',icon:'[FD]',tier:'platinum',cost:15,cat:'intel',type:'intel_fuite',desc:'Révèle la bonne réponse 2s.',priority:2,counters:[]},
+bouclier2:{id:'bouclier2',name:'BOUCLIER ACIER',icon:'[BA]',tier:'platinum',cost:15,cat:'defense',type:'defense_shield_2',desc:'Bloque 2 attaques.',priority:2,counters:[]},
+// ── BLACK (30⚡) — priorité absolue ──────────────────────────────────
+antivirus:{id:'antivirus',name:'ANTIVIRUS',icon:'[AV]',tier:'black',cost:30,cat:'defense',type:'defense_clear',desc:'Purge TOUTES les attaques + immunité 1Q.',priority:1,counters:[]},
+blackout:{id:'blackout',name:'BLACK OUT',icon:'[BO]',tier:'black',cost:30,cat:'attack',type:'brouillage_black',desc:'Question cachée 5s, timer −20s.',priority:1,counters:[]},
+hostile:{id:'hostile',name:'HOSTILE TAKEOVER',icon:'[HT]',tier:'black',cost:30,cat:'attack',type:'hostile',desc:'Vol Q + −5% jauge candidat.',priority:1,counters:[]},
+dossier:{id:'dossier',name:'DOSSIER COMPROMETTANT',icon:'[DC]',tier:'black',cost:30,cat:'attack',type:'dossier',n2:true,desc:'Dossier scellé N+2 dévastateur.',priority:1,counters:[]}
 };
-// Distribution de pioche : 70% GOLD / 25% PLATINUM / 5% BLACK
-const _CARD_POOL_GOLD=['brouillage_g','audit_g','turbo_g','parefeu_g'];
-const _CARD_POOL_PLAT=['sniper_p','pression_p','doubleur_p','fuite_p','bouclier_p'];
-const _CARD_POOL_BLACK=['antivirus_b','blackout_b','hostile_b','dossier_b'];
+// Distribution 70% GOLD / 25% PLATINUM / 5% BLACK
+const _CARD_POOL_G=['brouillage','audit','turbo','bouclier'];
+const _CARD_POOL_P=['sniper','pression','doubleur','fuite','bouclier2'];
+const _CARD_POOL_B=['antivirus','blackout','hostile','dossier'];
 function pickCard(){
   const r=Math.random();
-  const pool=r<0.70?_CARD_POOL_GOLD:r<0.95?_CARD_POOL_PLAT:_CARD_POOL_BLACK;
+  const pool=r<0.70?_CARD_POOL_G:r<0.95?_CARD_POOL_P:_CARD_POOL_B;
   return{...SAB_CARDS[pool[Math.floor(Math.random()*pool.length)]]};}
-// Compat ancien code qui référençait les anciens IDs directs
-const _LEGACY_CARD_ALIAS={sniper:'sniper_p',brouillage:'brouillage_g',pression:'pression_p',bouclier:'parefeu_g',antivirus:'antivirus_b',doubleur:'doubleur_p',turbo:'turbo_g',audit:'audit_g',fuite:'fuite_p'};
-// Combos désactivés avec le nouveau système (priorité absolue des BLACK remplace)
+// Combos désactivés (priorité BLACK remplace)
 const COMBOS={};
 
 // ===== 3 CLASSES =====
@@ -1522,6 +1607,11 @@ garant:{id:'garant',name:'LE GARANT',icon:'🛡️',role:'Défense / Assurance R
 // ── PA (Points d'Action) ─────────────────────────────────────────────────────
 // Garant commence avec 7 PA, les autres avec 5. Consommés par les actions d'inter-tour.
 const PA_COSTS={pioche:2,pioqueRequin:1,poubelle:1,bourse:3,capacite:3};
+// ── Coût en Flux pour jouer une carte Attaque (Sabotage Payant) ──────────
+// sniper = 30⚡ (redirection de Q, fort impact)
+// brouillage = 15⚡ (timer+texte, impact modéré)
+// pression = 5⚡ (pénalité jauge, faible impact)
+const ATTACK_FLUX_COSTS={sniper:30,brouillage:15,pression:5};
 
 function _getPlayerAP(){
   // En solo, le joueur humain
@@ -1568,7 +1658,36 @@ function _updPADisplay(){
   _updGestionButtons();}
 
 const TICKERS=["BREAKING: Suppression pauses café. +0.3% productivité.","FLASH: Toilettes 3ème → coworking premium.","MEMO: Bonheur = KPI non-négociable.","URGENT: Volontariat obligatoire ce weekend.","INFO: Congés maladie facturés comme consulting.","BREAKING: 47 buzzwords en une réunion.","MEMO: Larmes autorisées en B3 et B7 uniquement.","ALERTE: Le sommeil n'est pas un droit acquis."];
-const BULLSHIT_CONTRACTS=["Cession Totale de l'Âme (rétroactive)","Abandon Volontaire des Congés Payés","Renoncement au Droit de Dormir","Cession des Droits sur Votre Prénom","Clause de Sourire Permanent","Transfert de Propriété de Vos Idées","Engagement à Rire aux Blagues du CEO","Renonciation au Concept de Weekend","Accord de Surveillance Émotionnelle","Cession de Vos Pauses Toilettes","Pacte de Fidélité au PowerPoint","Abandon du Droit de Dire Non","Clause d'Enthousiasme Minimum Garanti","Engagement: Réunions = Loisirs","Renoncement au Libre Arbitre (Premium)","Disponibilité 25h/24, 8j/7"];
+const BULLSHIT_CONTRACTS=[
+{title:"CESSION TOTALE DE L'ÂME (Rétroactive)",body:`ARTICLE 1 — Le Salarié (ci-après "la Ressource") cède par la présente l'intégralité de ses droits moraux, émotionnels et spirituels à La Firme, de manière irrévocable et rétroactive jusqu'à sa date de naissance.\n\nARTICLE 2 — Cette cession inclut, sans s'y limiter : rêves, souvenirs agréables, capacité à ressentir de la joie un lundi matin, et tout sentiment d'accomplissement personnel.\n\nARTICLE 3 — En contrepartie, La Firme s'engage à fournir un badge d'accès au parking B2 (sous réserve de disponibilité).`},
+{title:"ABANDON VOLONTAIRE DES CONGÉS PAYÉS",body:`ARTICLE 1 — Le Collaborateur reconnaît que le concept de "repos" est un frein à l'optimisation de sa productivité et constitue une forme de sabotage passif envers La Firme.\n\nARTICLE 2 — En signant ce document, le Collaborateur renonce définitivement à ses congés payés, RTT, jours fériés, pauses déjeuner, et au droit de cligner des yeux plus de 3 fois par minute.\n\nARTICLE 3 — Toute tentative de prise de congé sera considérée comme une démission et facturée 500⚡ de pénalité.`},
+{title:"CLAUSE DE SOURIRE PERMANENT",body:`ARTICLE 1 — Le Salarié s'engage contractuellement à maintenir un sourire visible et mesurable (angle minimum : 15°) pendant l'intégralité de ses heures de travail.\n\nARTICLE 2 — Un capteur facial certifié ISO-42069 sera installé sur le poste de travail du Salarié pour vérification en temps réel. Tout froncement de sourcils sera déduit du bonus trimestriel.\n\nARTICLE 3 — Le sourire doit être maintenu y compris lors des entretiens de licenciement, des réunions budgétaires, et de la lecture du présent contrat.`},
+{title:"TRANSFERT DE PROPRIÉTÉ INTELLECTUELLE",body:`ARTICLE 1 — Toute idée, pensée, intuition, rêverie ou réflexion sous la douche ayant lieu pendant, avant, après, ou à proximité temporelle du travail devient propriété exclusive de La Firme.\n\nARTICLE 2 — Le Salarié s'interdit de penser à des solutions innovantes en dehors des créneaux autorisés (mardi 14h-14h07) sans autorisation écrite du C.E.O.\n\nARTICLE 3 — Toute violation sera poursuivie par le département de Propriété Cérébrale.`},
+{title:"ENGAGEMENT DE DISPONIBILITÉ 25h/24",body:`ARTICLE 1 — Le Collaborateur accepte d'être joignable 25 heures sur 24, 8 jours sur 7, y compris dans les dimensions parallèles et les fuseaux horaires qui n'existent pas encore.\n\nARTICLE 2 — L'absence de réponse à un email dans les 30 secondes sera considérée comme un acte d'insubordination passif, punissable par un stage de team building de 72 heures en open space.\n\nARTICLE 3 — La Firme fournira gracieusement un oreiller corporatif pour dormir sous le bureau (taille unique, non lavable).`},
+{title:"RENONCEMENT AU LIBRE ARBITRE (Édition Premium)",body:`ARTICLE 1 — Le Salarié reconnaît que ses décisions personnelles sont statistiquement inférieures à celles de l'algorithme RH de La Firme et consent à déléguer l'ensemble de ses choix de vie.\n\nARTICLE 2 — Cela inclut : choix vestimentaires, alimentaires, relationnels, existentiels, et la couleur de son fond d'écran (imposée : bleu corporate #003366).\n\nARTICLE 3 — Le Salarié pourra exprimer un avis personnel une fois par trimestre, sous réserve de validation par le comité d'Optimisation Humaine.`},
+{title:"PACTE DE FIDÉLITÉ AU POWERPOINT",body:`ARTICLE 1 — Le Collaborateur jure allégeance éternelle au logiciel Microsoft PowerPoint® et s'engage à ne jamais utiliser d'alternative (Keynote, Google Slides, un tableau blanc, la parole).\n\nARTICLE 2 — Chaque présentation devra contenir un minimum de 47 slides, 12 graphiques circulaires, et au moins 3 animations de transition "Tourbillon".\n\nARTICLE 3 — L'utilisation du mot "synergie" moins de 8 fois par deck constitue une faute professionnelle grave.`},
+{title:"ACCORD DE SURVEILLANCE ÉMOTIONNELLE",body:`ARTICLE 1 — La Firme se réserve le droit de monitorer en continu l'état émotionnel du Salarié via des capteurs biométriques, analyse faciale, et interprétation de ses soupirs.\n\nARTICLE 2 — Toute émotion non productive (nostalgie, empathie, amusement, espoir) sera signalée au département de Conformité Affective.\n\nARTICLE 3 — Les émotions autorisées sont : stress productif, angoisse motivationnelle, et gratitude envers le C.E.O.`},
+];
+
+// ── Phase Intro Screen ──────────────────────────────────────────────
+function _showPhaseIntro(title,icon,bodyHtml,btnText,callback){
+  window._phaseIntroCb=callback||null;
+  $('phaseIntroContent').innerHTML=`
+    <div style="text-align:center;margin-bottom:12px;">
+      <div style="font-size:42px;margin-bottom:8px;">${icon}</div>
+      <div style="font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(15px,4vw,20px);color:var(--gold);letter-spacing:3px;text-transform:uppercase;">${title}</div>
+    </div>
+    <div style="background:linear-gradient(180deg,rgba(20,18,15,.9),rgba(8,6,4,.95));border:1px solid rgba(212,168,50,.2);border-radius:6px;padding:14px 16px;">
+      <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8860b);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">💼</div>
+        <div>
+          <div style="font-family:'Orbitron',monospace;font-size:7px;color:var(--gold);letter-spacing:1.5px;">C.E.O. DE LA FIRME</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:12px;color:#e0e0e0;line-height:1.45;margin-top:4px;">${bodyHtml}</div>
+        </div>
+      </div>
+    </div>`;
+  $('phaseIntroBtn').textContent=btnText||'▶️ COMMENCER';
+  showOv('ovPhaseIntro');}
 
 // ==================== GEAR SYSTEM ====================
 const GEAR_ITEMS=[
@@ -1635,14 +1754,14 @@ function equipCardMod(player,cardIdx,modId){
 
 // Tables de loot thématiques (inspiré POI_CHEST_LOOT de 7DTD) — activer dans eepEndCandidate
 const LOOT_BY_THEME={
-  finance:    [{id:'doubleur_p',w:40},{id:'turbo_g',w:30},{id:'sniper_p',w:15},{id:'parefeu_g',w:15}],
-  marketing:  [{id:'sniper_p',w:35},{id:'brouillage_g',w:25},{id:'audit_g',w:25},{id:'doubleur_p',w:15}],
-  rh:         [{id:'parefeu_g',w:45},{id:'antivirus_b',w:30},{id:'bouclier_p',w:15},{id:'audit_g',w:10}],
-  tech:       [{id:'audit_g',w:40},{id:'fuite_p',w:30},{id:'turbo_g',w:20},{id:'antivirus_b',w:10}],
-  juridique:  [{id:'parefeu_g',w:40},{id:'antivirus_b',w:35},{id:'doubleur_p',w:15},{id:'pression_p',w:10}],
-  geo:        [{id:'sniper_p',w:30},{id:'pression_p',w:30},{id:'doubleur_p',w:25},{id:'turbo_g',w:15}],
-  culture:    [{id:'fuite_p',w:35},{id:'audit_g',w:25},{id:'brouillage_g',w:20},{id:'turbo_g',w:20}],
-  science:    [{id:'turbo_g',w:40},{id:'audit_g',w:30},{id:'doubleur_p',w:20},{id:'fuite_p',w:10}],
+  finance:    [{id:'doubleur',w:40},{id:'turbo',w:30},{id:'sniper',w:15},{id:'bouclier',w:15}],
+  marketing:  [{id:'sniper',w:35},{id:'brouillage',w:25},{id:'audit',w:25},{id:'doubleur',w:15}],
+  rh:         [{id:'bouclier',w:45},{id:'antivirus',w:30},{id:'freeErr',w:15},{id:'audit',w:10}],
+  tech:       [{id:'audit',w:40},{id:'fuite',w:30},{id:'turbo',w:20},{id:'antivirus',w:10}],
+  juridique:  [{id:'bouclier',w:40},{id:'antivirus',w:35},{id:'doubleur',w:15},{id:'pression',w:10}],
+  geo:        [{id:'sniper',w:30},{id:'pression',w:30},{id:'doubleur',w:25},{id:'turbo',w:15}],
+  culture:    [{id:'fuite',w:35},{id:'audit',w:25},{id:'brouillage',w:20},{id:'turbo',w:20}],
+  science:    [{id:'turbo',w:40},{id:'audit',w:30},{id:'doubleur',w:20},{id:'fuite',w:10}],
 };
 
 // Pioche une carte selon le thème joué (à activer dans eepEndCandidate)
@@ -1828,47 +1947,331 @@ $('btnStartGame').disabled=false;}
 let _aiQuestionsLoaded=false;
 const _SOLO_PLAYER_PID='solo_player';
 
+// ==================== V4.0 INTEGRATION SPRINT FLOW ====================
+// Écran 1: classSelect (existant) → Écran 2: themeDraft → Écran 3: Sprint → Écran 4: Rewards → Game
+
+let THEME_DECK=[];// All themes from all players (50 total)
+let _sprintState={timer:60,int:null,score:0,botScores:[],contracts:[]};
+let _draftSelected=new Set();
+
 function startSoloGame(){if(!G.classId)return;
-// Réinitialiser THEMES
-THEMES.length=0;STATIC_THEMES.forEach(t=>THEMES.push({...t}));
-// Initialiser G
 G.mode='solo';
-Object.assign(G,{flux:0,gauge:0,gaugeCP:[],cycle:1,round:1,totalR:0,
-  cards:Object.keys(SAB_CARDS).slice(0,2).map(k=>({...SAB_CARDS[k]})),
-  usedThemes:{},ultiCharge:0,correct:0,ultiAutoQ:0,ultiLock:0,
-  aiThemeIds:new Set(),gear:[],equippedGear:null,freeErrUsed:false,
-  portfolio:[],themePass:{},bourseQueue:[],gestionUsed:false,
-  _ap:CEO_CL[G.classId]?.paStart||5,
-  _bourse_revealLevel:0,
-  bots:[],
-  bourse:{active:false,phase:'none',themeId:null,themeObj:null,reservePrice:20,bids:[],forcedTheme:null},
-  bourseSession:{phase:'idle',sellerPid:null,themeId:null,themeName:null,themeIcon:null,
-    reservePrice:20,bids:[],eepAtList:null,eepAtReveal:null,revealLevel:0}});
-// Construire EEP.players : humain + 9 bots
-const classIds=Object.keys(CEO_CL);const sabKeys=Object.keys(SAB_CARDS);
-const allPlayers=[
-  {id:_SOLO_PLAYER_PID,name:'Vous',classId:G.classId,gauge:0,flux:0,
-   cards:[pickCard(),pickCard(),pickCard()],// 3 cartes de départ
-   correct:0,order:1,gaugeCP:[],debt:0,isHuman:true}
-];
-BOT_NAMES.forEach((name,i)=>{
-  allPlayers.push({id:`solo_bot_${i}`,name,classId:pick(classIds),gauge:0,flux:20,
-    cards:[pickCard(),pickCard()],
-    correct:0,order:i+2,gaugeCP:[],debt:0,isHuman:false,icon:BOT_ICONS[i]});});
-shuffle(allPlayers);allPlayers.forEach((p,i)=>p.order=i+1);
-// Lancer le moteur EEP
-EEP.active=true;EEP.candidateIdx=0;EEP.players=allPlayers;
-showScreen('game');
-$('gClass').textContent=CEO_CL[G.classId].icon+' '+CEO_CL[G.classId].name;
-$('gClass').style.color=CEO_CL[G.classId].color;
-$('candBanner').style.display='';
-$('tlGrid').style.display='grid';
-$('bufferBar').style.display='none';
-$('soloHandBar').style.display='';
-$('soloAnswerPanel').style.display='none';
-updGauge();updFlux();
-_updSoloHandBar();
-eepStartNextCandidate();}
+THEMES.length=0;STATIC_THEMES.forEach(t=>THEMES.push({...t}));
+// Show theme draft overlay
+_draftSelected.clear();
+const g=$('themeDraftGrid');g.innerHTML='';
+STATIC_THEMES.forEach(t=>{
+  const d=document.createElement('div');d.className='tcard-ceo';d.dataset.t=t.id;
+  d.style.position='relative';
+  const badge=t.type==='expert'?'<div style="position:absolute;top:2px;right:2px;font-size:7px;background:rgba(168,85,247,.15);color:#a855f7;border:1px solid #a855f7;border-radius:2px;padding:1px 3px;font-family:Orbitron,monospace;">PRO</div>':'';
+  d.innerHTML=`${badge}<div class="ti">${t.icon}</div><div class="tn" style="font-size:9px;">${t.name}</div>`;
+  d.onclick=()=>_toggleDraftTheme(d,t.id);
+  g.appendChild(d);});
+$('themeDraftCount').textContent='0/5 sélectionnés';
+$('btnDraftConfirm').disabled=true;
+showOv('ovThemeDraft');}
+
+function _toggleDraftTheme(el,id){
+  if(_draftSelected.has(id)){_draftSelected.delete(id);el.classList.remove('sel');}
+  else{if(_draftSelected.size>=5)return;_draftSelected.add(id);el.classList.add('sel');}
+  $('themeDraftCount').textContent=`${_draftSelected.size}/5 sélectionnés`;
+  $('btnDraftConfirm').disabled=_draftSelected.size<5;}
+
+function addCustomTheme(){
+  const input=$('customThemeInput');
+  const name=input.value.trim();
+  if(!name||name.length<2)return;
+  const tId='custom_'+name.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'').slice(0,20);
+  if(THEMES.find(t=>t.id===tId))return;
+  const t={id:tId,name,icon:'🎯',type:'mainstream',aiGenerated:true};
+  THEMES.push(t);STATIC_THEMES.push(t);
+  // Add to grid + auto-select
+  const g=$('themeDraftGrid');
+  const d=document.createElement('div');d.className='tcard-ceo sel';d.dataset.t=tId;
+  d.innerHTML=`<div style="position:absolute;top:2px;right:2px;font-size:7px;background:rgba(34,211,238,.15);color:var(--cyan);border:1px solid var(--cyan);border-radius:2px;padding:1px 3px;font-family:Orbitron,monospace;">IA</div><div class="ti">🎯</div><div class="tn" style="font-size:9px;">${name}</div>`;
+  d.style.position='relative';
+  d.onclick=()=>_toggleDraftTheme(d,tId);
+  g.prepend(d);
+  if(_draftSelected.size<5)_draftSelected.add(tId);
+  $('themeDraftCount').textContent=`${_draftSelected.size}/5 sélectionnés`;
+  $('btnDraftConfirm').disabled=_draftSelected.size<5;
+  input.value='';
+  // Mark as AI theme
+  if(!(G.aiThemeIds instanceof Set))G.aiThemeIds=new Set();
+  G.aiThemeIds.add(tId);}
+
+async function confirmThemeDraft(){
+  closeOv('ovThemeDraft');
+  if(!(G.aiThemeIds instanceof Set))G.aiThemeIds=new Set();
+  const playerPicks=[..._draftSelected];
+  // Register custom/AI themes
+  playerPicks.forEach(id=>{const t=THEMES.find(x=>x.id===id);if(t?.aiGenerated)G.aiThemeIds.add(id);});
+
+  // ═══ PIOCHE : thèmes QDB + thèmes custom du joueur ═══
+  const qdbIds=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);
+  const pioche=[];
+  // 2 copies de chaque QDB
+  qdbIds.forEach(id=>{pioche.push(id);pioche.push(id);});
+  // Ajouter les picks du joueur (y compris custom)
+  playerPicks.forEach(id=>{if(!pioche.includes(id))pioche.push(id);pioche.push(id);});
+  shuffle(pioche);
+
+  // Distribuer 2 thèmes au joueur — au moins 1 de ses picks
+  DRAFT.playerPortfolio={};
+  const guaranteedPick=playerPicks[0]||pioche[0]||'finance';
+  const secondDraw=pioche.find(t=>t!==guaranteedPick)||pioche[0]||'tech';
+  // Retirer du pool
+  const idx1=pioche.indexOf(guaranteedPick);if(idx1>=0)pioche.splice(idx1,1);
+  const idx2=pioche.indexOf(secondDraw);if(idx2>=0)pioche.splice(idx2,1);
+  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[guaranteedPick,secondDraw];
+  G.portfolio=[guaranteedPick,secondDraw];
+
+  // Bots reçoivent 2 thèmes (QDB prioritaire)
+  BOT_NAMES.forEach((_,i)=>{
+    const b1=pioche.shift()||qdbIds[i%qdbIds.length];
+    const b2=pioche.shift()||qdbIds[(i+1)%qdbIds.length];
+    DRAFT.playerPortfolio[`solo_bot_${i}`]=[b1,b2];});
+  G._piocheRestante=pioche.length>0?[...pioche]:[...qdbIds];
+
+  const th1=THEMES.find(t=>t.id===guaranteedPick)||{icon:'📚',name:guaranteedPick};
+  const th2=THEMES.find(t=>t.id===secondDraw)||{icon:'📚',name:secondDraw};
+  displayBossNotif(`Distribution terminée. Vos thèmes : ${th1.icon} ${th1.name} et ${th2.icon} ${th2.name}. Bonne chance.`);
+  _startSoloSprint();}
+
+// ── SIGNATURE SPRINT (60s) — clauses générées par Gemini en temps réel ──
+function _startSoloSprint(){
+  // ── Écran titre CEO avant le Sprint ──
+  _showPhaseIntro(
+    'SIGNATURE SPRINT','📝',
+    `Bienvenue dans la première épreuve de votre processus d'intégration, cher candidat.<br><br>
+    Le département juridique a préparé une série de contrats que vous devez signer le plus rapidement possible. Ne vous souciez pas du contenu — <em>personne ne lit les contrats ici</em>.<br><br>
+    <strong>Règles :</strong><br>
+    • Vous avez <span style="color:var(--gold);font-weight:700;">60 secondes</span> pour signer un maximum de contrats<br>
+    • Griffonnez une signature dans la zone prévue, puis validez<br>
+    • Le classement déterminera l'ordre de passage des entretiens<br>
+    • Le vainqueur recevra une <span style="color:var(--gold);">Loot Box Premium</span> et le droit de choisir le premier candidat<br><br>
+    <em style="color:var(--muted);font-size:10px;">— Note : La Firme décline toute responsabilité quant au contenu des clauses ci-dessous. En signant, vous reconnaissez ne pas les avoir lues. C'est le but.</em>`,
+    '✍️ COMMENCER LE SPRINT',
+    ()=>{_launchSprint();});}
+
+function _launchSprint(){
+  _sprintState={timer:60,int:null,score:0,contractIdx:0,botScores:BOT_NAMES.map(()=>0),contracts:[...BULLSHIT_CONTRACTS]};
+  shuffle(_sprintState.contracts);
+  $('sprintTimer').textContent='60';
+  $('sprintTimer').style.color='var(--gold)';
+  $('sprintScore').textContent='Contrats: 0';
+  _showFullContract(0);
+  _initSprintCanvas();
+  showOv('ovSoloSprint');
+  _sprintFetchGeminiClauses();
+  _sprintState.int=setInterval(()=>{
+    _sprintState.timer--;
+    $('sprintTimer').textContent=_sprintState.timer;
+    if(_sprintState.timer<=10)$('sprintTimer').style.color='var(--red)';
+    _sprintState.botScores.forEach((_,i)=>{
+      if(Math.random()<0.03)_sprintState.botScores[i]++;});
+    if(_sprintState.timer<=0){clearInterval(_sprintState.int);_endSoloSprint();}
+  },1000);}
+
+function _showFullContract(idx){
+  const c=_sprintState.contracts[idx%_sprintState.contracts.length];
+  if(typeof c==='object'&&c.title){
+    $('sprintContractTitle').textContent=`CONTRAT N°${String(idx+1).padStart(3,'0')}`;
+    $('sprintContractText').innerHTML=c.body.replace(/\\n/g,'<br>').replace(/\n/g,'<br>');
+  }else{
+    // Fallback: old-style string contract
+    $('sprintContractTitle').textContent=`CONTRAT N°${String(idx+1).padStart(3,'0')}`;
+    $('sprintContractText').textContent=typeof c==='string'?c:'Clause de résilience maximale';}}
+
+// Génère 6 clauses absurdes via Gemini pendant que le joueur signe
+async function _sprintFetchGeminiClauses(){
+  try{
+    const raw=await Promise.race([
+      _bossGemini(`Génère 6 clauses de contrat corporate absurdes en français, style passif-agressif. FORMAT: retourne un tableau JSON uniquement, exemple: ["Clause A","Clause B","Clause C","Clause D","Clause E","Clause F"]. Pas d'explication, pas de guillemets extérieurs, juste le tableau JSON.`),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),8000))
+    ]);
+    if(!raw)return;
+    const cleaned=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    const m=cleaned.match(/\[[\s\S]+\]/);
+    if(!m)return;
+    const clauses=JSON.parse(m[0]);
+    if(Array.isArray(clauses)&&clauses.length>=3){
+      // Injecter les clauses Gemini dans le pool du sprint
+      _sprintState.contracts=[...clauses,..._sprintState.contracts];
+      // Mettre à jour le contrat actuel si on en est encore aux premiers
+      if(_sprintState.score===0){$('sprintContractText').textContent=_sprintState.contracts[0];}
+    }
+  }catch(e){/* Silencieux — le sprint continue avec les clauses statiques */}}
+
+function _initSprintCanvas(){
+  const c=$('sprintCanvas');if(!c)return;
+  const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);
+  ctx.strokeStyle='#d4a832';ctx.lineWidth=2;ctx.lineCap='round';
+  let drawing=false;
+  function pos(e){const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};}
+  c.onmousedown=c.ontouchstart=e=>{e.preventDefault();drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);};
+  c.onmousemove=c.ontouchmove=e=>{if(!drawing)return;e.preventDefault();const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();};
+  c.onmouseup=c.ontouchend=()=>drawing=false;}
+
+function submitSprintSig(){
+  if(_sprintState.timer<=0)return;
+  const c=$('sprintCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const d=ctx.getImageData(0,0,c.width,c.height).data;
+  let px=0;for(let i=3;i<d.length;i+=4)if(d[i]>0)px++;
+  if(px<20){_bossNotif('Griffonnez quelque chose au moins!');return;}
+  _sprintState.score++;
+  _sprintState.contractIdx=(_sprintState.contractIdx||0)+1;
+  $('sprintScore').textContent=`Contrats: ${_sprintState.score}`;
+  ctx.clearRect(0,0,c.width,c.height);
+  _showFullContract(_sprintState.contractIdx);
+  _updSprintLB();}
+
+function _updSprintLB(){
+  const entries=[{name:'Vous',score:_sprintState.score,isPlayer:true}];
+  BOT_NAMES.forEach((n,i)=>entries.push({name:n,score:_sprintState.botScores[i],icon:BOT_ICONS[i]}));
+  entries.sort((a,b)=>b.score-a.score);
+  $('sprintLeaderboard').innerHTML=entries.slice(0,5).map((e,i)=>
+    `<div style="display:flex;justify-content:space-between;padding:2px 0;${e.isPlayer?'color:var(--gold);font-weight:700;':''}">`+
+    `<span>#${i+1} ${e.icon||'👤'} ${e.name}</span><span>${e.score}</span></div>`).join('');}
+
+function skipSprint(){
+  if(G.mode!=='solo')return;
+  if(_sprintState.int)clearInterval(_sprintState.int);
+  _sprintState.score=999;// garantit la 1ère place
+  _endSoloSprint();}
+
+function _endSoloSprint(){
+  // Final bot scores boost (bots sign ~8-15 contracts total)
+  _sprintState.botScores=_sprintState.botScores.map(s=>s+Math.floor(Math.random()*8)+5);
+  _updSprintLB();
+  // Determine winner
+  const allScores=[{name:'Vous',score:_sprintState.score,isPlayer:true,pid:_SOLO_PLAYER_PID}];
+  BOT_NAMES.forEach((n,i)=>allScores.push({name:n,score:_sprintState.botScores[i],pid:`solo_bot_${i}`,icon:BOT_ICONS[i]}));
+  allScores.sort((a,b)=>b.score-a.score);
+  const winner=allScores[0];
+  const playerRank=allScores.findIndex(e=>e.isPlayer)+1;
+  setTimeout(()=>{
+    closeOv('ovSoloSprint');
+    _showRewards(winner,playerRank,allScores);
+  },1500);}
+
+// ── REWARDS & WELCOME PACK ──────────────────────────────────────────────
+function _showRewards(winner,playerRank,rankings){
+  // Summary
+  const isWinner=winner.isPlayer;
+  $('rewardsSummary').innerHTML=`
+    <div style="text-align:center;padding:10px;background:rgba(212,168,50,.08);border:1px solid rgba(212,168,50,.3);border-radius:6px;">
+      <div style="font-size:28px;">${isWinner?'🏆':'🎖️'}</div>
+      <div style="font-family:'Orbitron',monospace;font-size:14px;color:var(--gold);margin:4px 0;">
+        ${isWinner?'VOUS AVEZ GAGNÉ LE SPRINT!':'SPRINT TERMINÉ'}</div>
+      <div style="font-size:11px;color:var(--muted);">Rang #${playerRank} — ${_sprintState.score} contrats signés</div>
+      <div style="font-size:10px;color:var(--text);margin-top:4px;">${winner.icon||'👤'} ${winner.name}: ${winner.score} contrats</div>
+    </div>
+    ${rankings.slice(0,5).map((e,i)=>`<div style="display:flex;justify-content:space-between;font-size:10px;padding:2px 4px;${e.isPlayer?'color:var(--gold);':'color:var(--muted);'}">
+      <span>#${i+1} ${e.icon||'👤'} ${e.name}</span><span>${e.score}</span></div>`).join('')}`;
+
+  // Welcome Pack: 1 gear, 3 gold cards, 50 flux
+  const welcomeGear=pick([
+    {id:'flux_start',name:'Montre CEO',icon:'⌚',desc:'+10⚡ au début de chaque EEP',type:'fluxStart',val:10,rarity:'gold'},
+    {id:'def_aura',name:'Aura de Charisme',icon:'✨',desc:'Réduit dégâts sabotage -15%',type:'defAura',val:15,rarity:'gold'},
+    {id:'combo_boost',name:'Café Premium',icon:'☕',desc:'+5s bonus sur chaque question',type:'timeBoost',val:5,rarity:'gold'},
+  ]);
+  const welcomeCards=[pickCard(),pickCard(),pickCard()];
+  // Winner bonus
+  const winnerBonus=isWinner?`<div style="margin-top:6px;padding:6px;background:rgba(212,168,50,.1);border:1px solid var(--gold);border-radius:4px;">
+    <div style="font-size:9px;color:var(--gold);font-family:'Orbitron',monospace;">🏆 BONUS VAINQUEUR</div>
+    <div style="font-size:10px;color:var(--text);">Gear Premium + 100⚡ bonus + 1 Carte Black</div></div>`:'';
+
+  $('rewardsWelcome').innerHTML=`
+    <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--cyan);letter-spacing:1px;margin-bottom:4px;">📦 WELCOME PACK</div>
+    <div style="font-size:10px;color:var(--text);line-height:1.5;">
+      ${welcomeGear.icon} <strong>${welcomeGear.name}</strong> — ${welcomeGear.desc}<br>
+      🃏 3 Cartes Gold: ${welcomeCards.map(c=>c.icon+' '+c.name).join(', ')}<br>
+      ⚡ 50 Flux de départ${isWinner?' + 100 bonus':''}</div>${winnerBonus}`;
+
+  // Use portfolio already distributed during confirmThemeDraft
+  const myThemes=[...(G.portfolio||[])];
+  if(myThemes.length<2){// Fallback if not set
+    const qk=Object.keys(QDB).filter(k=>QDB[k]&&QDB[k].length>=5);shuffle(qk);
+    while(myThemes.length<2&&qk.length)myThemes.push(qk.shift());}
+
+  // Nomination: winner picks first candidate (for solo, auto-pick)
+  const nomineeIdx=isWinner?1:0;// winner nominates someone else (or self)
+  $('rewardsNomination').innerHTML=`
+    <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--orange);letter-spacing:1px;margin-top:6px;">🎯 CANDIDAT #1</div>
+    <div style="font-size:10px;color:var(--muted);">${isWinner?"En tant que vainqueur, vous choisissez qui passe en premier.":"Le vainqueur a choisi l\u0027ordre de passage."}</div>
+    <div style="font-size:10px;color:var(--text);margin-top:2px;">📋 Portfolio: ${myThemes.map(id=>{const t=THEMES.find(x=>x.id===id);return(t?.icon||'📚')+' '+(t?.name||id);}).join(', ')}</div>`;
+
+  // Store for later
+  G._welcomeGear=welcomeGear;
+  G._welcomeCards=welcomeCards;
+  G._welcomeFlux=isWinner?150:50;
+  G._myThemes=myThemes;
+  G._rankings=rankings;
+  G._isSprintWinner=isWinner;
+
+  showOv('ovRewards');}
+
+function startAfterRewards(){
+  closeOv('ovRewards');
+  // Afficher l'écran titre de la phase Entretien
+  const portfolio=[...(G.portfolio||G._myThemes||[])];
+  const themeNames=portfolio.map(id=>{const t=THEMES.find(x=>x.id===id);return(t?.icon||'📚')+' '+(t?.name||id);}).join(', ');
+  _showPhaseIntro(
+    'ENTRETIENS D\'ÉVALUATION','🏢',
+    `Les festivités sont terminées. Place aux choses sérieuses.<br><br>
+    Chaque candidat passera un entretien de <strong>10 questions</strong> sur l'un de ses thèmes. Pendant que le candidat répond, les autres joueurs peuvent saboter ses performances avec des cartes d'attaque.<br><br>
+    <strong>Votre portfolio :</strong> ${themeNames}<br><br>
+    <strong>Déroulement :</strong><br>
+    • <span style="color:var(--cyan);">Briefing 10s</span> — Le candidat pose ses défenses<br>
+    • <span style="color:var(--gold);">Questions</span> — Répondez correctement pour remplir votre jauge<br>
+    • <span style="color:var(--red);">Sabotage</span> — Les adversaires attaquent entre chaque question<br><br>
+    <em style="color:var(--muted);font-size:10px;">Le C.E.O. observe. Le C.E.O. juge. Le C.E.O. est déçu d'avance.</em>`,
+    '▶️ LANCER LES ENTRETIENS',
+    ()=>{_initAndStartEEP();});}
+
+function _initAndStartEEP(){
+  const currentPortfolio=[...(G.portfolio||G._myThemes||[])];
+  // Initialize full G state
+  Object.assign(G,{flux:G._welcomeFlux,gauge:0,gaugeCP:[],cycle:1,round:1,totalR:0,
+    cards:G._welcomeCards,
+    usedThemes:{},ultiCharge:0,correct:0,ultiAutoQ:0,ultiLock:0,
+    gear:[G._welcomeGear],equippedGear:G._welcomeGear,freeErrUsed:false,
+    portfolio:currentPortfolio,themePass:{},bourseQueue:[],gestionUsed:false,
+    _ap:CEO_CL[G.classId]?.paStart||5,
+    _bourse_revealLevel:0,bots:[],
+    bourse:{active:false,phase:'none',themeId:null,themeObj:null,reservePrice:20,bids:[],forcedTheme:null},
+    bourseSession:{phase:'idle',sellerPid:null,themeId:null,themeName:null,themeIcon:null,
+      reservePrice:20,bids:[],eepAtList:null,eepAtReveal:null,revealLevel:0}});
+  // DRAFT.playerPortfolio already set — just sync human in case of swap
+  DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...currentPortfolio];
+  // Build EEP.players based on Sprint rankings
+  const classIds=Object.keys(CEO_CL);
+  const allPlayers=[
+    {id:_SOLO_PLAYER_PID,name:'Vous',classId:G.classId,gauge:0,flux:G._welcomeFlux,
+     cards:[...G._welcomeCards],correct:0,order:1,gaugeCP:[],debt:0,isHuman:true,
+     freeSwap:G._isSprintWinner}
+  ];
+  const rankings=G._rankings||[];
+  BOT_NAMES.forEach((name,i)=>{
+    const rank=rankings.findIndex(r=>r.pid===`solo_bot_${i}`);
+    allPlayers.push({id:`solo_bot_${i}`,name,classId:pick(classIds),gauge:0,flux:20,
+      cards:[pickCard(),pickCard()],
+      correct:0,order:rank>=0?rank+1:i+2,gaugeCP:[],debt:0,isHuman:false,icon:BOT_ICONS[i]});});
+  allPlayers.sort((a,b)=>a.order-b.order);
+  allPlayers.forEach((p,i)=>p.order=i+1);
+  EEP.active=true;EEP.candidateIdx=0;EEP.players=allPlayers;
+  showScreen('game');
+  // Clear old "PROTOCOLE DE DRAFT" content
+  $('qTheme').textContent='';$('qNum').textContent='';$('qTxt').textContent='';$('qChoices').innerHTML='';
+  $('gClass').textContent=CEO_CL[G.classId].icon+' '+CEO_CL[G.classId].name;
+  $('gClass').style.color=CEO_CL[G.classId].color;
+  $('candBanner').style.display='';$('tlGrid').style.display='grid';
+  $('bufferBar').style.display='none';$('soloHandBar').style.display='';
+  $('soloAnswerPanel').style.display='none';
+  updGauge();updFlux();_updSoloHandBar();
+  eepStartNextCandidate();}
 
 // ── Main de cartes — barre persistante ───────────────────────────────────
 function _updSoloHandBar(){
@@ -1976,28 +2379,76 @@ function soloPlayCardAnim(cardIdx, cardEl){
 function _makeSoloQChoicesClickable(d){
   if(!d.canAnswer)return;
   const isQCM=!!d.choices;
+  let _selectedIdx=null;// index sélectionné (pas encore validé)
+
   if(isQCM){
-    $('qChoices').querySelectorAll('.cbox-ceo').forEach((el,i)=>{
-      const isCorrect=(i===d.correctIdx);
+    const boxes=$('qChoices').querySelectorAll('.cbox-ceo');
+    boxes.forEach((el,i)=>{
       el.style.cursor='pointer';
       el.onclick=()=>{
-        if(!EEP.answered){EEP.answered=true;
-          $('qChoices').querySelectorAll('.cbox-ceo').forEach((b,j)=>{
-            b.classList.add(j===d.correctIdx?'ok':'ko');b.style.pointerEvents='none';});
-          eepProcessAnswer(_SOLO_PLAYER_PID,isCorrect);}};}); }
+        if(EEP.answered)return;
+        // Sélectionner cette réponse (highlight)
+        _selectedIdx=i;
+        boxes.forEach(b=>{b.style.borderColor='';b.style.background='';});
+        el.style.borderColor='var(--gold)';el.style.background='rgba(212,168,50,.12)';
+        // Afficher VALIDER / ANNULER
+        _showValidateBar(()=>{
+          // VALIDER
+          if(EEP.answered)return;EEP.answered=true;
+          _hideValidateBar();
+          const isCorrect=(i===d.correctIdx);
+          boxes.forEach((b,j)=>{b.classList.add(j===d.correctIdx?'ok':'ko');b.style.pointerEvents='none';});
+          eepProcessAnswer(_SOLO_PLAYER_PID,isCorrect);
+        },()=>{
+          // ANNULER
+          _selectedIdx=null;
+          boxes.forEach(b=>{b.style.borderColor='';b.style.background='';});
+          _hideValidateBar();
+        });};});}
   else{
     const vfBtns=$('qChoices').querySelectorAll('.vf-btn');
     [[true,0],[false,1]].forEach(([val,idx])=>{
       const btn=vfBtns[idx];if(!btn)return;
       btn.style.cursor='pointer';
       btn.onclick=()=>{
-        if(!EEP.answered){EEP.answered=true;
+        if(EEP.answered)return;
+        _selectedIdx=idx;
+        vfBtns.forEach(b=>{b.style.borderColor='';b.style.background='';b.style.opacity='1';});
+        btn.style.borderColor='var(--gold)';btn.style.background='rgba(212,168,50,.12)';
+        _showValidateBar(()=>{
+          if(EEP.answered)return;EEP.answered=true;
+          _hideValidateBar();
           vfBtns.forEach(b=>{b.style.pointerEvents='none';b.style.opacity='.5';});
           btn.style.opacity='1';
           const isCorrect=(val===d.correctVal||(String(val)===String(d.correctVal)));
           btn.style.borderColor=isCorrect?'var(--green)':'var(--red)';
           btn.style.color=isCorrect?'var(--green)':'var(--red)';
-          eepProcessAnswer(_SOLO_PLAYER_PID,isCorrect);}};}); }}
+          eepProcessAnswer(_SOLO_PLAYER_PID,isCorrect);
+        },()=>{
+          _selectedIdx=null;
+          vfBtns.forEach(b=>{b.style.borderColor='';b.style.background='';});
+          _hideValidateBar();
+        });};});}}
+
+// ── Barre VALIDER / ANNULER ──
+function _showValidateBar(onValidate,onCancel){
+  let bar=$('validateBar');
+  if(!bar){
+    bar=document.createElement('div');bar.id='validateBar';
+    bar.style.cssText='position:fixed;bottom:160px;left:0;right:0;z-index:9000;display:flex;gap:10px;padding:12px 20px;background:rgba(8,9,14,.95);border-top:2px solid var(--gold);justify-content:center;';
+    document.body.appendChild(bar);}
+  bar.innerHTML='';
+  const btnV=document.createElement('button');
+  btnV.className='btn gold';btnV.style.cssText='flex:1;max-width:180px;padding:14px;font-size:15px;';
+  btnV.textContent='✅ VALIDER';btnV.onclick=onValidate;
+  const btnA=document.createElement('button');
+  btnA.className='btn';btnA.style.cssText='flex:1;max-width:180px;padding:14px;font-size:15px;border-color:var(--red);color:var(--red);';
+  btnA.textContent='❌ ANNULER';btnA.onclick=onCancel;
+  bar.appendChild(btnV);bar.appendChild(btnA);
+  bar.style.display='flex';}
+
+function _hideValidateBar(){
+  const bar=$('validateBar');if(bar)bar.style.display='none';}
 function soloHandleBroadcast(d){
   // Le broadcast en solo va à tous les joueurs
   EEP.players.forEach(p=>soloHandleTo(p.id,d));}
@@ -2084,42 +2535,8 @@ function soloBotRx(pid,d){
       $('gTicker').textContent=`⚠️ ${bot.icon||'🤖'} ${bot.name} charge ${card.icon} ${card.name} dans le buffer...`;
       updBufferUI();},Math.random()*3000);}}
 
-function openSoloOnboarding(){
-const suggestions=['Dinosaures','Cuisine française','Espace & Astronomie','Cinéma','Histoire mondiale','Musique','Sport','Architecture','Philosophie','Biologie','Jeux vidéo','Mode & Luxe','Environnement','Psychologie','Gastronomie'];
-shuffle(suggestions);
-// Construire les 5 champs avec suggestions aléatoires en placeholder
-const fields=Array.from({length:5},(_,i)=>`
-<div style="position:relative;margin-bottom:6px;">
-  <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'Orbitron',monospace;font-size:9px;color:var(--gold);font-weight:700;">${i+1}</span>
-  <input class="inp" id="soloT${i}" placeholder="${suggestions[i]}" maxlength="40"
-    style="padding-left:28px;font-size:13px;letter-spacing:1px;text-transform:capitalize;">
-</div>`).join('');
-$('soloOnboardBody').innerHTML=fields;
-$('soloOnboardStatus').textContent='';
-$('soloOnboardBtn').disabled=false;$('soloOnboardBtn').textContent='🤖 ANALYSER LE MARCHÉ';
-showOv('ovSoloOnboard');}
-
-async function soloOnboardConfirm(){
-const names=Array.from({length:5},(_,i)=>$('soloT'+i)?.value.trim()).filter(Boolean);
-if(names.length<1){$('soloOnboardStatus').textContent='⚠️ Entrez au moins un thème.';return;}
-$('soloOnboardBtn').disabled=true;$('soloOnboardBtn').textContent='⏳ Enregistrement...';
-$('soloOnboardStatus').innerHTML=`<div style="margin-top:8px;">
-<div style="background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:2px;height:5px;overflow:hidden;max-width:280px;margin:0 auto 6px;">
-  <div style="height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));animation:aiLoad 1.8s ease-in-out infinite;"></div>
-</div>
-<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">Récupération des icônes pour : ${names.join(', ')}...</div>
-</div>`;
-// Appel léger : icônes uniquement. Si ça échoue, on continue avec des icônes par défaut.
-try{await fetchAIThemes(names);}
-catch(e){
-  console.warn('[CEO-AI] Icônes non récupérées, icônes par défaut utilisées:',e.message);
-  // Enregistrer quand même les thèmes sans icônes Gemini
-  names.forEach(name=>{
-    const tId=name.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
-    if(!THEMES.find(t=>t.id===tId))THEMES.push({id:tId,name,icon:'📚',aiGenerated:true});
-    if(G.aiThemeIds instanceof Set)G.aiThemeIds.add(tId);});}
-$('gTicker').textContent=`📊 ${names.length} thèmes définis — questions générées à la volée par Gemini.`;
-closeOv('ovSoloOnboard');showScreen('game');G.round=1;openThemeSel();}
+function openSoloOnboarding(){startSoloGame();}// compat redirect
+async function soloOnboardConfirm(){confirmThemeDraft();}// compat redirect
 
 function openThemeSel(){
 G.selTheme=null;$('btnConfTheme').disabled=true;const g=$('ovThemeGrid');g.innerHTML='';
@@ -2146,9 +2563,9 @@ async function confirmTheme(){
 if(!G.selTheme)return;
 const newThemeId=G.selTheme;
 closeOv('ovTheme');
-// Portfolio limit — max 2 thèmes simultanés
+// Portfolio limit — max 3 thèmes simultanés
 if(G.portfolio&&!G.portfolio.includes(newThemeId)){
-  if(G.portfolio.length>=2){
+  if(G.portfolio.length>=3){
     const newTh=THEMES.find(t=>t.id===newThemeId);
     $('restructNewTheme').textContent=`${newTh?.icon||'📚'} ${newTh?.name||newThemeId}`;
     $('restructGrid').innerHTML=G.portfolio.map(pid=>{
@@ -2329,28 +2746,38 @@ startTimer();showQ();}
 async function _streamGenerateNext(){
   const idx=G._streamGenerated;
   if(idx>=G._streamTotal)return;
+  const _N1_TO=5000;
   try{
-    const q=await generateOneQuestion(G._streamThemeName,idx,G._streamTotal,G._streamContext);
+    const timeoutP=new Promise((_,rej)=>setTimeout(()=>rej(new Error('N1_TIMEOUT')),_N1_TO));
+    const q=await Promise.race([generateOneQuestion(G._streamThemeName,idx,G._streamTotal,G._streamContext),timeoutP]);
     G._streamQueue.push(q);
     G._streamGenerated++;
     console.log(`[CEO-AI] Q${idx+1} générée:`,q.q?.slice(0,40));
-    // Si le jeu attend cette question (G.qs vide), l'afficher maintenant
     if(G._streamMode&&G.phase==='playing'&&G.qs.length===0){
       G.qs=[q];showQStream();}
   }catch(e){
-    console.warn(`[CEO-AI] Échec Q${idx+1}:`,e.message);
-    G._streamGenerated++;// ne pas bloquer — question sautée
-    if(G._streamMode&&G.phase==='playing'&&G.qs.length===0){
-      // Fallback: utiliser une question statique
-      const fallbackQ=_getStaticFallbackQ();
-      if(fallbackQ){G.qs=[fallbackQ];showQStream();}}}
-  // Pré-générer la suivante en background (sans await — non-bloquant)
+    console.warn(`[CEO-AI] Q${idx+1} ${e.message==='N1_TIMEOUT'?'timeout 6s':'erreur'}:`,e.message);
+    G._streamGenerated++;
+    const fallbackQ=_getStaticFallbackQ();
+    if(fallbackQ){
+      G._streamQueue.push(fallbackQ);
+      if(G._streamMode&&G.phase==='playing'&&G.qs.length===0){
+        G.qs=[fallbackQ];showQStream();}
+      if(e.message==='N1_TIMEOUT')_bossNotif('Le réseau sature... voici une question de stagiaire pour vous occuper.');}}
   if(G._streamGenerated<G._streamTotal){
     _streamGenerateNext().catch(e=>console.warn('[CEO-AI bg]',e.message));}}
 
 function _getStaticFallbackQ(){
-  const k=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>0&&!G.aiThemeIds.has(k));
-  return k?pick(QDB[k]):null;}
+  // 1. QDB du thème courant (TOUJOURS prioritaire)
+  const tid=G.theme||EEP.theme||'';
+  if(QDB[tid]&&QDB[tid].length>0){
+    if(!G._usedOffline)G._usedOffline=new Set();
+    const pool=QDB[tid].filter(q=>!G._usedOffline.has(q.q));
+    if(pool.length){const q=pick(pool);G._usedOffline.add(q.q);return{...q,source:'qdb-fallback'};}
+    return{...pick(QDB[tid]),source:'qdb-fallback'};}
+  // 2. N'importe quel QDB
+  const k=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>0);
+  return k?{...pick(QDB[k]),source:'qdb-fallback'}:null;}
 
 function showQStream(){
   if(!G._streamMode){showQ();return;}
@@ -2365,8 +2792,14 @@ function showQStream(){
     $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(13px,3vw,16px);color:var(--cyan);">GEMINI PRÉPARE...</span>`;
     $('qChoices').innerHTML=`<div style="max-width:200px;margin:12px auto;"><div style="background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:2px;height:4px;overflow:hidden;"><div style="height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));animation:aiLoad 1s ease-in-out infinite;"></div></div></div>`;
     $('gTimer').textContent='';
-    // Attendre que la question arrive (poll toutes les 300ms)
-    const wait=setInterval(()=>{if(G._streamQueue.length>0||!G._streamMode){clearInterval(wait);showQStream();}},300);}}
+    // Attendre que la question arrive (poll 300ms, timeout 6s)
+    let _pollT=0;
+    const wait=setInterval(()=>{_pollT+=300;
+      if(G._streamQueue.length>0||!G._streamMode){clearInterval(wait);showQStream();}
+      else if(_pollT>=5000){clearInterval(wait);const fb=_getStaticFallbackQ();
+        if(fb){G._streamQueue.push(fb);_bossNotif('Le réseau sature. Question de secours déployée — ne vous réjouissez pas, elle est encore plus vicieuse.');showQStream();}
+        else endRound();}
+    },300);}}
 
 function startTimer(){/* Timer géré question par question dans _renderQuestion */}
 function updTimerD(){/* idem */}
@@ -3223,7 +3656,7 @@ MP.peer.on('error',e=>{$('lobbyStatus').textContent='❌ '+e.type;$('lobbyStatus
 
 function hostRx(conn,d){
 if(d.type==='join'){if(MP.conns.find(c=>c.conn===conn))return;MP.conns.push({conn,pid:conn.peer,name:d.name,classId:null,sigScore:0});conn.send({type:'joined',roomCode:MP.roomCode});updLobby();}
-else if(d.type==='signature'&&MP.hostPhase==='s0'){const p=MP.conns.find(c=>c.conn===conn);if(!p)return;p.sigScore=(p.sigScore||0)+1;conn.send({type:'newContract',contract:pick(BULLSHIT_CONTRACTS),score:p.sigScore});updS0Board();$('s0Last').textContent=`📝 ${p.name} vient de signer!`;}
+else if(d.type==='signature'&&MP.hostPhase==='s0'){const p=MP.conns.find(c=>c.conn===conn);if(!p)return;p.sigScore=(p.sigScore||0)+1;conn.send({type:'newContract',contract:(pick(BULLSHIT_CONTRACTS)).title||pick(BULLSHIT_CONTRACTS),score:p.sigScore});updS0Board();$('s0Last').textContent=`📝 ${p.name} vient de signer!`;}
 else if(d.type==='classSel'){const p=MP.conns.find(c=>c.conn===conn);if(p)p.classId=d.classId;updDraftBoard();}
 else if(d.type==='draftPick'){const p=MP.conns.find(c=>c.conn===conn);if(!p)return;Object.keys(MP.draftSlots).forEach(k=>{if(MP.draftSlots[k]===p.pid)delete MP.draftSlots[k];});MP.draftSlots[d.slot]=p.pid;conn.send({type:'draftConfirm',slot:d.slot});updDraftBoard();mpBroadcast({type:'draftUpdate',slots:MP.draftSlots});}
 // ===== THEME DRAFT: joueur pioche un thème du pool =====
@@ -3241,62 +3674,49 @@ else if(d.type==='portfolioSet'&&MP.hostPhase==='draft'){
 const p=MP.conns.find(c=>c.conn===conn);if(!p)return;
 const active=_setPortfolio(p.pid,d.themeIds||[]);
 conn.send({type:'portfolioOk',active});updDraftBoard();}
-// ===== EEP: card played during latency window (FLUX COST + IMMEDIATE EFFECT) =====
+// ===== EEP: card played during latency — FLUX COST + IMMEDIATE EFFECT =====
 else if(d.type==='playCard'&&EEP.latencyActive){
 const p=EEP.players.find(pl=>pl.id===conn.peer);if(!p)return;
 const cIdx=d.cardIdx;if(cIdx<0||cIdx>=p.cards.length)return;
 const card=p.cards[cIdx];
-// 1. Check flux cost
-if(p.flux<card.cost){conn.send({type:'cardPlayFail',reason:'Flux insuffisant ('+card.cost+'⚡ requis)'});return;}
-// 2. Check attack limit: max 1 attack per player per window
+// 1. Flux cost check
+const cost=card.cost||0;
+if(cost>0&&p.flux<cost){conn.send({type:'cardPlayFail',reason:'Flux insuffisant ('+cost+'⚡)'});return;}
+// 2. Attack limit: max 1 attack per player per window
 if(card.cat==='attack'){
   if(!EEP._windowAttacks)EEP._windowAttacks=new Set();
   if(EEP._windowAttacks.has(p.id)){conn.send({type:'cardPlayFail',reason:'Max 1 attaque par fenêtre'});return;}
   EEP._windowAttacks.add(p.id);}
-// 3. Deduct flux & remove card from hand
-p.flux-=card.cost;
+// 3. Deduct flux + remove card
+if(cost>0)p.flux-=cost;
 p.cards.splice(cIdx,1);
-// 4. ANALYSTE passive: +15 Flux on intel cards
-if(p.classId==='analyste'&&card.cat==='intel'){p.flux+=15;}
-// 5. DOSSIER COMPROMETTANT (BLACK): seule carte qui garde le buffer N+2
-if(card.type==='dossier'){
-  EEP.buffer=EEP.buffer||[];
+// 4. ANALYSTE PASSIVE: +15 Flux on intel cards
+if(p.classId==='analyste'&&card.cat==='intel'){p.flux+=15;conn.send({type:'analysteBonus',flux:p.flux});}
+// 5. DOSSIER COMPROMETTANT (BLACK): seule carte N+2
+if(card.n2){
   EEP.buffer.push({card,fromPid:p.id,fromName:p.name,triggersAt:EEP.questionIdx+2,revealed:false});
-  $('gTicker').textContent=`⚫ ${p.name} pose DOSSIER COMPROMETTANT (Q+2) !`;
-  updBufferUI();mpBroadcast({type:'bufferUpdate',buffer:EEP.buffer.map(b=>({hidden:!b.revealed,triggersAt:b.triggersAt,tier:b.card.tier}))});
+  $('gTicker').textContent=`⚫ ${p.name} pose ${card.name} (N+2)!`;
 }
-// 6. DEFENSE: pousser dans _defenseQueue (résolution existante)
+// 6. Défense → _defenseQueue (résolution ordonnée existante)
 else if(card.cat==='defense'){
   EEP._defenseQueue=EEP._defenseQueue||[];
   EEP._defenseQueue.push(card);
-  $('gTicker').textContent=`🛡️ ${p.name} joue ${card.name} (−${card.cost}⚡)`;
+  $('gTicker').textContent=`🛡️ ${p.name}: ${card.name} (−${cost}⚡)`;
 }
-// 7. MULTIPLIER: pousser dans _multiplierQueue
+// 7. Multiplicateur → _multiplierQueue
 else if(card.cat==='multiplier'){
   EEP._multiplierQueue=EEP._multiplierQueue||[];
   EEP._multiplierQueue.push(card);
-  $('gTicker').textContent=`⚡ ${p.name} joue ${card.name} (−${card.cost}⚡)`;
+  $('gTicker').textContent=`⚡ ${p.name}: ${card.name} (−${cost}⚡)`;
 }
-// 8. INTEL: buffer immédiat (triggersAt = Q courante)
-else if(card.cat==='intel'){
-  EEP.buffer=EEP.buffer||[];
+// 8. Attaque + Intel → buffer IMMÉDIAT (triggersAt = question courante)
+else{
   EEP.buffer.push({card,fromPid:p.id,fromName:p.name,triggersAt:EEP.questionIdx,revealed:false});
-  $('gTicker').textContent=`🔍 ${p.name} joue ${card.name} (−${card.cost}⚡)`;
+  $('gTicker').textContent=`⚔️ ${p.name}: ${card.name} (−${cost}⚡)`;
 }
-// 9. ATTACK: effet immédiat sur la prochaine Q (triggersAt = Q courante, pas N+2)
-else if(card.cat==='attack'){
-  EEP.buffer=EEP.buffer||[];
-  EEP.buffer.push({card,fromPid:p.id,fromName:p.name,triggersAt:EEP.questionIdx,revealed:false});
-  const tierIcon=card.tier==='black'?'⚫':card.tier==='platinum'?'⚪':'🟡';
-  $('gTicker').textContent=`${tierIcon} ${p.name} attaque avec ${card.name} (−${card.cost}⚡)`;
-}
-// Confirmation au joueur
-conn.send({type:'cardPlayed',cardName:card.name,fluxRemaining:p.flux,cards:p.cards.map(c=>({id:c.id,name:c.name,tier:c.tier,cost:c.cost,cat:c.cat,desc:c.desc}))});
-// Broadcast UI update
-updBufferUI();mpBroadcast({type:'bufferUpdate',buffer:(EEP.buffer||[]).map(b=>({hidden:!b.revealed,triggersAt:b.triggersAt,tier:b.card?.tier}))});
-// Boss comment 20% on BLACK plays
-if(card.tier==='black')bossMaybeComment(card.name);
-}
+conn.send({type:'cardPlayed',cardName:card.name,fluxRemaining:p.flux});
+updBufferUI();mpBroadcast({type:'bufferUpdate',buffer:EEP.buffer.map(b=>({hidden:!b.revealed,triggersAt:b.triggersAt,icon:b.revealed?b.card.icon:'📁'}))});
+if(card.tier==='black')bossMaybeComment(card.name);}
 // ===== LOAN: Fonds du C.E.O. =====
 else if(d.type==='requestLoan'){
 const p=EEP.players.find(pl=>pl.id===conn.peer);if(!p)return;
@@ -3416,16 +3836,12 @@ function mpDraftDone(){
 const order=[];for(let i=1;i<=MP.conns.length;i++){const pid=MP.draftSlots[String(i)];if(pid){const c=MP.conns.find(x=>x.pid===pid);if(c)order.push(c);}}
 MP.conns.forEach(c=>{if(!order.find(o=>o.pid===c.pid))order.push(c);});
 EEP.players=order.map((c,i)=>{
-const cl=CEO_CL[c.classId]||CEO_CL.requin;
-// Main de départ: 4 cartes via pickCard (distribution 70/25/5)
-const hand=[pickCard(),pickCard(),pickCard(),pickCard()];
-// Starter flux: 25⚡ base + 2⚡ par signature (Sprint) — capé à 60⚡
-const starterFlux=Math.min(60,25+(c.sigScore||0)*2);
-return{id:c.pid,name:c.name,classId:c.classId||'requin',gauge:0,flux:starterFlux,
+const cl=CEO_CL[c.classId]||CEO_CL.requin;const cardCount=cl.stats.cardD;const hand=[];const ck=Object.keys(SAB_CARDS);for(let j=0;j<cardCount;j++)hand.push({...SAB_CARDS[pick(ck)]});
+return{id:c.pid,name:c.name,classId:c.classId||'requin',gauge:0,flux:0,
   pa:_getPA(c.classId||'requin'),paMax:_getPA(c.classId||'requin'),
   cards:hand,correct:0,order:i+1,gaugeCP:[],debt:0,
   portfolio:DRAFT.playerPortfolio[c.pid]||[]};});
-mpBroadcast({type:'gameStart',players:EEP.players.map(p=>({id:p.id,name:p.name,classId:p.classId,order:p.order,flux:p.flux}))});
+mpBroadcast({type:'gameStart',players:EEP.players.map(p=>({id:p.id,name:p.name,classId:p.classId,order:p.order}))});
 MP.hostPhase='eep';EEP.active=true;EEP.candidateIdx=0;
 showScreen('game');$('gClass').textContent='📡 HOST TV';$('gClass').style.color='var(--cyan)';
 $('candBanner').style.display='';$('bufferBar').style.display='';
@@ -3440,47 +3856,177 @@ $('gRound').textContent=`EEP ${EEP.candidateIdx+1}/${EEP.players.length}`;
 EEP.buffer=[];EEP.sniperRedirect=null;EEP.activeEffects=[];EEP.questionIdx=0;
 EEP._defenseQueue=[];EEP._multiplierQueue=[];
 
-// ── Choix du thème ──────────────────────────────────────────────────
-let themeObj;
-if(EEP.bourse?.forcedTheme){themeObj=THEMES.find(t=>t.id===EEP.bourse.forcedTheme);EEP.bourse.forcedTheme=null;
-$('gTicker').textContent=`📈 Thème imposé par la Bourse: ${themeObj?.name}!`;}
-else{
-  // Tirer du portfolio du candidat (3 thèmes actifs), sinon fallback global
-  const portfolio=_getPortfolio(cand.id);
-  if(portfolio.length>0){themeObj=pick(portfolio);}
-  else{themeObj=pick(THEMES);}
-}
-EEP.theme=themeObj.id;EEP.fmt=Math.random()<.5?'qcm':'vf';
+const isHuman=cand.id===_SOLO_PLAYER_PID&&G.mode==='solo';
 
-// ── Questions : IA ou statique ──────────────────────────────────────
-const isAITheme=G.aiThemeIds instanceof Set&&G.aiThemeIds.has(EEP.theme);
-if(isAITheme){
-  // Streaming Gemini : génère Q1 tout de suite, les suivantes en background
-  EEP._aiStream={queue:[],generated:0,total:10,themeName:themeObj.name,ready:false};
-  _eepStreamStart();
+// ── Thème imposé par la Bourse ? ──
+if(EEP.bourse?.forcedTheme){
+  const thObj=THEMES.find(t=>t.id===EEP.bourse.forcedTheme);EEP.bourse.forcedTheme=null;
+  $('gTicker').textContent=`📈 Thème imposé par la Bourse: ${thObj?.name}!`;
+  _launchEEPWithTheme(thObj);return;}
+
+// ── 1er candidat humain : proposer le swap d'abord ──
+if(EEP.candidateIdx===0&&isHuman&&cand.freeSwap){
+  cand.freeSwap=false;
+  _showFreeSwapThenChoose();return;}
+
+// ── Candidat humain : choisir son thème ──
+if(isHuman){_showThemeChoice();return;}
+
+// ── Bot : auto-pick ──
+const portfolio=_getPortfolio(cand.id);
+const thObj=portfolio.length>0?pick(portfolio):pick(THEMES);
+_launchEEPWithTheme(thObj);}
+
+// ── Overlay choix de thème pour le joueur ──
+function _showThemeChoice(){
+  const ids=DRAFT.playerPortfolio[_SOLO_PLAYER_PID]||G.portfolio||[];
+  const portfolio=ids.map(id=>{
+    const t=THEMES.find(x=>x.id===id);
+    return t||{id,name:id.replace(/_/g,' '),icon:'📚'};});
+  if(portfolio.length===0){
+    _launchEEPWithTheme(THEMES.find(t=>t.id==='finance')||pick(THEMES));return;}
+  if(portfolio.length===1){
+    _launchEEPWithTheme(portfolio[0]);return;}
+  // Déterminer le format pour chaque thème
+  if(!EEP._themePassCount)EEP._themePassCount={};
+  $('qTheme').textContent='📋 CHOIX DU THÈME';
+  $('qNum').textContent='';
+  $('qTxt').innerHTML=`<div style="font-family:'Orbitron',monospace;font-size:clamp(13px,3vw,17px);color:var(--gold);letter-spacing:2px;margin-bottom:8px;">CHOISISSEZ VOTRE TERRAIN</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:12px;">Sur quel thème voulez-vous passer votre entretien ?</div>`;
+  $('qChoices').innerHTML=portfolio.map(t=>{
+    const pass=(EEP._themePassCount[t.id]||0);
+    const fmt=pass%2===0?'QCM':'VRAI/FAUX';
+    const fmtIcon=pass%2===0?'🔲':'✓✗';
+    return`<button class="btn cy" style="width:90%;max-width:340px;padding:14px;font-size:14px;margin:6px auto;display:block;" onclick="_pickThemeForEEP('${t.id}')">
+      ${t.icon} ${t.name} <span style="font-size:10px;opacity:.7;margin-left:8px;">${fmtIcon} ${fmt}</span></button>`;}).join('');
+  $('gTimer').textContent='';
+  _bossNotif('Choisissez votre thème. Quel que soit votre choix, je serai déçu.');}
+
+window._pickThemeForEEP=function(themeId){
+  closeOv('ovPickTheme');// au cas où
+  const thObj=THEMES.find(t=>t.id===themeId)||{id:themeId,name:themeId,icon:'📚'};
+  _launchEEPWithTheme(thObj);};
+
+// ── Free swap overlay PUIS choix de thème ──
+function _showFreeSwapThenChoose(){
+  const pioche=G._piocheRestante||[];
+  const portfolio=G.portfolio||[];
+  if(pioche.length===0||portfolio.length===0){_showThemeChoice();return;}
+  // Afficher l'overlay de swap
+  let html=`<div style="font-size:10px;color:var(--text);margin-bottom:8px;">Vos thèmes actuels :</div>`;
+  html+=portfolio.map((tid,i)=>{
+    const th=THEMES.find(x=>x.id===tid);
+    return`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;">
+      <span style="font-size:12px;">${th?.icon||'📚'} ${th?.name||tid}</span>
+      <button class="btn sm gold" onclick="doFreeSwap(${i})">🔄 ÉCHANGER</button>
+    </div>`;}).join('');
+  html+=`<div style="font-size:9px;color:var(--muted);margin-top:4px;text-align:center;">La pioche contient ${pioche.length} thème(s) restant(s)</div>`;
+  $('freeSwapContent').innerHTML=html;
+  _bossNotif('Avantage du premier candidat. Vous pouvez échanger un thème contre la pioche. Profitez-en — ma générosité a une date d\'expiration.');
+  showOv('ovFreeSwap');
+  // Quand le joueur ferme le swap (bouton GARDER ou après swap) → choix du thème
+  const origClose=$('ovFreeSwap').querySelector('.btn.sm');
+  if(origClose)origClose.onclick=()=>{closeOv('ovFreeSwap');_showThemeChoice();};}
+
+function doFreeSwap(slotIdx){
+  const pioche=G._piocheRestante||[];
+  if(!pioche.length){closeOv('ovFreeSwap');_showThemeChoice();return;}
+  shuffle(pioche);
+  const newId=pioche.shift();
+  const oldId=G.portfolio[slotIdx];
+  const oldTh=THEMES.find(t=>t.id===oldId)||{icon:'📚',name:oldId};
+  const newTh=THEMES.find(t=>t.id===newId)||{icon:'📚',name:newId};
+  // ── Animation roulette dans l'overlay ──
+  const content=$('freeSwapContent');
+  let spinIdx=0;
+  const spinPool=THEMES.filter(t=>t.id!==oldId).slice(0,15);
+  content.innerHTML=`
+    <div style="text-align:center;padding:16px;">
+      <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">🎰 ÉCHANGE EN COURS...</div>
+      <div style="font-size:14px;color:var(--gold);margin-bottom:4px;">${oldTh.icon} ${oldTh.name}</div>
+      <div style="font-size:20px;margin:8px 0;">↓</div>
+      <div id="swapSpin" style="font-size:18px;color:var(--cyan);font-family:'Orbitron',monospace;min-height:30px;transition:all .1s;">🎲 ...</div>
+    </div>`;
+  const spinEl=$('swapSpin');
+  const spinInt=setInterval(()=>{
+    const rt=spinPool[spinIdx%spinPool.length]||{icon:'❓',name:'?'};
+    spinEl.textContent=`${rt.icon} ${rt.name}`;
+    spinIdx++;
+  },120);
+  // Phase 2: reveal after 1.5s
+  setTimeout(()=>{
+    clearInterval(spinInt);
+    // Appliquer l'échange
+    G.portfolio[slotIdx]=newId;
+    DRAFT.playerPortfolio[_SOLO_PLAYER_PID]=[...G.portfolio];
+    _updSoloHandBar();
+    // Afficher le résultat
+    const p=G.portfolio;
+    const th0=THEMES.find(t=>t.id===p[0])||{icon:'📚',name:p[0]};
+    const th1=p[1]?(THEMES.find(t=>t.id===p[1])||{icon:'📚',name:p[1]}):null;
+    content.innerHTML=`
+      <div style="text-align:center;padding:12px;">
+        <div style="font-size:12px;color:var(--green);font-family:'Orbitron',monospace;margin-bottom:8px;">✅ ÉCHANGE EFFECTUÉ</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">${oldTh.icon} ${oldTh.name} → ${newTh.icon} ${newTh.name}</div>
+        <div style="border-top:1px solid var(--border);margin:10px 0;padding-top:10px;">
+          <div style="font-size:9px;color:var(--gold);font-family:'Orbitron',monospace;letter-spacing:1px;margin-bottom:6px;">VOS THÈMES</div>
+          <div style="display:flex;gap:8px;justify-content:center;">
+            <div style="padding:10px 16px;background:var(--card);border:2px solid var(--cyan);border-radius:6px;font-size:13px;">${th0.icon} ${th0.name}</div>
+            ${th1?`<div style="padding:10px 16px;background:var(--card);border:2px solid var(--cyan);border-radius:6px;font-size:13px;">${th1.icon} ${th1.name}</div>`:''}
+          </div>
+        </div>
+        <button class="btn gold" style="width:100%;margin-top:12px;padding:14px;" onclick="closeOv('ovFreeSwap');_showThemeChoice()">▶️ CHOISIR MON THÈME D'ENTRETIEN</button>
+      </div>`;
+    _bossNotif(`Échange : ${oldTh.icon} ${oldTh.name} → ${newTh.icon} ${newTh.name}. Espérons que vous ne le regretterez pas.`);
+  },1500);}
+
+// ── Lancer l'EEP avec le thème choisi ──
+function _launchEEPWithTheme(themeObj){
+if(!themeObj)themeObj=THEMES.find(t=>t.id==='finance')||pick(THEMES);
+const cand=EEP.players[EEP.candidateIdx];
+EEP.theme=themeObj.id;
+G.theme=EEP.theme;
+EEP._aiStream=null;
+_hideValidateBar();// reset
+
+// ═══ CHARGEMENT DES QUESTIONS — QCM et V/F SÉPARÉS ═══
+let allQ=QDB[EEP.theme]?[...QDB[EEP.theme]]:[];
+if(allQ.length<3){
+  // Thème custom sans QDB → OFFLINE_QDB immédiat + Gemini en background
+  allQ=[...OFFLINE_QDB];
+  displayBossNotif(`Thème "${themeObj.name}" — questions de secours. L'IA tente de générer du contenu spécifique.`);
+  fetchQuestionsForTheme(themeObj.name).then(n=>{
+    if(n>0)displayBossNotif(`🤖 ${n} questions IA chargées pour "${themeObj.name}".`);
+  }).catch(()=>{});}
+// Séparer QCM et V/F
+const qcmPool=allQ.filter(q=>q.c!==undefined);
+const vfPool=allQ.filter(q=>q.v!==undefined);
+// Passage 1 = QCM, Passage 2 = V/F (alternance)
+const passNum=(EEP._themePassCount||{})[EEP.theme]||0;
+if(!EEP._themePassCount)EEP._themePassCount={};
+EEP._themePassCount[EEP.theme]=passNum+1;
+if(passNum%2===0&&qcmPool.length>=3){
+  EEP.fmt='qcm';shuffle(qcmPool);EEP.questions=qcmPool.slice(0,10);
+}else if(vfPool.length>=3){
+  EEP.fmt='vf';shuffle(vfPool);EEP.questions=vfPool.slice(0,10);
 }else{
-  const all=QDB[EEP.theme]||[];
-  const qcmPool=all.filter(q=>q.c!==undefined);const vfPool=all.filter(q=>q.v!==undefined);
-  const passNum=EEP._candidatePass||0;
-  let pool;
-  if(all.length>=15&&passNum===0)pool=qcmPool.length>=5?qcmPool:all.filter((_,i)=>i<10);
-  else if(all.length>=15&&passNum===1)pool=vfPool.length>=5?vfPool:all.filter((_,i)=>i>=10);
-  else pool=[...all];
-  if(pool.length<3)pool=[...all];
-  shuffle(pool);EEP.questions=pool.slice(0,10);}
+  EEP.fmt='mix';shuffle(allQ);EEP.questions=allQ.slice(0,10);}
 
-// ── GLaDOS intro thème ──────────────────────────────────────────────
+// ── Boss intro thème ──
+// Update round display with format
+const fmtLabel=EEP.fmt==='qcm'?'QCM':EEP.fmt==='vf'?'VRAI/FAUX':'MIX';
+$('gRound').textContent=`EEP ${EEP.candidateIdx+1}/${EEP.players.length} · ${fmtLabel}`;
+
 _gladosIntroTheme(themeObj.name);
 
-// ── Notify players ──────────────────────────────────────────────────
+// ── Notify players ──
 mpBroadcast({type:'eepStart',candidateId:cand.id,candidateName:cand.name,
-  theme:themeObj.name,themeIcon:themeObj.icon,total:10});
+  theme:themeObj.name,themeIcon:themeObj.icon,total:EEP.questions.length});
 EEP.players.forEach(p=>{mpTo(p.id,{type:'eepRole',isCandidate:p.id===cand.id,
-  flux:p.flux,
-  cards:p.cards.map(c=>({id:c.id,name:c.name,tier:c.tier,cost:c.cost,cat:c.cat,desc:c.desc}))});});
+  cards:p.cards.map(c=>({id:c.id,name:c.name,icon:c.icon,desc:c.desc}))});});
 updBufferUI();updGaugeFromEEP(cand);
 
-// ── BRIEFING 10s (avant Q1) : candidat pose ses cartes, bots ne peuvent pas attaquer ──
+// ── BRIEFING 10s ──
 _eepBriefingPhase(cand);}
 
 // ── Streaming IA pour les EEPs sur thème Gemini ─────────────────────
@@ -3533,32 +4079,35 @@ async function _getNextEEPQuestion(){
 // ── BRIEFING PHASE (10s avant Q1) ────────────────────────────────────
 function _eepBriefingPhase(cand){
   const isHumanCand=cand.id===_SOLO_PLAYER_PID;
-  EEP.latencyActive=true;// permet au candidat de jouer des cartes
-  EEP._windowAttacks=new Set();// Reset attaques pour cette fenêtre
+  EEP.latencyActive=true;
+  EEP._windowAttacks=new Set();
   let t=10;
-  // Afficher le countdown sur le ticker
-  $('gTicker').textContent=`📋 BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
+  $('qTheme').textContent='🛡️ INITIATIVE DÉFENSIVE';
+  $('qNum').textContent=`${cand.name}`;
+  $('qTxt').innerHTML=`<span style="font-family:'Orbitron',monospace;font-size:clamp(11px,2.5vw,15px);color:var(--cyan);letter-spacing:2px;">PRÉPARATION DU CANDIDAT</span>`;
+  $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--muted);">Le candidat pose ses cartes défensives face cachée — ${t}s</div>`;
+  $('gTicker').textContent=`🛡️ BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
   $('gTimer').textContent=`${t}s`;
   if(isHumanCand&&G.mode==='solo'){_updSoloHandBar();}
   mpBroadcast({type:'briefingStart',candidateId:cand.id,duration:10});
-  // Boss CEO commente le début d'entretien
   bossIntro(cand.name,EEP.theme||G.theme||'évaluation');
   EEP._briefingInt=setInterval(()=>{
     t--;
-    $('gTicker').textContent=`📋 BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
+    $('gTicker').textContent=`🛡️ BRIEFING — ${cand.name} prépare sa défense... ${t}s`;
+    $('qChoices').innerHTML=`<div style="text-align:center;font-size:10px;color:var(--muted);">Défenses face cachée — ${t}s</div>`;
     $('gTimer').textContent=`${t}s`;
     mpBroadcast({type:'latencyTick',t});
     if(t<=0){
       clearInterval(EEP._briefingInt);
       EEP.latencyActive=false;
-      // Maintenant lancer la première question
+      closeOv('ovFreeSwap');// fermer si encore ouvert
       _eepSendNextQuestion();}},1000);}
 
 // ── Remplace eepLatencyWindow pour les phases inter-questions ─────────
 function eepLatencyWindow(){
-// 10s entre chaque question : tout le monde peut jouer des cartes (coût en Flux)
+// 10s entre chaque question : tout le monde joue des cartes (coût Flux, effet immédiat)
 EEP.latencyActive=true;EEP.latencyTimer=10;
-EEP._windowAttacks=new Set();// Reset: max 1 attaque/joueur/fenêtre
+EEP._windowAttacks=new Set();// max 1 attaque/joueur/fenêtre
 const cand=EEP.players[EEP.candidateIdx];
 const isHumanCand=cand.id===_SOLO_PLAYER_PID;
 EEP._defenseQueue=EEP._defenseQueue||[];
@@ -3598,7 +4147,7 @@ const hand=player?.cards||[];
 
 // ── Analyse défensive du slot actuel ───────────────────────────────
 let defBlocks=0;
-dq.forEach(d=>{if(d.type==='defense_clear')defBlocks=999;else if(d.type==='defense_shield'||d.type==='defense_shield_2')defBlocks+=isGarant?2:1;});
+dq.forEach(d=>{if(d.id==='antivirus')defBlocks=999;else if(d.id==='bouclier')defBlocks+=isGarant?2:1;});
 const incoming=EEP.buffer.filter(b=>!b.revealed&&b.triggersAt===EEP.questionIdx);
 const attacksNow=incoming.filter(b=>b.card.cat==='attack');
 const covered=Math.min(defBlocks,attacksNow.length);
@@ -3674,53 +4223,46 @@ panel.classList.add('show');}
 // ── Bots attaquent — IA de stacking ────────────────────────────────
 function soloBotAttack(){
 const bots=EEP.players.filter(p=>!p.isHuman&&p.cards&&p.cards.length>0);
-// Analyser si le slot courant est déjà sécurisé par le joueur
 const dq=EEP._defenseQueue||[];
 let playerDefBlocks=0;
 const playerCand=EEP.players[EEP.candidateIdx]?.id===_SOLO_PLAYER_PID;
 dq.forEach(d=>{if(d.type==='defense_clear')playerDefBlocks=999;else if(d.type==='defense_shield'||d.type==='defense_shield_2')playerDefBlocks+=2;});
-const attacksOnCurrentSlot=EEP.buffer.filter(b=>!b.revealed&&b.triggersAt===EEP.questionIdx+2).length;
-// Slot "sécurisé" = défenses du joueur ≥ attaques déjà présentes
-const slotIsSecured=playerCand&&playerDefBlocks>0&&playerDefBlocks>=attacksOnCurrentSlot;
-// Si le slot est sécurisé, les bots tentent de le saturer (stacking)
+const attacksOnSlot=EEP.buffer.filter(b=>!b.revealed&&b.triggersAt===EEP.questionIdx).length;
+const slotIsSecured=playerCand&&playerDefBlocks>0&&playerDefBlocks>=attacksOnSlot;
 const needsStack=slotIsSecured;
 
 bots.forEach(bot=>{
   const cl=CEO_CL[bot.classId];
-  // Probabilité d'attaque selon le contexte
   let attackProb=0.25;
-  if(needsStack)attackProb=0.65;// fort stacking si défense détectée
+  if(needsStack)attackProb=0.65;
   if(Math.random()>attackProb)return;
+  // Check bot flux
+  const botFlux=bot.flux||0;
 
   let chosenIdx=-1;
-  if(needsStack){
-    // Mode stacking : tous les types d'attaques sont bons
-    chosenIdx=bot.cards.findIndex(c=>c.cat==='attack');
-  } else if(cl.id==='requin'){
-    // Requin : Sniper en priorité, sinon n'importe quelle attaque
-    chosenIdx=bot.cards.findIndex(c=>c.type==='sniper');
-    if(chosenIdx<0)chosenIdx=bot.cards.findIndex(c=>c.cat==='attack');
-  } else if(cl.id==='analyste'){
-    // Analyste : attend Q5+ ou si stack nécessaire
+  if(needsStack){chosenIdx=bot.cards.findIndex(c=>c.cat==='attack'&&(c.cost||0)<=botFlux);}
+  else if(cl?.id==='requin'){
+    chosenIdx=bot.cards.findIndex(c=>c.type==='sniper'&&(c.cost||0)<=botFlux);
+    if(chosenIdx<0)chosenIdx=bot.cards.findIndex(c=>c.cat==='attack'&&(c.cost||0)<=botFlux);
+  } else if(cl?.id==='analyste'){
     if(EEP.questionIdx>=4||needsStack){
-      chosenIdx=bot.cards.findIndex(c=>c.type==='brouillage');
-      if(chosenIdx<0)chosenIdx=bot.cards.findIndex(c=>c.cat==='attack');}
+      chosenIdx=bot.cards.findIndex(c=>c.type==='brouillage'&&(c.cost||0)<=botFlux);
+      if(chosenIdx<0)chosenIdx=bot.cards.findIndex(c=>c.cat==='attack'&&(c.cost||0)<=botFlux);}
   } else {
-    // Garant bot : peu agressif SAUF en mode stacking
     if(needsStack||Math.random()>0.5)
-      chosenIdx=bot.cards.findIndex(c=>c.cat==='attack');}
+      chosenIdx=bot.cards.findIndex(c=>c.cat==='attack'&&(c.cost||0)<=botFlux);}
 
   if(chosenIdx<0||chosenIdx>=bot.cards.length)return;
   const card=bot.cards.splice(chosenIdx,1)[0];
-  // Délai réduit en mode stacking (urgence)
+  bot.flux=Math.max(0,botFlux-(card.cost||0));
   const delay=needsStack?300+Math.random()*800:500+Math.random()*3000;
   setTimeout(()=>{
     if(!EEP.latencyActive)return;
-    EEP.buffer.push({card,fromPid:bot.id,fromName:bot.name,triggersAt:EEP.questionIdx+2,revealed:false});
-    const stackNote=needsStack?' [STACK 🔥]':'';
-    $('gTicker').textContent=`${bot.icon||'🤖'} ${bot.name} lance ${card.icon} ${card.name}${stackNote}!`;
+    // EFFET IMMÉDIAT (sauf Dossier N+2)
+    const triggersAt=card.n2?EEP.questionIdx+2:EEP.questionIdx;
+    EEP.buffer.push({card,fromPid:bot.id,fromName:bot.name,triggersAt,revealed:false,sealed:true});
+    $('gTicker').textContent=card.n2?`⚫ ${bot.name}: ${card.name} (N+2)`:`🔒 ${bot.name}: ${card.name} (−${card.cost||0}⚡)`;
     updBufferUI();
-    // Mettre à jour le panneau combat si actif
     if($('soloAnswerPanel')?.classList.contains('show')){
       _updCombatUI(EEP.players[EEP.candidateIdx],EEP.players[EEP.candidateIdx]?.id===_SOLO_PLAYER_PID);}
   },delay);});}
@@ -3731,28 +4273,43 @@ function soloPlayCard(cardIdx){
 if(!EEP.latencyActive)return;
 const player=EEP.players.find(p=>p.id===_SOLO_PLAYER_PID);
 if(!player||cardIdx<0||cardIdx>=player.cards.length)return;
-const card=player.cards.splice(cardIdx,1)[0];
-// Sync G.cards
-const gi=G.cards.findIndex(c=>c.id===card.id&&c.name===card.name);
-if(gi>=0)G.cards.splice(gi,1);
+const card=player.cards[cardIdx];
 const cand=EEP.players[EEP.candidateIdx];
 const isHumanCand=cand.id===_SOLO_PLAYER_PID;
+// ── Coût en Flux pour TOUTES les cartes ──
+const cost=card.cost||0;
+const currentFlux=player.flux??G.flux;
+if(cost>0&&currentFlux<cost){
+  _bossNotif(`💸 Flux insuffisant. ${card.name} coûte ${cost}⚡.`);
+  $('gTicker').textContent=`💸 Pas assez de Flux — ${card.name} coûte ${cost}⚡`;
+  return;}
+// ── Attack limit: max 1 attaque/fenêtre ──
+if(card.cat==='attack'&&!isHumanCand){
+  if(!EEP._windowAttacks)EEP._windowAttacks=new Set();
+  if(EEP._windowAttacks.has(_SOLO_PLAYER_PID)){_bossNotif('Max 1 attaque par fenêtre.');return;}
+  EEP._windowAttacks.add(_SOLO_PLAYER_PID);}
+// Déduire coût + retirer carte
+player.cards.splice(cardIdx,1);
+const gi=G.cards.findIndex(c=>c.id===card.id&&c.name===card.name);
+if(gi>=0)G.cards.splice(gi,1);
+if(cost>0){player.flux=Math.max(0,(player.flux||0)-cost);G.flux=Math.max(0,G.flux-cost);updFlux();}
+// ── Routage par catégorie ──
 if(isHumanCand){
   if(card.cat==='defense'){
     EEP._defenseQueue.push(card);
-    $('gTicker').textContent=`🛡️ ${card.icon} ${card.name} activé — buffer analysé...`;}
+    $('gTicker').textContent=`🛡️ ${card.icon} ${card.name} (−${cost}⚡)`;}
   else if(card.cat==='multiplier'){
     EEP._multiplierQueue.push(card);
-    $('gTicker').textContent=`⚡ ${card.icon} ${card.name} chargé — prochain bonus actif!`;}
+    $('gTicker').textContent=`⚡ ${card.icon} ${card.name} (−${cost}⚡)`;}
   else if(card.cat==='intel'){
     EEP.activeEffects.push(card.type);
-    $('gTicker').textContent=`🔍 ${card.icon} ${card.name} — effet Intel actif!`;}
+    $('gTicker').textContent=`🔍 ${card.icon} ${card.name} (−${cost}⚡)`;}
 }else{
-  EEP.buffer.push({card,fromPid:_SOLO_PLAYER_PID,fromName:'Vous',triggersAt:EEP.questionIdx+2,revealed:false});
-  $('gTicker').textContent=`⚔️ ${card.icon} ${card.name} → buffer Q${EEP.questionIdx+3}!`;}
-updBufferUI();_updSoloHandBar();
-// Flash vert sur la colonne N+2 de la timeline
-const n2=$('tlStack2');if(n2){n2.style.transition='none';n2.style.background='rgba(212,168,50,.15)';setTimeout(()=>{n2.style.background='';},400);}}
+  // Attaque/Intel → effet IMMÉDIAT (triggersAt = Q courante), sauf Dossier N+2
+  const triggersAt=card.n2?EEP.questionIdx+2:EEP.questionIdx;
+  EEP.buffer.push({card,fromPid:_SOLO_PLAYER_PID,fromName:'Vous',triggersAt,revealed:false});
+  $('gTicker').textContent=card.n2?`⚫ ${card.icon} ${card.name} → N+2 (−${cost}⚡)!`:`⚔️ ${card.icon} ${card.name} (−${cost}⚡)!`;}
+updBufferUI();_updSoloHandBar();}
 
 
 function eepSendQuestion(){
@@ -3787,40 +4344,34 @@ const fullImmune=EEP._comboEffect?.effect==='full_immunity'||EEP._comboEffect?.e
 const toActivate=EEP.buffer.filter(b=>!b.revealed&&b.triggersAt===EEP.questionIdx);
 
 // — ÉTAPE 1 : PRIORITÉ DÉFENSIVE — traiter les défenses en PREMIER
-// BLACK résout en premier dans chaque catégorie (priorité absolue Timeline)
-dq.sort((a,b)=>(a.priority||99)-(b.priority||99));
-mq.sort((a,b)=>(a.priority||99)-(b.priority||99));
 // Calculer combien de blocs sont disponibles
 let blocksAvailable=0;
 if(fullImmune){blocksAvailable=999;}// immunité totale
 else{
   dq.forEach(d=>{
-    if(d.type==='defense_clear'){blocksAvailable=999;}// antivirus = tout purger
-    else if(d.type==='defense_shield'){blocksAvailable+=isGarant?2:1;}// Pare-Feu GOLD
-    else if(d.type==='defense_shield_2'){blocksAvailable+=isGarant?3:2;}// Bouclier PLATINUM
+    if(d.id==='antivirus'){blocksAvailable=999;}// antivirus = tout purger
+    else if(d.id==='bouclier'){blocksAvailable+=isGarant?2:1;}// Garant: 1 Pare-Feu = 2 blocs
   });}
 
-// — ÉTAPE 2 : Résoudre chaque attaque dans l'ordre (BLACK d'abord)
-toActivate.sort((a,b)=>(a.card.priority||99)-(b.card.priority||99));
+// — ÉTAPE 2 : Résoudre chaque attaque dans l'ordre (FIFO)
 const blockedAttacks=[];const landedAttacks=[];
 toActivate.forEach(b=>{
   b.revealed=true;
   const isAttack=b.card.cat==='attack';
-  if(!isAttack){// cartes non-attaque (intel) → applique directement
+  if(!isAttack){// cartes non-attaque (intel bots) → applique directement
     EEP.activeEffects.push(b.card.type);return;}
   // Vérifier si l'antivirus couvre tout
   if(blocksAvailable>=999){blockedAttacks.push(b);return;}
   // Vérifier si le Pare-Feu couvre ce type
-  const bouclierCovers=(b.card.type==='sniper'||b.card.type==='pression'||b.card.type==='hostile');
+  const bouclierCovers=(b.card.type==='sniper'||b.card.type==='pression');
+  const antiCovers=true;// antivirus couvre tout
   const canBlock=dq.some(d=>
-    (d.type==='defense_shield'&&bouclierCovers)||
-    (d.type==='defense_shield_2'&&bouclierCovers)||
-    d.type==='defense_clear');
+    (d.id==='bouclier'&&bouclierCovers)||d.id==='antivirus');
   if(canBlock&&blocksAvailable>0){
     blocksAvailable--;blockedAttacks.push(b);
     // Si Garant a utilisé un bloc, ne consommer la carte défense que tous les 2 blocs
     if(!isGarant||blocksAvailable%2===0){
-      const usedDef=dq.find(d=>d.type==='defense_shield'||d.type==='defense_shield_2'||d.type==='defense_clear');
+      const usedDef=dq.find(d=>d.id==='bouclier'||d.id==='antivirus');
       if(usedDef)dq.splice(dq.indexOf(usedDef),1);}
   }else{
     landedAttacks.push(b);
@@ -3846,7 +4397,7 @@ landedAttacks.forEach(b=>{b._landed=true;});
 EEP.buffer=EEP.buffer.filter(b=>b.triggersAt>EEP.questionIdx);
 
 // Antivirus global → purge totale du buffer futur aussi
-if(dq.some(d=>d.type==='defense_clear')||EEP._comboEffect?.effect==='purge_shield'){
+if(dq.some(d=>d.id==='antivirus')||EEP._comboEffect?.effect==='purge_shield'){
   EEP.buffer=[];$('gTicker').textContent='🧹 ANTIVIRUS — Buffer futur entièrement purgé!';}
 
 EEP._defenseQueue=[];EEP._multiplierQueue=[];
@@ -3864,17 +4415,11 @@ const qData={type:'eepQuestion',qi:EEP.questionIdx,total:EEP.questions.length,
 question:q.q,themeIcon:th?.icon||'',candidateName:cand.name,
 choices:isQCM?q.c:null,correctIdx:isQCM?Number(q.a):null,correctVal:!isQCM?(q.v===true||String(q.v).toLowerCase()==='true'):null,
 effects:EEP.activeEffects};
-// Candidat/sniper : peut répondre + voit les bonnes réponses pour onClick
-mpTo(targetPid,{...qData,canAnswer:true,isSniped});
-// Spectateurs : voient les choix SANS la réponse correcte (anti-triche)
-const spectatorData={...qData,canAnswer:false,correctIdx:null,correctVal:null};
-EEP.players.forEach(p=>{if(p.id!==targetPid)mpTo(p.id,spectatorData);});
-// TV
+// TV — RENDER FIRST (avant mpTo, sinon les onclick ne trouvent pas le DOM)
 $('qTheme').textContent=(th?th.icon+' '+th.name+' — ':'')+(isQCM?'QCM':'V/F');
 $('qNum').textContent=`Q ${EEP.questionIdx+1}/${EEP.questions.length}`;$('qTxt').textContent=q.q;
 if(isQCM&&q.c){
   const L=['A','B','C','D'];
-  // Style TCG : cartes avec en-tête lettre + texte
   $('qChoices').innerHTML=`<div class="cgrid-ceo">${q.c.map((c,i)=>`
     <div class="cbox-ceo">
       <div class="cl">${L[i]}</div>
@@ -3891,6 +4436,10 @@ else{
       <div style="font-size:10px;font-family:'Orbitron',monospace;letter-spacing:1px;">FAUX</div>
     </div>
   </div>`;}
+// THEN send to players (onclick handlers attach to existing DOM)
+mpTo(targetPid,{...qData,canAnswer:true,isSniped});
+const spectatorData={...qData,canAnswer:false,correctIdx:null,correctVal:null};
+EEP.players.forEach(p=>{if(p.id!==targetPid)mpTo(p.id,spectatorData);});
 // Timer + modificateurs
 let time=EEP.timerBase;
 if(EEP.activeEffects.includes('brouillage'))time=Math.max(8,time-15);
@@ -3902,7 +4451,7 @@ $('gTimer').textContent=time+'s';$('gTimer').className='timer-ceo';
 if(EEP.timerInt)clearInterval(EEP.timerInt);
 EEP.timerInt=setInterval(()=>{EEP.timer--;$('gTimer').textContent=EEP.timer+'s';
 if(EEP.timer<=10)$('gTimer').className='timer-ceo crit';
-if(EEP.timer<=0){clearInterval(EEP.timerInt);if(!EEP.answered){EEP.answered=true;eepProcessAnswer(null,false);}}},1000);}
+if(EEP.timer<=0){clearInterval(EEP.timerInt);_hideValidateBar();if(!EEP.answered){EEP.answered=true;eepProcessAnswer(null,false);}}},1000);}
 
 function eepProcessAnswer(fromPid,correct){
 if(EEP.timerInt)clearInterval(EEP.timerInt);
@@ -3986,7 +4535,7 @@ mpTo(cand.id,{type:'debtSaisie',gauge:cand.gauge});
 $('gTicker').textContent=`🏦 SAISIE! ${cand.name} n'a pas remboursé. -15% jauge!`;}}
 // Draw new cards for everyone based on class
 EEP.players.forEach(p=>{const cl=CEO_CL[p.classId];const draw=cl?.stats.cardD||1;const ck=Object.keys(SAB_CARDS);for(let i=0;i<draw&&p.cards.length<6;i++)p.cards.push({...SAB_CARDS[pick(ck)]});
-mpTo(p.id,{type:'eepCandEnd',candidateName:cand.name,score:cand.correct,gauge:cand.gauge,flux:p.flux,cards:p.cards.map(c=>({id:c.id,name:c.name,tier:c.tier,cost:c.cost,cat:c.cat,desc:c.desc}))});});
+mpTo(p.id,{type:'eepCandEnd',candidateName:cand.name,score:cand.correct,gauge:cand.gauge,cards:p.cards.map(c=>({id:c.id,name:c.name,icon:c.icon,desc:c.desc}))});});
 // ── Feedback succès/échec EEP pour le joueur humain ─────────────────
 if(G.mode==='solo'){const isMe=cand.id===_SOLO_PLAYER_PID;if(isMe)showEEPFeedback(cand.correct>=5,Math.round(cand.gauge),G.flux);}
 // Show on TV
@@ -4027,7 +4576,7 @@ const cand=EEP.players?.[EEP.candidateIdx];
 const isGarant=cand?.classId==='garant';
 const dq=EEP._defenseQueue||[];
 let defBlocks=0;
-dq.forEach(d=>{if(d.type==='defense_clear')defBlocks=999;else if(d.type==='defense_shield'||d.type==='defense_shield_2')defBlocks+=isGarant?2:1;});
+dq.forEach(d=>{if(d.id==='antivirus')defBlocks=999;else if(d.id==='bouclier')defBlocks+=isGarant?2:1;});
 const fullImmune=EEP._comboEffect?.effect==='full_immunity'||EEP._comboEffect?.effect==='purge_shield';
 if(fullImmune)defBlocks=999;
 
@@ -4057,12 +4606,19 @@ if(tlGrid){
     attacks.forEach((b,i)=>{
       const isBlocked=i<blocked;
       const chip=document.createElement('div');
-      // Dossier scellé : afficher 🔒 si bot et non encore révélé
-      const isSealed=b.sealed&&!b.revealed&&b.fromPid!==_SOLO_PLAYER_PID;
+      const isSealed=!b.revealed&&b.fromPid===_SOLO_PLAYER_PID&&b.card.cat==='attack';
+      const isBotSealed=!b.revealed&&b.sealed&&b.fromPid!==_SOLO_PLAYER_PID;
       chip.className='tl-chip '+(b.revealed?'blk':isBlocked?'def':'atk');
       if(isSealed){
-        chip.innerHTML=`🔒<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;opacity:.6;">N+${b.triggersAt-(EEP.questionIdx||0)}</span>`;
-        chip.title=`Dossier scellé — Q${b.triggersAt+1}`;}
+        // 💰 si le joueur humain a payé pour ce dossier
+        const fluxBadge=b.fluxCost?`<span style="font-size:6px;color:var(--gold);position:absolute;bottom:1px;right:1px;">💰${b.fluxCost}</span>`:'';
+        chip.style.position='relative';
+        chip.innerHTML=`🔒${fluxBadge}<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;opacity:.6;">N+${b.triggersAt-(EEP.questionIdx||0)}</span>`;
+        chip.title=`Dossier scellé — Q${b.triggersAt+1}${b.fluxCost?' · '+b.fluxCost+'⚡ payés':''}`;}
+      else if(!b.revealed&&b.fromPid!==_SOLO_PLAYER_PID){
+        // Dossier bot scellé : icône 🔒 sans coût
+        chip.innerHTML=`🔒<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;opacity:.6;">${b.fromName.split(' ').pop()}</span>`;
+        chip.title=`Dossier scellé bot — Q${b.triggersAt+1}`;}
       else{
         chip.innerHTML=`${b.card.icon}<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;">${b.fromName.split(' ').pop()}</span>`;}
       if(isBlocked){const s=document.createElement('div');s.className='d-strike';chip.style.position='relative';chip.appendChild(s);}
@@ -4318,7 +4874,7 @@ const DRAFT_PICK_COUNT=5,DRAFT_PORTFOLIO_SIZE=3;
 function playerRx(d){
 if(d.type==='joined'){showScreen('player');$('pBadge').textContent=MP.myName;pLog('✅ Salle '+d.roomCode);$('pQ').innerHTML='<div style="color:var(--muted);">En attente...</div>';$('pAns').innerHTML='';}
 // PHASE 0
-else if(d.type==='startS0'){pLog('📝 Sprint!');showPSig(pick(BULLSHIT_CONTRACTS));}
+else if(d.type==='startS0'){pLog('📝 Sprint!');showPSig((pick(BULLSHIT_CONTRACTS)).body||(pick(BULLSHIT_CONTRACTS)).title||'Contrat absurde');}
 else if(d.type==='s0Timer'){$('pTimer').textContent=d.t+'s';$('pTimer').style.color=d.t<=10?'var(--red)':'var(--gold)';}
 else if(d.type==='newContract'){$('pFlux').textContent='📝'+d.score;showPSig(d.contract);}
 else if(d.type==='s0End'){pLog('🏆 Sprint fini!');P_themePool=d.themePool||[];P_draftedThemes=[];P_portfolio=[];showPDraft(d);}
@@ -4332,50 +4888,20 @@ else if(d.type==='portfolioOk'){P_portfolio=d.active||[];pLog('⭐ Portfolio: '+
 // GAME
 else if(d.type==='gameStart'){pLog('🏢 Partie lancée!');}
 else if(d.type==='eepStart'){pLog(`📋 EEP: ${d.candidateName}`);$('pQ').innerHTML=`<div style="color:var(--gold);font-size:12px;">📋 Évaluation de ${d.candidateName}</div>`;}
-else if(d.type==='eepRole'){P_isCandidate=d.isCandidate;P_cards=d.cards||[];if(d.flux!=null){P_flux=d.flux;$('pFlux').textContent='⚡'+P_flux;}$('pAns').innerHTML=P_isCandidate?'<div style="text-align:center;color:var(--gold);font-size:11px;">🎯 VOUS ÊTES LE CANDIDAT</div>':'';}
+else if(d.type==='eepRole'){P_isCandidate=d.isCandidate;P_cards=d.cards||[];$('pAns').innerHTML=P_isCandidate?'<div style="text-align:center;color:var(--gold);font-size:11px;">🎯 VOUS ÊTES LE CANDIDAT</div>':'';}
 // LATENCY WINDOW — saboteurs can play cards
 else if(d.type==='latencyStart'){
 $('pTimer').textContent='⏳'+d.duration;
-// Candidat ET non-candidats peuvent jouer des cartes (défense pour candidat, attaque pour autres)
-let html='<div style="color:var(--orange);font-size:12px;font-weight:700;margin-bottom:4px;">⏳ FENÊTRE DE LATENCE 10s</div>';
-if(P_isCandidate)html+='<div style="font-size:10px;color:var(--gold);margin-bottom:4px;">🛡️ Défendez-vous !</div>';
-else html+='<div style="font-size:10px;color:var(--red);margin-bottom:4px;">⚔️ Attaquez le candidat (max 1 attaque)</div>';
-html+='<div style="font-size:9px;color:var(--muted);margin-bottom:4px;">💰 Flux disponible : <strong style="color:var(--gold);">'+P_flux+'⚡</strong></div>';
-if(P_debt===0&&!P_isCandidate)html+='<button class="btn sm or" style="margin-bottom:6px;" onclick="requestLoan()">🏦 Solliciter un Prêt (+50⚡)</button>';
-else if(P_debt>0)html+='<div style="font-size:9px;color:var(--red);margin-bottom:4px;">💀 Dette: '+P_debt+'⚡</div>';
+if(!P_isCandidate){
+let html='<div style="color:var(--orange);font-size:12px;font-weight:700;margin-bottom:4px;">⏳ FENÊTRE DE LATENCE</div>';
+if(P_cards.length>0)html+='<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Jouez vos dossiers!</div>';
+if(P_debt===0)html+='<button class="btn sm or" style="margin-bottom:6px;" onclick="requestLoan()">🏦 Solliciter un Prêt (+50⚡)</button>';
+else html+='<div style="font-size:9px;color:var(--red);margin-bottom:4px;">💀 Dette: '+P_debt+'⚡</div>';
 $('pQ').innerHTML=html;
-// Rendu cartes tiers (sans émojis)
-$('pHand').innerHTML=P_cards.map((c,i)=>{
-  const tier=c.tier||'gold';
-  const tierLabel=tier==='black'?'INFINITE BLACK':tier==='platinum'?'EXECUTIVE PLATINUM':'BUSINESS GOLD';
-  const cost=c.cost||5;
-  const canAfford=P_flux>=cost;
-  const disabled=canAfford?'':'disabled';
-  const catLabel={attack:'ATTAQUE',defense:'DÉFENSE',intel:'INTEL',multiplier:'MULTIPLIC.'}[c.cat]||'';
-  return`<div class="sab-card tier-${tier} ${disabled}" onclick="pPlayCard(${i})">
-    <div class="tier-band">${tierLabel}</div>
-    <div class="card-name">${c.name}</div>
-    <div class="card-cost">${cost}⚡<div class="card-cat">${catLabel}</div></div>
-  </div>`;}).join('');}
+$('pHand').innerHTML=P_cards.map((c,i)=>`<div class="sab-card" onclick="pPlayCard(${i})"><div class="sc-icon">${c.icon}</div><div class="sc-name">${c.name}</div></div>`).join('');}
+else{$('pQ').innerHTML='<div style="color:var(--muted);font-size:11px;">⏳ Préparez-vous...</div>';}}
 else if(d.type==='latencyTick'){$('pTimer').textContent='⏳'+d.t;}
-else if(d.type==='cardPlayed'){
-P_cards=d.cards||P_cards;P_flux=d.fluxRemaining!=null?d.fluxRemaining:P_flux;
-$('pFlux').textContent='⚡'+P_flux;
-pLog('🃏 '+d.cardName+' joué (-'+(P_cards.length?'?':'?')+')');
-// Re-render hand avec nouveau flux
-$('pHand').innerHTML=P_cards.map((c,i)=>{
-  const tier=c.tier||'gold';
-  const tierLabel=tier==='black'?'INFINITE BLACK':tier==='platinum'?'EXECUTIVE PLATINUM':'BUSINESS GOLD';
-  const cost=c.cost||5;
-  const canAfford=P_flux>=cost;
-  const disabled=canAfford?'':'disabled';
-  const catLabel={attack:'ATTAQUE',defense:'DÉFENSE',intel:'INTEL',multiplier:'MULTIPLIC.'}[c.cat]||'';
-  return`<div class="sab-card tier-${tier} ${disabled}" onclick="pPlayCard(${i})">
-    <div class="tier-band">${tierLabel}</div>
-    <div class="card-name">${c.name}</div>
-    <div class="card-cost">${cost}⚡<div class="card-cat">${catLabel}</div></div>
-  </div>`;}).join('');}
-else if(d.type==='cardPlayFail'){pLog('❌ '+d.reason);}
+else if(d.type==='cardPlayed'){const idx=P_cards.findIndex(c=>c.name===d.cardName);if(idx>=0)P_cards.splice(idx,1);$('pHand').innerHTML='';pLog('🃏 '+d.cardName+' chargé!');}
 // QUESTION
 else if(d.type==='eepQuestion'){
 $('pHand').innerHTML='';
@@ -4419,7 +4945,7 @@ else{
     </div>`;}}}
 else if(d.type==='eepSniper'){pLog('🎯 SNIPER! '+d.thiefName+' vole la question!');}
 else if(d.type==='eepResult'){pLog(d.correct?'✅':'❌');$('pGauge').style.width=d.gauge+'%';$('pAns').innerHTML='';$('pQ').className='mob-q';}
-else if(d.type==='eepCandEnd'){P_cards=d.cards||[];if(d.flux!=null){P_flux=d.flux;$('pFlux').textContent='⚡'+P_flux;}pLog(`📊 ${d.candidateName}: ${d.score} — Jauge: ${d.gauge}%`);}
+else if(d.type==='eepCandEnd'){P_cards=d.cards||[];pLog(`📊 ${d.candidateName}: ${d.score} — Jauge: ${d.gauge}%`);}
 // DETTE
 else if(d.type==='loanGranted'){P_flux=d.flux;P_debt=d.debt;$('pFlux').textContent='⚡'+d.flux+' (💀'+d.debt+')';pLog('🏦 Prêt accordé! +50⚡, dette: 75⚡');}
 else if(d.type==='loanDenied'){pLog('🏦 Prêt refusé: '+d.reason);}
