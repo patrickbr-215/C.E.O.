@@ -551,10 +551,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 <!-- ── CHAMP DE BATAILLE — timeline cartes style plateau ─────── -->
 <div id="tlGrid" style="flex-shrink:0;display:none;">
-  <div class="tl-grid">
-    <div class="tl-col" id="tlCol0"><div class="tl-col-hdr current" style="font-size:7px;">⚡ ACT.</div><div class="tl-stack" id="tlStack0"></div></div>
-    <div class="tl-col" id="tlCol1"><div class="tl-col-hdr next1" style="font-size:7px;">N+1</div><div class="tl-stack" id="tlStack1"></div></div>
-    <div class="tl-col" id="tlCol2"><div class="tl-col-hdr next2" style="font-size:7px;">N+2</div><div class="tl-stack" id="tlStack2"></div></div>
+  <div class="tl-grid" style="grid-template-columns:1fr!important;">
+    <div class="tl-col active" id="tlCol0"><div class="tl-col-hdr current" style="font-size:7px;">⚡ EFFETS PROCHAINE QUESTION</div><div class="tl-stack" id="tlStack0" style="flex-direction:row;flex-wrap:wrap;justify-content:center;"></div></div>
   </div>
 </div>
 
@@ -2527,8 +2525,8 @@ function soloBotRx(pid,d){
       if(!EEP.latencyActive)return;
       const cardIdx=Math.floor(Math.random()*bot.cards.length);
       const card=bot.cards.splice(cardIdx,1)[0];
-      EEP.buffer.push({card,fromPid:pid,fromName:bot.name,triggersAt:EEP.questionIdx+2,revealed:false});
-      $('gTicker').textContent=`⚠️ ${bot.icon||'🤖'} ${bot.name} charge ${card.icon} ${card.name} dans le buffer...`;
+      EEP.buffer.push({card,fromPid:pid,fromName:bot.name,triggersAt:card.n2?EEP.questionIdx+2:EEP.questionIdx,revealed:false});
+      $('gTicker').textContent=`⚠️ ${bot.icon||'🤖'} ${bot.name} joue ${card.icon} ${card.name}`;
       updBufferUI();},Math.random()*3000);}}
 
 function openSoloOnboarding(){startSoloGame();}// compat redirect
@@ -2687,7 +2685,7 @@ G._streamMode=false;// sera activé si on utilise la génération streaming
 if(G.equippedGear?.type==='fluxStart'){G.flux+=G.equippedGear.val;updFlux();}
 $('gRound').textContent=`EEP ${G.round} · ${th?.name||G.theme} · Passage ${pass}/2`;
 
-// Sabotage bots N+2
+// Sabotage bots — effet immédiat (sauf Dossier)
 if(G.bots&&G.bots.length){
   G.bots.forEach(b=>{
     if(!b.cards||!b.cards.length)return;
@@ -2696,9 +2694,9 @@ if(G.bots&&G.bots.length){
     const card=b.cards.splice(cardIdx,1)[0];
     const sabType=card.type||'brouillage';
     const playedAt=Math.floor(Math.random()*7);
-    const triggersAt=Math.min(9,playedAt+2);
+    const triggersAt=card.n2?Math.min(9,playedAt+2):playedAt;
     G._botBuffer.push({bot:b,card,type:sabType,playedAt,triggersAt,revealed:false});});
-  if(G._botBuffer.length)$('gTicker').textContent=`⚠️ ${G._botBuffer.length} dossier(s) chargé(s) dans le buffer N+2...`;}
+  if(G._botBuffer.length)$('gTicker').textContent=`⚠️ ${G._botBuffer.length} sabotage(s) prêt(s)...`;}
 
 // Si thème IA → mode streaming (une question à la fois)
 if(isAiTheme){
@@ -2742,7 +2740,7 @@ startTimer();showQ();}
 async function _streamGenerateNext(){
   const idx=G._streamGenerated;
   if(idx>=G._streamTotal)return;
-  const _N1_TO=5000;
+  const _N1_TO=10000;
   try{
     const timeoutP=new Promise((_,rej)=>setTimeout(()=>rej(new Error('N1_TIMEOUT')),_N1_TO));
     const q=await Promise.race([generateOneQuestion(G._streamThemeName,idx,G._streamTotal,G._streamContext),timeoutP]);
@@ -2752,28 +2750,32 @@ async function _streamGenerateNext(){
     if(G._streamMode&&G.phase==='playing'&&G.qs.length===0){
       G.qs=[q];showQStream();}
   }catch(e){
-    console.warn(`[CEO-AI] Q${idx+1} ${e.message==='N1_TIMEOUT'?'timeout 6s':'erreur'}:`,e.message);
+    console.warn(`[CEO-AI] Q${idx+1} ${e.message==='N1_TIMEOUT'?'timeout 10s':'erreur'}:`,e.message);
     G._streamGenerated++;
     const fallbackQ=_getStaticFallbackQ();
     if(fallbackQ){
       G._streamQueue.push(fallbackQ);
       if(G._streamMode&&G.phase==='playing'&&G.qs.length===0){
         G.qs=[fallbackQ];showQStream();}
-      if(e.message==='N1_TIMEOUT')_bossNotif('Le réseau sature... voici une question de stagiaire pour vous occuper.');}}
+      if(e.message==='N1_TIMEOUT')_bossNotif('Le réseau sature... voici une question générique pour vous occuper.');}}
   if(G._streamGenerated<G._streamTotal){
     _streamGenerateNext().catch(e=>console.warn('[CEO-AI bg]',e.message));}}
 
 function _getStaticFallbackQ(){
-  // 1. QDB du thème courant (TOUJOURS prioritaire)
+  // 1. QDB du thème courant si disponible
   const tid=G.theme||EEP.theme||'';
   if(QDB[tid]&&QDB[tid].length>0){
     if(!G._usedOffline)G._usedOffline=new Set();
     const pool=QDB[tid].filter(q=>!G._usedOffline.has(q.q));
     if(pool.length){const q=pick(pool);G._usedOffline.add(q.q);return{...q,source:'qdb-fallback'};}
     return{...pick(QDB[tid]),source:'qdb-fallback'};}
-  // 2. N'importe quel QDB
-  const k=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>0);
-  return k?{...pick(QDB[k]),source:'qdb-fallback'}:null;}
+  // 2. Sinon : OFFLINE_QDB générique (jamais un QDB d'un autre thème)
+  if(typeof OFFLINE_QDB!=='undefined'&&OFFLINE_QDB.length){
+    if(!G._usedOffline)G._usedOffline=new Set();
+    const pool=OFFLINE_QDB.filter(q=>!G._usedOffline.has(q.q));
+    const q=pool.length?pick(pool):pick(OFFLINE_QDB);
+    G._usedOffline.add(q.q);return{...q,source:'offline'};}
+  return null;}
 
 function showQStream(){
   if(!G._streamMode){showQ();return;}
@@ -4580,50 +4582,34 @@ if(tlGrid){
   tlGrid.style.display='grid';
   if(legacyBar)legacyBar.style.display='none';
   const qi=EEP.questionIdx||0;
-  const slots={0:[],1:[],2:[]};
-  (EEP.buffer||[]).forEach(b=>{const rel=b.triggersAt-qi;if(rel>=0&&rel<=2)slots[rel].push(b);});
-  [0,1,2].forEach(rel=>{
-    const hdr=$(`tlCol${rel}`)?.querySelector('.tl-col-hdr');
-    const stack=$(`tlStack${rel}`);
-    if(!stack)return;
-    const items=slots[rel];
-    const attacks=items.filter(b=>b.card.cat==='attack');
-    let blocked=0,remaining=defBlocks;
-    if(rel===0){blocked=Math.min(remaining,attacks.length);remaining-=blocked;}
-    const landed=attacks.length-blocked;
-    const isSecured=attacks.length>0&&landed===0;
-    const isStack=attacks.length>=3;
-    if(hdr){
-      const labels=['⚡ ACT.','N+1','N+2'];
-      hdr.className='tl-col-hdr '+(rel===0?(isSecured?'secured-hdr':landed>0?'next2':'current'):(rel===1?'next1':'next2'));
-      hdr.textContent=labels[rel]+(isStack?' 🔥':'');}
+  // Une seule slot : effets sur la PROCHAINE question (qi)
+  const items=(EEP.buffer||[]).filter(b=>!b.revealed&&b.triggersAt===qi);
+  const attacks=items.filter(b=>b.card.cat==='attack');
+  const blocked=Math.min(defBlocks,attacks.length);
+  const landed=attacks.length-blocked;
+  const isSecured=attacks.length>0&&landed===0;
+  const isStack=attacks.length>=3;
+  const hdr=$('tlCol0')?.querySelector('.tl-col-hdr');
+  const stack=$('tlStack0');
+  if(hdr){
+    hdr.className='tl-col-hdr '+(isSecured?'secured-hdr':landed>0?'next2':'current');
+    hdr.textContent='⚡ EFFETS PROCHAINE QUESTION'+(isStack?' 🔥':'')+(isSecured?' 🛡️':'');}
+  if(stack){
     stack.innerHTML='';
-    if(!items.length){stack.innerHTML='<div style="font-size:9px;color:var(--muted);padding:4px;">—</div>';return;}
-    attacks.forEach((b,i)=>{
-      const isBlocked=i<blocked;
-      const chip=document.createElement('div');
-      const isSealed=!b.revealed&&b.fromPid===_SOLO_PLAYER_PID&&b.card.cat==='attack';
-      const isBotSealed=!b.revealed&&b.sealed&&b.fromPid!==_SOLO_PLAYER_PID;
-      chip.className='tl-chip '+(b.revealed?'blk':isBlocked?'def':'atk');
-      if(isSealed){
-        // 💰 si le joueur humain a payé pour ce dossier
-        const fluxBadge=b.fluxCost?`<span style="font-size:6px;color:var(--gold);position:absolute;bottom:1px;right:1px;">💰${b.fluxCost}</span>`:'';
-        chip.style.position='relative';
-        chip.innerHTML=`🔒${fluxBadge}<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;opacity:.6;">N+${b.triggersAt-(EEP.questionIdx||0)}</span>`;
-        chip.title=`Dossier scellé — Q${b.triggersAt+1}${b.fluxCost?' · '+b.fluxCost+'⚡ payés':''}`;}
-      else if(!b.revealed&&b.fromPid!==_SOLO_PLAYER_PID){
-        // Dossier bot scellé : icône 🔒 sans coût
-        chip.innerHTML=`🔒<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;opacity:.6;">${b.fromName.split(' ').pop()}</span>`;
-        chip.title=`Dossier scellé bot — Q${b.triggersAt+1}`;}
-      else{
-        chip.innerHTML=`${b.card.icon}<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;">${b.fromName.split(' ').pop()}</span>`;}
-      if(isBlocked){const s=document.createElement('div');s.className='d-strike';chip.style.position='relative';chip.appendChild(s);}
-      stack.appendChild(chip);});
-    items.filter(b=>b.card.cat!=='attack').forEach(b=>{
-      const chip=document.createElement('div');
-      chip.className='tl-chip '+(b.revealed?'blk':'hidden-chip');
-      chip.innerHTML=`${b.card.icon}<span style="font-size:7px;">${b.card.name.substring(0,6)}</span>`;
-      stack.appendChild(chip);});});
+    if(!items.length){stack.innerHTML='<div style="font-size:9px;color:var(--muted);padding:4px;">Aucun effet en attente</div>';}
+    else{
+      attacks.forEach((b,i)=>{
+        const isBlocked=i<blocked;
+        const chip=document.createElement('div');
+        chip.className='tl-chip '+(isBlocked?'def':'atk');
+        chip.innerHTML=`${b.card.icon}<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;">${b.fromName.split(' ').pop()}</span>`;
+        if(isBlocked){const s=document.createElement('div');s.className='d-strike';chip.style.position='relative';chip.appendChild(s);}
+        stack.appendChild(chip);});
+      items.filter(b=>b.card.cat!=='attack').forEach(b=>{
+        const chip=document.createElement('div');
+        chip.className='tl-chip blk';
+        chip.innerHTML=`${b.card.icon}<span style="font-size:7px;">${b.card.name.substring(0,8)}</span>`;
+        stack.appendChild(chip);});}}
 }else if(legacyBar){
   legacyBar.style.display='';
   legacyBar.innerHTML='<span class="lbl" style="font-size:7px;">📁</span>';
