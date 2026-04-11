@@ -228,6 +228,23 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   transition:width .6s cubic-bezier(.4,0,.2,1);}
 /* Buffer DOSSIER compact */
 .tl-col{min-height:60px!important;}
+/* ── CARD PLAY FEED — Yu-Gi-Oh style notifications ── */
+.cpf-notif{background:linear-gradient(135deg,rgba(15,17,24,.96),rgba(25,28,40,.96));border:1.5px solid var(--gold-dim);border-radius:8px;padding:8px 12px;backdrop-filter:blur(8px);pointer-events:auto;animation:cpfIn .35s cubic-bezier(.22,1,.36,1) forwards;box-shadow:0 4px 20px rgba(0,0,0,.5);min-width:200px;}
+.cpf-notif.tier-gold{border-color:#d4a832;box-shadow:0 0 15px rgba(212,168,50,.3);}
+.cpf-notif.tier-platinum{border-color:#c8cdd8;box-shadow:0 0 15px rgba(200,205,216,.3);}
+.cpf-notif.tier-black{border-color:#d4a832;box-shadow:0 0 25px rgba(212,168,50,.5),0 0 40px rgba(239,68,68,.3);background:linear-gradient(135deg,#0a0a0c,#1a0a0a);}
+.cpf-notif.out{animation:cpfOut .4s ease-in forwards;}
+.cpf-tier{font-family:'Orbitron',monospace;font-size:7px;letter-spacing:1.5px;font-weight:900;margin-bottom:2px;}
+.cpf-tier.gold{color:#d4a832;}
+.cpf-tier.platinum{color:#c8cdd8;}
+.cpf-tier.black{color:#ef4444;}
+.cpf-name{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;}
+.cpf-from{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px;}
+.cpf-effect{font-family:'Rajdhani',sans-serif;font-size:10px;color:#d4a832;font-style:italic;margin-top:3px;}
+@keyframes cpfIn{0%{opacity:0;transform:translateX(60px) scale(.9);}100%{opacity:1;transform:translateX(0) scale(1);}}
+@keyframes cpfOut{0%{opacity:1;transform:translateX(0);}100%{opacity:0;transform:translateX(60px);}}
+@keyframes blackAlertIn{0%{opacity:0;transform:scale(1.2);}100%{opacity:1;transform:scale(1);}}
+@keyframes blackPulse{0%,100%{box-shadow:0 0 20px rgba(212,168,50,.4),0 0 40px rgba(239,68,68,.3);}50%{box-shadow:0 0 30px rgba(212,168,50,.7),0 0 60px rgba(239,68,68,.5);}}
 /* BUFFER — N+2 Dossiers */
 .buffer-bar{display:flex;gap:6px;justify-content:center;padding:6px 12px;background:var(--bg2);border-bottom:1px solid var(--border);min-height:52px;align-items:center;flex-wrap:wrap;}
 .dossier{width:40px;height:52px;border:2px solid var(--border);border-radius:4px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;position:relative;transition:all .4s;}
@@ -550,10 +567,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 
 <!-- ── CHAMP DE BATAILLE — timeline cartes style plateau ─────── -->
-<div id="tlGrid" style="flex-shrink:0;display:none;">
-  <div class="tl-grid" style="grid-template-columns:1fr!important;">
-    <div class="tl-col active" id="tlCol0"><div class="tl-col-hdr current" style="font-size:7px;">⚡ EFFETS PROCHAINE QUESTION</div><div class="tl-stack" id="tlStack0" style="flex-direction:row;flex-wrap:wrap;justify-content:center;"></div></div>
-  </div>
+<div id="tlGrid" style="display:none;"></div>
+<!-- 🔔 NOTIFICATION POPUP — cartes Gold/Platinum (style Yu-Gi-Oh slide-in) -->
+<div id="cardPlayFeed" style="position:fixed;top:60px;right:8px;z-index:9988;display:flex;flex-direction:column;gap:4px;pointer-events:none;max-width:300px;"></div>
+<!-- ⚫ BANDEAU BLACK PERSISTENT — affiché pendant la Q précédant l'effet BLACK -->
+<div id="blackWarning" style="display:none;position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:9989;background:linear-gradient(135deg,#0a0a0c,#1a0606);border:2px solid #d4a832;border-radius:6px;padding:6px 14px;box-shadow:0 0 20px rgba(212,168,50,.4),0 0 40px rgba(239,68,68,.3);animation:blackPulse 1.5s ease-in-out infinite;">
+  <div style="font-family:'Orbitron',monospace;font-size:10px;color:#d4a832;letter-spacing:2px;text-align:center;text-transform:uppercase;">⚫ DOSSIER NOIR EN APPROCHE</div>
+  <div id="blackWarningText" style="font-family:'Rajdhani',sans-serif;font-size:11px;color:#fff;text-align:center;margin-top:2px;"></div>
+</div>
+<!-- ⚫ ALERTE PLEIN ÉCRAN — quand une BLACK est jouée -->
+<div id="blackAlert" style="display:none;position:fixed;inset:0;z-index:10000;background:radial-gradient(circle at center,rgba(60,0,0,.85),rgba(0,0,0,.95));align-items:center;justify-content:center;flex-direction:column;animation:blackAlertIn .4s ease-out;">
+  <div style="font-family:'Orbitron',monospace;font-size:clamp(28px,6vw,52px);font-weight:900;color:#d4a832;text-shadow:0 0 30px rgba(212,168,50,.8),0 0 60px rgba(239,68,68,.4);letter-spacing:6px;animation:blackPulse 0.8s ease-in-out infinite;">⚫ ALERTE</div>
+  <div style="font-family:'Orbitron',monospace;font-size:clamp(11px,2.5vw,16px);color:#ef4444;letter-spacing:4px;margin-top:8px;text-transform:uppercase;">DOSSIER NOIR ACTIVÉ</div>
+  <div id="blackAlertCard" style="font-family:'Rajdhani',sans-serif;font-size:clamp(18px,4vw,28px);color:#fff;font-weight:700;margin-top:18px;text-align:center;padding:0 20px;"></div>
+  <div id="blackAlertSrc" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;"></div>
+  <div style="font-family:'Orbitron',monospace;font-size:11px;color:#d4a832;letter-spacing:2px;margin-top:18px;text-transform:uppercase;">⏱ EFFET IMMINENT</div>
 </div>
 
 <!-- ── TICKER ────────────────────────────────────────────────── -->
@@ -3690,30 +3718,37 @@ if(cost>0)p.flux-=cost;
 p.cards.splice(cIdx,1);
 // 4. ANALYSTE PASSIVE: +15 Flux on intel cards
 if(p.classId==='analyste'&&card.cat==='intel'){p.flux+=15;conn.send({type:'analysteBonus',flux:p.flux});}
-// 5. DOSSIER COMPROMETTANT (BLACK): seule carte N+2
-if(card.n2){
-  EEP.buffer.push({card,fromPid:p.id,fromName:p.name,triggersAt:EEP.questionIdx+2,revealed:false});
-  $('gTicker').textContent=`⚫ ${p.name} pose ${card.name} (N+2)!`;
+// 5. BLACK offensive : annonce 1 question à l'avance + overlay alerte
+if(card.tier==='black'&&card.cat==='attack'){
+  EEP.buffer.push({card,fromPid:p.id,fromName:p.name,triggersAt:EEP.questionIdx+1,revealed:false});
+  _showBlackAlert(card,p.name);
+  _showCardPlayNotif(card,p.name,6000);
+  $('gTicker').textContent=`⚫ ${p.name} active ${card.name} — IMPACT À LA QUESTION SUIVANTE!`;
 }
 // 6. Défense → _defenseQueue (résolution ordonnée existante)
 else if(card.cat==='defense'){
   EEP._defenseQueue=EEP._defenseQueue||[];
   EEP._defenseQueue.push(card);
+  if(card.tier==='black'){_showBlackAlert(card,p.name);_showCardPlayNotif(card,p.name,5000);}
+  else _showCardPlayNotif(card,p.name);
   $('gTicker').textContent=`🛡️ ${p.name}: ${card.name} (−${cost}⚡)`;
 }
 // 7. Multiplicateur → _multiplierQueue
 else if(card.cat==='multiplier'){
   EEP._multiplierQueue=EEP._multiplierQueue||[];
   EEP._multiplierQueue.push(card);
+  _showCardPlayNotif(card,p.name);
   $('gTicker').textContent=`⚡ ${p.name}: ${card.name} (−${cost}⚡)`;
 }
-// 8. Attaque + Intel → buffer IMMÉDIAT (triggersAt = question courante)
+// 8. Attaque/Intel Gold/Platinum : effet IMMÉDIAT sur la prochaine Q
 else{
   EEP.buffer.push({card,fromPid:p.id,fromName:p.name,triggersAt:EEP.questionIdx,revealed:false});
+  _showCardPlayNotif(card,p.name);
   $('gTicker').textContent=`⚔️ ${p.name}: ${card.name} (−${cost}⚡)`;
 }
 conn.send({type:'cardPlayed',cardName:card.name,fluxRemaining:p.flux});
-updBufferUI();mpBroadcast({type:'bufferUpdate',buffer:EEP.buffer.map(b=>({hidden:!b.revealed,triggersAt:b.triggersAt,icon:b.revealed?b.card.icon:'📁'}))});
+updBufferUI();
+mpBroadcast({type:'cardPlayedBroadcast',cardName:card.name,cardIcon:card.icon,cardDesc:card.desc,tier:card.tier,fromName:p.name,isBlackOffensive:card.tier==='black'&&card.cat==='attack'});
 if(card.tier==='black')bossMaybeComment(card.name);}
 // ===== LOAN: Fonds du C.E.O. =====
 else if(d.type==='requestLoan'){
@@ -3853,6 +3888,10 @@ $('candName').textContent=`${CEO_CL[cand.classId]?.icon||''} ${cand.name}`;
 $('gRound').textContent=`EEP ${EEP.candidateIdx+1}/${EEP.players.length}`;
 EEP.buffer=[];EEP.sniperRedirect=null;EEP.activeEffects=[];EEP.questionIdx=0;
 EEP._defenseQueue=[];EEP._multiplierQueue=[];
+// Cleanup UI alertes BLACK
+if($('blackWarning'))$('blackWarning').style.display='none';
+if($('blackAlert'))$('blackAlert').style.display='none';
+if($('cardPlayFeed'))$('cardPlayFeed').innerHTML='';
 
 const isHuman=cand.id===_SOLO_PLAYER_PID&&G.mode==='solo';
 
@@ -4256,10 +4295,14 @@ bots.forEach(bot=>{
   const delay=needsStack?300+Math.random()*800:500+Math.random()*3000;
   setTimeout(()=>{
     if(!EEP.latencyActive)return;
-    // EFFET IMMÉDIAT (sauf Dossier N+2)
-    const triggersAt=card.n2?EEP.questionIdx+2:EEP.questionIdx;
-    EEP.buffer.push({card,fromPid:bot.id,fromName:bot.name,triggersAt,revealed:false,sealed:true});
-    $('gTicker').textContent=card.n2?`⚫ ${bot.name}: ${card.name} (N+2)`:`🔒 ${bot.name}: ${card.name} (−${card.cost||0}⚡)`;
+    // BLACK offensive : annonce 1 question à l'avance
+    const isBlackAttack=card.tier==='black'&&card.cat==='attack';
+    const triggersAt=isBlackAttack?EEP.questionIdx+1:EEP.questionIdx;
+    EEP.buffer.push({card,fromPid:bot.id,fromName:bot.name,triggersAt,revealed:false});
+    if(isBlackAttack){_showBlackAlert(card,bot.name);_showCardPlayNotif(card,bot.name,6000);
+      $('gTicker').textContent=`⚫ ${bot.name} active ${card.name} — IMPACT IMMINENT!`;}
+    else{_showCardPlayNotif(card,bot.name);
+      $('gTicker').textContent=`⚔️ ${bot.name}: ${card.name} (−${card.cost||0}⚡)`;}
     updBufferUI();
     if($('soloAnswerPanel')?.classList.contains('show')){
       _updCombatUI(EEP.players[EEP.candidateIdx],EEP.players[EEP.candidateIdx]?.id===_SOLO_PLAYER_PID);}
@@ -4295,18 +4338,29 @@ if(cost>0){player.flux=Math.max(0,(player.flux||0)-cost);G.flux=Math.max(0,G.flu
 if(isHumanCand){
   if(card.cat==='defense'){
     EEP._defenseQueue.push(card);
+    if(card.tier==='black')_showBlackAlert(card,'Vous');
+    _showCardPlayNotif(card,'Vous');
     $('gTicker').textContent=`🛡️ ${card.icon} ${card.name} (−${cost}⚡)`;}
   else if(card.cat==='multiplier'){
     EEP._multiplierQueue.push(card);
+    _showCardPlayNotif(card,'Vous');
     $('gTicker').textContent=`⚡ ${card.icon} ${card.name} (−${cost}⚡)`;}
   else if(card.cat==='intel'){
     EEP.activeEffects.push(card.type);
+    _showCardPlayNotif(card,'Vous');
     $('gTicker').textContent=`🔍 ${card.icon} ${card.name} (−${cost}⚡)`;}
 }else{
-  // Attaque/Intel → effet IMMÉDIAT (triggersAt = Q courante), sauf Dossier N+2
-  const triggersAt=card.n2?EEP.questionIdx+2:EEP.questionIdx;
-  EEP.buffer.push({card,fromPid:_SOLO_PLAYER_PID,fromName:'Vous',triggersAt,revealed:false});
-  $('gTicker').textContent=card.n2?`⚫ ${card.icon} ${card.name} → N+2 (−${cost}⚡)!`:`⚔️ ${card.icon} ${card.name} (−${cost}⚡)!`;}
+  // BLACK offensive : annonce 1 question à l'avance
+  if(card.tier==='black'&&card.cat==='attack'){
+    EEP.buffer.push({card,fromPid:_SOLO_PLAYER_PID,fromName:'Vous',triggersAt:EEP.questionIdx+1,revealed:false});
+    _showBlackAlert(card,'Vous');
+    _showCardPlayNotif(card,'Vous',6000);
+    $('gTicker').textContent=`⚫ ${card.name} — IMPACT À LA QUESTION SUIVANTE!`;
+  }else{
+    // Gold/Platinum : effet immédiat sur la prochaine Q
+    EEP.buffer.push({card,fromPid:_SOLO_PLAYER_PID,fromName:'Vous',triggersAt:EEP.questionIdx,revealed:false});
+    _showCardPlayNotif(card,'Vous');
+    $('gTicker').textContent=`⚔️ ${card.icon} ${card.name} (−${cost}⚡)`;}}
 updBufferUI();_updSoloHandBar();}
 
 
@@ -4342,38 +4396,44 @@ const fullImmune=EEP._comboEffect?.effect==='full_immunity'||EEP._comboEffect?.e
 const toActivate=EEP.buffer.filter(b=>!b.revealed&&b.triggersAt===EEP.questionIdx);
 
 // — ÉTAPE 1 : PRIORITÉ DÉFENSIVE — traiter les défenses en PREMIER
-// Calculer combien de blocs sont disponibles
+// Séparer défenses BLACK et non-BLACK
 let blocksAvailable=0;
-if(fullImmune){blocksAvailable=999;}// immunité totale
+let hasAntivirusBlack=false;
+if(fullImmune){blocksAvailable=999;hasAntivirusBlack=true;}
 else{
   dq.forEach(d=>{
-    if(d.id==='antivirus'){blocksAvailable=999;}// antivirus = tout purger
-    else if(d.id==='bouclier'){blocksAvailable+=isGarant?2:1;}// Garant: 1 Pare-Feu = 2 blocs
+    if(d.id==='antivirus'&&d.tier==='black'){hasAntivirusBlack=true;blocksAvailable=999;}
+    else if(d.type==='defense_shield'){blocksAvailable+=isGarant?2:1;}// Pare-Feu Gold
+    else if(d.type==='defense_shield_2'){blocksAvailable+=isGarant?3:2;}// Bouclier Acier Platinum
   });}
 
-// — ÉTAPE 2 : Résoudre chaque attaque dans l'ordre (FIFO)
+// — ÉTAPE 2 : Résoudre chaque attaque dans l'ordre (BLACK = priorité)
+toActivate.sort((a,b)=>(a.card.priority||99)-(b.card.priority||99));
 const blockedAttacks=[];const landedAttacks=[];
 toActivate.forEach(b=>{
   b.revealed=true;
   const isAttack=b.card.cat==='attack';
-  if(!isAttack){// cartes non-attaque (intel bots) → applique directement
-    EEP.activeEffects.push(b.card.type);return;}
-  // Vérifier si l'antivirus couvre tout
+  if(!isAttack){EEP.activeEffects.push(b.card.type);return;}
+  // RÈGLE TIER : une BLACK offensive ne peut être contrée QUE par Antivirus BLACK
+  const isBlackAttack=b.card.tier==='black';
+  if(isBlackAttack){
+    if(hasAntivirusBlack){blockedAttacks.push(b);
+      const av=dq.find(d=>d.id==='antivirus'&&d.tier==='black');
+      if(av){dq.splice(dq.indexOf(av),1);hasAntivirusBlack=false;blocksAvailable=Math.min(blocksAvailable,0);}
+    }else{
+      landedAttacks.push(b);EEP.activeEffects.push(b.card.type);
+      if(b.card.type==='sniper'||b.card.type==='hostile')EEP.sniperRedirect=b.fromPid;}
+    return;}
+  // Gold/Platinum : bloquables par n'importe quelle défense Gold/Platinum
   if(blocksAvailable>=999){blockedAttacks.push(b);return;}
-  // Vérifier si le Pare-Feu couvre ce type
-  const bouclierCovers=(b.card.type==='sniper'||b.card.type==='pression');
-  const antiCovers=true;// antivirus couvre tout
-  const canBlock=dq.some(d=>
-    (d.id==='bouclier'&&bouclierCovers)||d.id==='antivirus');
+  const canBlock=dq.some(d=>d.type==='defense_shield'||d.type==='defense_shield_2'||d.type==='defense_clear');
   if(canBlock&&blocksAvailable>0){
     blocksAvailable--;blockedAttacks.push(b);
-    // Si Garant a utilisé un bloc, ne consommer la carte défense que tous les 2 blocs
     if(!isGarant||blocksAvailable%2===0){
-      const usedDef=dq.find(d=>d.id==='bouclier'||d.id==='antivirus');
+      const usedDef=dq.find(d=>d.type==='defense_shield'||d.type==='defense_shield_2');
       if(usedDef)dq.splice(dq.indexOf(usedDef),1);}
   }else{
-    landedAttacks.push(b);
-    EEP.activeEffects.push(b.card.type);
+    landedAttacks.push(b);EEP.activeEffects.push(b.card.type);
     if(b.card.type==='sniper')EEP.sniperRedirect=b.fromPid;}});
 
 // — ÉTAPE 3 : Afficher le résultat de la résolution
@@ -4568,57 +4628,49 @@ showOv('ovGO');}
 function updGaugeFromEEP(cand){$('gaugeFill').style.width=cand.gauge+'%';$('gaugePct').textContent=Math.round(cand.gauge)+'%';}
 
 function updBufferUI(){
-const tlGrid=$('tlGrid');
-const legacyBar=$('bufferBar');
-const cand=EEP.players?.[EEP.candidateIdx];
-const isGarant=cand?.classId==='garant';
-const dq=EEP._defenseQueue||[];
-let defBlocks=0;
-dq.forEach(d=>{if(d.id==='antivirus')defBlocks=999;else if(d.id==='bouclier')defBlocks+=isGarant?2:1;});
-const fullImmune=EEP._comboEffect?.effect==='full_immunity'||EEP._comboEffect?.effect==='purge_shield';
-if(fullImmune)defBlocks=999;
+// Le buffer n'a plus de représentation visuelle persistente.
+// Les cartes Gold/Platinum sont notifiées via cardPlayFeed (slide-in temporaire).
+// Les cartes BLACK sont annoncées via blackAlert (overlay) puis blackWarning (bandeau).
+// Cette fonction reste pour compat mais ne fait plus de rendu.
+const tlGrid=$('tlGrid');if(tlGrid)tlGrid.style.display='none';
+const legacyBar=$('bufferBar');if(legacyBar)legacyBar.style.display='none';
+// Vérifie si une BLACK est en attente (triggersAt = questionIdx+1) → bandeau persistent
+_updateBlackWarning();
+if(G.mode==='solo')_updSoloHandBar();}
 
-if(tlGrid){
-  tlGrid.style.display='grid';
-  if(legacyBar)legacyBar.style.display='none';
-  const qi=EEP.questionIdx||0;
-  // Une seule slot : effets sur la PROCHAINE question (qi)
-  const items=(EEP.buffer||[]).filter(b=>!b.revealed&&b.triggersAt===qi);
-  const attacks=items.filter(b=>b.card.cat==='attack');
-  const blocked=Math.min(defBlocks,attacks.length);
-  const landed=attacks.length-blocked;
-  const isSecured=attacks.length>0&&landed===0;
-  const isStack=attacks.length>=3;
-  const hdr=$('tlCol0')?.querySelector('.tl-col-hdr');
-  const stack=$('tlStack0');
-  if(hdr){
-    hdr.className='tl-col-hdr '+(isSecured?'secured-hdr':landed>0?'next2':'current');
-    hdr.textContent='⚡ EFFETS PROCHAINE QUESTION'+(isStack?' 🔥':'')+(isSecured?' 🛡️':'');}
-  if(stack){
-    stack.innerHTML='';
-    if(!items.length){stack.innerHTML='<div style="font-size:9px;color:var(--muted);padding:4px;">Aucun effet en attente</div>';}
-    else{
-      attacks.forEach((b,i)=>{
-        const isBlocked=i<blocked;
-        const chip=document.createElement('div');
-        chip.className='tl-chip '+(isBlocked?'def':'atk');
-        chip.innerHTML=`${b.card.icon}<span style="font-size:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45px;">${b.fromName.split(' ').pop()}</span>`;
-        if(isBlocked){const s=document.createElement('div');s.className='d-strike';chip.style.position='relative';chip.appendChild(s);}
-        stack.appendChild(chip);});
-      items.filter(b=>b.card.cat!=='attack').forEach(b=>{
-        const chip=document.createElement('div');
-        chip.className='tl-chip blk';
-        chip.innerHTML=`${b.card.icon}<span style="font-size:7px;">${b.card.name.substring(0,8)}</span>`;
-        stack.appendChild(chip);});}}
-}else if(legacyBar){
-  legacyBar.style.display='';
-  legacyBar.innerHTML='<span class="lbl" style="font-size:7px;">📁</span>';
-  (EEP.buffer||[]).forEach(b=>{
-    const d=document.createElement('div');d.className='dossier '+(b.revealed?'revealed':'hidden');
-    d.innerHTML=`${b.card.icon}<div class="d-label">N+${b.triggersAt-(EEP.questionIdx||0)}</div>`;
-    legacyBar.appendChild(d);});}}
-// Refresh reserve slots (buffer visible)
-if(G.mode==='solo')_updSoloHandBar();
+// ── Bandeau BLACK : affiché pendant la Q précédant l'effet ──
+function _updateBlackWarning(){
+const banner=$('blackWarning');if(!banner)return;
+const qi=EEP.questionIdx||0;
+const incoming=(EEP.buffer||[]).find(b=>!b.revealed&&b.card?.tier==='black'&&b.triggersAt===qi+1);
+if(incoming){
+  banner.style.display='';
+  $('blackWarningText').textContent=`${incoming.card.name} — par ${incoming.fromName} — frappe à la prochaine question`;
+}else{banner.style.display='none';}}
+
+// ── Notification slide-in pour Gold/Platinum (style Yu-Gi-Oh) ──
+function _showCardPlayNotif(card,fromName,duration=4500){
+const feed=$('cardPlayFeed');if(!feed)return;
+const tier=card.tier||'gold';
+const tierLabel=tier==='black'?'INFINITE BLACK':tier==='platinum'?'EXECUTIVE PLATINUM':'BUSINESS GOLD';
+const notif=document.createElement('div');
+notif.className='cpf-notif tier-'+tier;
+notif.innerHTML=`<div class="cpf-tier ${tier}">${tierLabel}</div>
+<div class="cpf-name">${card.icon||''} ${card.name}</div>
+<div class="cpf-from">par ${fromName}</div>
+<div class="cpf-effect">${card.desc||''}</div>`;
+feed.appendChild(notif);
+setTimeout(()=>{notif.classList.add('out');setTimeout(()=>notif.remove(),400);},duration);}
+
+// ── Overlay alerte plein écran pour BLACK ──
+function _showBlackAlert(card,fromName){
+const ov=$('blackAlert');if(!ov)return;
+$('blackAlertCard').textContent=card.name;
+$('blackAlertSrc').textContent=`Activé par ${fromName}`;
+ov.style.display='flex';
+// Beep + auto-close après 2.5s
+try{if(typeof _bossBeep==='function')_bossBeep();}catch(e){}
+setTimeout(()=>{ov.style.display='none';},2500);}
 
 
 
@@ -4971,6 +5023,10 @@ $('pAns').innerHTML=`<input type="number" id="bidAmt" class="inp" placeholder="M
 else if(d.type==='bourseTick'){/* timer update, could display */}
 else if(d.type==='bourseEnd'){P_isSeller=false;P_bourseBid=0;$('pAns').innerHTML='';$('pQ').innerHTML='<div style="color:var(--muted);">Prochain EEP...</div>';}
 else if(d.type==='bufferUpdate'){/* */}
+else if(d.type==='cardPlayedBroadcast'){
+  const tierTxt=d.tier==='black'?'⚫ INFINITE BLACK':d.tier==='platinum'?'⚪ EXECUTIVE PLATINUM':'🟡 BUSINESS GOLD';
+  if(d.isBlackOffensive){pLog(`⚫ DOSSIER NOIR — ${d.fromName} active ${d.cardName}`);}
+  else{pLog(`${d.cardIcon||'🃏'} ${d.fromName}: ${d.cardName}`);}}
 else if(d.type==='scoreboard'){pLog('📊 '+d.players.map(p=>`${p.name}:${Math.round(p.gauge)}%`).join(' '));}}
 
 function pPlayCard(idx){if(idx<0||idx>=P_cards.length)return;MP.hostConn.send({type:'playCard',cardIdx:idx});}
