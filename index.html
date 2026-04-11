@@ -1212,13 +1212,10 @@ const OFFLINE_QDB=[
 ];
 let _offlineIdx=0;
 function _getOfflineFallback(){
-  // 1. Essayer QDB du thème courant
+  // 1. Essayer QDB du thème courant uniquement (pas de QDB random qui mélange tout)
   const tid=G.theme||EEP.theme||'';
   if(QDB[tid]&&QDB[tid].length>0)return{...pick(QDB[tid]),source:'offline-qdb'};
-  // 2. Essayer n'importe quel QDB
-  const k=Object.keys(QDB).find(k=>QDB[k]&&QDB[k].length>0);
-  if(k)return{...pick(QDB[k]),source:'offline-qdb'};
-  // 3. Dernier recours: OFFLINE_QDB générique
+  // 2. Sinon : OFFLINE_QDB générique (culture générale neutre, ne ment pas sur le thème)
   _offlineIdx=(_offlineIdx+1)%OFFLINE_QDB.length;
   return{...OFFLINE_QDB[_offlineIdx],source:'offline'};}
 
@@ -1236,14 +1233,13 @@ function _pipelinePrefetch(){
   const idx=_qPipeline.qIndex;const name=_qPipeline.themeName;
   _qPipeline.nextPromise=Promise.race([
     generateOneQuestion(name,idx,10),
-    new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT_5S')),5000))
+    new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT_8S')),8000))
   ]).then(q=>{_qPipeline.nextReady=q;_qPipeline.generating=false;return q;})
    .catch(e=>{
-    const isTimeout=e.message==='TIMEOUT_5S';
-    console.warn('[N+1]',isTimeout?'Timeout 6s':'Erreur Gemini','→ fallback offline:',e.message);
+    const isTimeout=e.message==='TIMEOUT_8S';
+    console.warn('[N+1]',isTimeout?'Timeout 8s':'Erreur Gemini','→ fallback offline:',e.message);
     if(isTimeout){
-      // Message boss "connexion satellite instable"
-      setTimeout(()=>_bossNotif('⚠️ Connexion satellite instable. Je vais vous poser une question de stagiaire en attendant que mes serveurs daignent répondre.'),100);}
+      setTimeout(()=>_bossNotif('⚠️ Connexion satellite instable. Question générique en attendant que mes serveurs daignent répondre.'),100);}
     const fb=_getOfflineFallback();_qPipeline.nextReady=fb;_qPipeline.generating=false;return fb;});}
 
 async function _pipelineGet(){
@@ -4059,8 +4055,8 @@ async function _eepStreamNext(){
   if(s.generated<s.total){_pipelinePrefetch();setTimeout(()=>_eepStreamNext().catch(()=>{}),100);}}
 
 function _getEEPFallbackQ(){
-  const keys=Object.keys(QDB).filter(k=>QDB[k]?.length>0);
-  const k=pick(keys);return k?pick(QDB[k]):null;}
+  // Utilise le fallback thématique propre (QDB du thème courant ou OFFLINE_QDB générique)
+  return _getOfflineFallback();}
 
 // Récupérer la prochaine question EEP (IA ou statique)
 async function _getNextEEPQuestion(){
